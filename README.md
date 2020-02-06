@@ -9,3 +9,4 @@
 - [x] nonac
 - [ ] wzxutao 
 - [x] Boris Johnson
+- [x] Donald Trump
