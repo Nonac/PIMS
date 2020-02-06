@@ -5,6 +5,6 @@
 - [ ] leatong
 - [x] 524534852
 - [x] wangfuzhou110
-- [ ] ZzAllenZz
+- [x] ZzAllenZz
 - [x] nonac
 - [ ] wzxutao 
