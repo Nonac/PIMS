@@ -7,6 +7,7 @@
 - [x] wangfuzhou110
 - [x] ZzAllenZz
 - [x] nonac
-- [ ] wzxutao 
+- [x] wzxutao 
 - [x] Boris Johnson
 - [x] Donald Trump
+- [ ] Kim Jong-un
