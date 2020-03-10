@@ -6,6 +6,7 @@
 		"barrier_type": "out",
 		"time_in": "2020-03-20T17:53:30",
 		"time_out": "2020-03-20T17:59:40",
+		"customer_id": 01,
 		"vehicle": {
 			"vehicle_id": 01,
 			"vehicle_type": "car"
