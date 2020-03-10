@@ -10,14 +10,33 @@ static abstract class MessageType{
 
 //Database
 private class Database{
-     int max_massage=10000;
-     JSONObject[] massage=new JSONObject[max_massage];
+     int max_message=10000;
+     JSONObject[] message=new JSONObject[max_message];
      Database(){}
-     int max_massage(){
-       return max_massage;
+     int max_message(){
+       return max_message;
      }
 }
 
+
+// copy any JSON objects on disk into working memory
+void refreshData() {
+    File dir;
+    File[] files;
+    dir = new File(dataPath(""));
+    files = dir.listFiles();
+    JSONObject json;
+    for (int i = 0; i <= files.length - 1; i++) {
+      
+        String path = files[i].getAbsolutePath();
+        if (path.toLowerCase().endsWith(".json")) {
+            json = loadJSONObject(path);
+            if (json != null) {
+                db.message[i] = json;
+            }
+        }
+    }
+}
 
 
 public class MessageData{

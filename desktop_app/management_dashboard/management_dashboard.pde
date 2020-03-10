@@ -7,7 +7,7 @@ ControlP5 cp5;
 MQTTClient client;
 //Dashboard_view view = new Dashboard_view();
 MessageData api = new MessageData();
-//Database db = new Database();
+Database db = new Database();
 
 void setup() {
     //cp5 = new ControlP5(this);
