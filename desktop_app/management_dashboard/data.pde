@@ -39,6 +39,40 @@ void refreshData() {
 }
 
 
+
+//get a JSONObject from disk according to datatype and userId
+JSONObject getObjWithId(String datatype , String userId){
+    File dir;
+    File[] files;
+    dir = new File(dataPath(""));
+    files = dir.listFiles();
+    JSONObject json;
+    for (int i = 0; i <= files.length - 1; i++) {
+      
+        String path = files[i].getAbsolutePath();
+        if (path.toLowerCase().startsWith(datatype)) {
+            json = loadJSONObject(path);
+            if(json.get("datatype")==datatype){
+              JSONObject message = (JSONObject) json.get("reg_info");
+              if(message.get("userId").equals(userId)) return json;
+            }
+        }
+    }
+    return null;
+}
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+//Provide API for view, m5stack and web
 public class MessageData{
   String makeUUID()
   {
@@ -52,12 +86,23 @@ public class MessageData{
     }
      return result;
   }
-  
+  //receive message from web
    void saveMessageToDB(JSONObject message) {
         if (message == null) {
             return;
         } else {
-            saveJSONObject(message, "data/" +makeUUID()+ ".json");
+          //file's name should have datatype identifier since it is useful for searching
+            saveJSONObject(message, "data/" +message.get("datatype") + makeUUID()+ ".json");
         }
     }
+  //send message to web to allow access or not
+  JSONObject sendComfirmInfoToWeb(JSONObject loginMessage){
+    JSONObject comfirmMessage;
+    JSONObject temp = (JSONObject)loginMessage.get("reg_info");
+    comfirmMessage = getObjWithId("web_register",temp.get("userId").toString());
+    if(comfirmMessage == null) return null;
+    //and set!!!
+    return comfirmMessage;
+  }
+  
 }
