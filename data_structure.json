@@ -1,6 +1,6 @@
-{
-	"data_type": "parking",
-	"parking": {
+[
+	{
+		"data_type": "parking",
 		"barrier_type": "out",
 		"time_in": "2020-03-20T17:53:30",
 		"time_out": "2020-03-20T17:59:40",
@@ -10,41 +10,52 @@
 			"postcode": "BS1 5UL"
 		}
 	},
-	"login_info": {
+
+	{
+		"data_type": "login_info",
 		"username": "lea_tong",
 		"password": "*******",
 		"userId": "ad19014",
 		"access": false
 	},
-	//may be merged with "login_info"
-	"reg_info": {
+	
+	{
+		"data_type": "reg_info",
 		"username": "lea_tong",
 		"password": "*******",
 		"userId": "ad19014"
 	},
-	"finance_info": {
+
+	{
+		"data_type": "finance_info",
 		"user_id": "ad19014",
-		"balance": 21331,
+		"balance": 100,
 		"currency": "GBP"
 	},
-	"topup_info": {
+
+	{
+		"data_type": "top_up_info",
 		"user_id": "ad19014",
-		"balance": 21331,
+		"balance": 130,
 		"currency": "GBP",
-		"topup_amount": 30
+		"top_up_amount": 30
 	},
-	"recharge_info": {
+
+	{
+		"data_type": "charge_info",
 		"user_id": "ad19014",
-		"balance": 21331,
+		"balance": 120,
 		"currency": "GBP",
-		"pay_amount": "10"
+		"pay_amount": 10
 	},
-	"vehicle_reg_info": {
+
+	{
+		"data_type": "vehicle_reg_info",
 		"user_id": "ad19014",
 		"vehicle_id": "WBS1258",
 		"vehicle_type": "car"
 	}
-}
+]
 
 
 
