@@ -1,32 +1,61 @@
 {
-
 	"data_type": "parking",
-	
-	"parking":{
+	"parking": {
 		"barrier_type": "out",
 		"time_in": "2020-03-20T17:53:30",
 		"time_out": "2020-03-20T17:59:40",
-		"vehicle": {
-			"vehicle_id": 01,
-			"vehicle_type": "car"
-		},
+		"vehicle_id": "acdjcidjd",
 		"parking_lot": {
-			"parking_id": 01,
-			"postcode": "BS1 5UL",
+			"parking_id": "dc007",
+			"postcode": "BS1 5UL"
 		}
 	},
-
-	"customer": {
-		"name": "Lea",
-		"customer_id": 01,
-		"login_info": {
-			"user_name": "lea_tong",
-			"email": "cy19158@bristol.ac.uk",
-			"password": "*******"
-		},
-		"finance_info": {
-			"balance": "10000.00",
-			"currency": "GBP"
-		}
+	"login_info": {
+		"username": "lea_tong",
+		"password": "*******",
+		"userId": "ad19014",
+		"access": false
+	},
+	//may be merged with "login_info"
+	"reg_info": {
+		"username": "lea_tong",
+		"password": "*******",
+		"userId": "ad19014"
+	},
+	"finance_info": {
+		"user_id": "ad19014",
+		"balance": 21331,
+		"currency": "GBP"
+	},
+	"topup_info": {
+		"user_id": "ad19014",
+		"balance": 21331,
+		"currency": "GBP",
+		"topup_amount": 30
+	},
+	"recharge_info": {
+		"user_id": "ad19014",
+		"balance": 21331,
+		"currency": "GBP",
+		"pay_amount": "10"
+	},
+	"vehicle_reg_info": {
+		"user_id": "ad19014",
+		"vehicle_id": "WBS1258",
+		"vehicle_type": "car"
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
