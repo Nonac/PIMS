@@ -10,8 +10,21 @@ void messageReceived(String topic, byte[] payload) {
     if (json == null) {
      println("Order could not be parsed");
     }
-    else
-    {api.saveMessageToDB(json);}
+    else 
+    {
+      String datatype=json.getString("daya_type");
+      if(datatype.equals(MessageType.REGISTER))
+      {
+        api.saveMessageToDB(json);
+      }
+      else if(datatype.equals(MessageType.LOGIN))
+      {
+        JSONObject tmp=api.sendConfirmInfoToWeb(json);
+        //convert the JSONObject to String
+        client.publish(MQTT_topic,tmp.toString());
+      }
+    }
+
 }
 
 void connectionLost() {
