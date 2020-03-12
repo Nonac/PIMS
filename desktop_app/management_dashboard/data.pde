@@ -39,28 +39,6 @@ void refreshData() {
     }
 }
 
-
-
-//get a JSONObject from disk according to datatype and userId
-/*JSONObject getObjWithId(String datatype , String userId){
-    File dir;
-    File[] files;
-    dir = new File(dataPath(""));
-    files = dir.listFiles();
-    JSONObject json;
-    for (int i = 0; i <= files.length - 1; i++) {
-      
-        String path = files[i].getAbsolutePath();
-        if (path.toLowerCase().startsWith(datatype)) {
-            json = loadJSONObject(path);
-            if(json.get("datatype")==datatype){
-              JSONObject message = (JSONObject) json.get("reg_info");
-              if(message.get("userId").equals(userId)) return json;
-            }
-        }
-    }
-    return null;
-}*/
   
 //get a JSONObject from disk according to datatype and userId
   JSONObject getObjWithId(String datatype , String userId)
@@ -100,22 +78,15 @@ public class MessageData{
             return;
         } else {
           //file's name should have datatype identifier since it is useful for searching
-            saveJSONObject(message, "data/" +message.get("data_type") + makeUUID()+ ".json");
+            saveJSONObject(message, "data/" +message.getString("data_type") + makeUUID()+ ".json");
         }
     }
-  //send message to web to allow access or not
- /* JSONObject sendComfirmInfoToWeb(JSONObject loginMessage){
-    JSONObject comfirmMessage;
-    JSONObject temp = (JSONObject)loginMessage.get("reg_info");
-    comfirmMessage = getObjWithId("web_register",temp.get("userId").toString());
-    if(comfirmMessage == null) return null;
-    //and set!!!
-    return comfirmMessage;
-  }*/
-     //send message to web to allow access or not
-    JSONObject sendConfirmInfoToWeb(JSONObject loginMessage){
+    
+   //send message to web to allow access or not
+   JSONObject sendConfirmInfoToWeb(JSONObject loginMessage){
          String userId=loginMessage.getString("user_id");
-         String datatype=loginMessage.getString("data_type");
+         // use reg_info object to check whether password is correct
+         String datatype="reg_info";
          JSONObject obj= getObjWithId(datatype,userId);
          if(obj.getString("password").equals(loginMessage.getString("password")))
          {

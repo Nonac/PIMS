@@ -12,15 +12,20 @@ void messageReceived(String topic, byte[] payload) {
     }
     else 
     {
-      String datatype=json.getString("daya_type");
+      
+      String datatype=json.getString("data_type");
+      
       if(datatype.equals(MessageType.REGISTER))
       {
         api.saveMessageToDB(json);
+        refreshData();
       }
       else if(datatype.equals(MessageType.LOGIN))
       {
+        
         JSONObject tmp=api.sendConfirmInfoToWeb(json);
         //convert the JSONObject to String
+        println("login");
         client.publish(MQTT_topic,tmp.toString());
       }
     }

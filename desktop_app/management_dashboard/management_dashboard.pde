@@ -24,5 +24,4 @@ void setup() {
 // we don't really use the draw function as controlP5 does the work
 void draw() {
     background(0);
-
 }
