@@ -14,16 +14,16 @@
 	{
 		"data_type": "login_info",
 		"username": "lea_tong",
-		"password": "*******",
-		"userId": "ad19014",
+		"password": "123456",
+		"user_id": "ad19014",
 		"access": false
 	},
 	
 	{
 		"data_type": "reg_info",
 		"username": "lea_tong",
-		"password": "*******",
-		"userId": "ad19014"
+		"password": "123456",
+		"user_id": "ad19014"
 	},
 
 	{
