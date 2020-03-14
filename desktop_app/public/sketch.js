@@ -13,6 +13,14 @@ function setup() {
     let e = new Easer(width / 2, height / 2, diameter, easing)
     easer.push(e)
   }
+  button = createButton('click me');
+  button.position(windowWidth/2, windowHeight/2);
+  button.size(100,100);
+  button.mousePressed(changeBG);
+}
+function changeBG() {
+  let val = random(255);
+  background(val);
 }
 
 function draw() {
