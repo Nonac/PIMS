@@ -1,4 +1,4 @@
-#PIMS Destop App
+# PIMS Destop App
 A minimal Electron application running a p5.js sketch.
 ```bash
 # Install Eletron
