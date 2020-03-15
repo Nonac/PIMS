@@ -11,7 +11,7 @@ Database db = new Database();
 
 void setup() {
     //cp5 = new ControlP5(this);
-    size(900, 700);
+    size(1920, 1080);
     // connect to the broker
     client = new MQTTClient(this);
     // connect to the broker and use a random string for clientid
