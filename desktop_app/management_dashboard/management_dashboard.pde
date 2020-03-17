@@ -19,6 +19,7 @@ void setup() {
     delay(100);
     // refresh the dashboard with the information
     //updateDashboardData();
+    //run_tests();
 }
 
 // we don't really use the draw function as controlP5 does the work

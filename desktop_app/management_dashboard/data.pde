@@ -43,7 +43,7 @@ void refreshData() {
 //get a JSONObject from disk according to datatype and userId
   JSONObject getObjWithId(String datatype , String userId)
   {
-       JSONObject res=new JSONObject();
+       JSONObject res=null;
        for(JSONObject message:db.messages)
        {
          if(message!=null&&message.getString("data_type").equals(datatype))
@@ -88,10 +88,29 @@ public class MessageData{
          // use reg_info object to check whether password is correct
          String datatype="reg_info";
          JSONObject obj= getObjWithId(datatype,userId);
-         if(obj.getString("password").equals(loginMessage.getString("password")))
+         if(obj!=null&&obj.getString("password").equals(loginMessage.getString("password")))
          {
             loginMessage.setBoolean("access",true);
         }
          return loginMessage;
         }
+   
+   //send message to web to show finance state
+   JSONObject sendFinanceInfoToWeb(JSONObject financeMessage)
+   {
+      String userId=financeMessage.getString("user_id");
+      String datatype=financeMessage.getString("data_type");
+      JSONObject obj=getObjWithId(datatype,userId);
+      
+      //The first time to check the finance state;
+      if(obj==null)
+      {
+       financeMessage.setInt("balance",0);
+       financeMessage.setString("currency","GBP");
+       return financeMessage;
+      }
+      
+      return obj;
+   
+   }
 }        

@@ -27,6 +27,10 @@ void messageReceived(String topic, byte[] payload) {
         //convert the JSONObject to String
         println("login");
         client.publish(MQTT_topic,tmp.toString());
+      }else if(datatype.equals(MessageType.FINANCE))
+      {
+          JSONObject tmp=api.sendFinanceInfoToWeb(json);
+          client.publish(MQTT_topic,tmp.toString());
       }
     }
 
