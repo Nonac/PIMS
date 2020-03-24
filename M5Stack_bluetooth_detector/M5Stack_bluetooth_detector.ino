@@ -2,7 +2,7 @@
 #include "BLEDevice.h"
 
 #define BLE_DEVICE_NAME "BLEScanner001" // BLE name of this device
-#define BLE_SCAN_DURATION 10 // duration in seconds for which a secion of scan lasts
+#define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
 
 BLEScan *pBLEScan;
 
@@ -16,9 +16,7 @@ void handleScanResult(BLEScanResults results){
   M5.Lcd.println(" devices in the vicinity:");
   for(int i=0; i<deviceCount; i++){
     BLEAdvertisedDevice BLEad = results.getDevice(i);
-    M5.Lcd.println(BLEad.toString().c_str());
-    continue;
-    M5.Lcd.println(BLEad.getServiceUUID().toString().c_str());
+    M5.Lcd.println(BLEad.getAddress().toString().c_str());
   }
 }
 
