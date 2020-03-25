@@ -18,7 +18,7 @@ const char* wifi_password = "malvinas";                      // No password for 
 
 
 // MQTT Settings
-const char* MQTT_clientname = "make_up_a_name"; // Make up a short name
+const char* MQTT_clientname = "barrier"; // Make up a short name
 const char* MQTT_sub_topic = "m5comm"; // pub/sub topics
 const char* MQTT_pub_topic = "m5comm"; // You might want to create your own
 
