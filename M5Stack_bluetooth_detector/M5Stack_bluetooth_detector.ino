@@ -1,8 +1,12 @@
 #include <M5Stack.h>
 #include "BLEDevice.h"
+#include <ArduinoJson.h>
 
 #define BLE_DEVICE_NAME "BLEScanner001" // BLE name of this device
 #define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
+
+//#define BLUETOOTH_ADDRESS_SIZE 6
+//#define TRAMSMIT_JSON_ARRAY_SIZE 8
 
 BLEScan *pBLEScan;
 
@@ -14,10 +18,14 @@ void handleScanResult(BLEScanResults results){
   M5.Lcd.print("There are ");
   M5.Lcd.print(deviceCount);
   M5.Lcd.println(" devices in the vicinity:");
+
+  DynamicJsonDocument jDoc(JSON_ARRAY_SIZE(deviceCount));
   for(int i=0; i<deviceCount; i++){
     BLEAdvertisedDevice BLEad = results.getDevice(i);
-    M5.Lcd.println(BLEad.getAddress().toString().c_str());
+    jDoc.add(BLEad.getAddress().toString().c_str());
+    //Serial.println(BLEad.getAddress().toString().c_str());
   }
+  serializeJson(jDoc, Serial);
 }
 
 void handleButtonInterrupt(){
@@ -33,6 +41,8 @@ void setup() {
   M5.Lcd.println("BLE client initialising...");
   BLEDevice::init(BLE_DEVICE_NAME);
   pBLEScan = BLEDevice::getScan();
+
+  Serial.begin(9600);
 } 
 
 
