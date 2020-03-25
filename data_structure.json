@@ -7,7 +7,7 @@
 	
 	"bluetooth_devices":
 		[{
-			"bluetooth_address": FFFFFFFFFFFF
+			"bluetooth_address": ”ff,ff,ff,ff,ff,ff"
 			"intensity": 80
 		},...,{}]
 	
@@ -26,7 +26,7 @@
 		"postcode": "BS1 5UL",
 		}
 	}*/
-	"operation_code": 001 // which stands for lifting the barrier (for example).
+	"operation_code": 'A' // which stands for lifting the barrier (for example).
 }
 
 {
