@@ -2,11 +2,14 @@
 #include "BLEDevice.h"
 #include <ArduinoJson.h>
 
+/*
+ * device specific 
+ */
 #define BLE_DEVICE_NAME "BLEScanner001" // BLE name of this device
-#define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
+#define BARRIER_ID 12345 // id of this barrier
 
-//#define BLUETOOTH_ADDRESS_SIZE 6
-//#define TRAMSMIT_JSON_ARRAY_SIZE 8
+
+#define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
 
 BLEScan *pBLEScan;
 
@@ -19,13 +22,24 @@ void handleScanResult(BLEScanResults results){
   M5.Lcd.print(deviceCount);
   M5.Lcd.println(" devices in the vicinity:");
 
-  DynamicJsonDocument jDoc(JSON_ARRAY_SIZE(deviceCount));
+  const int jsonCapacity = JSON_ARRAY_SIZE(deviceCount) + deviceCount * JSON_OBJECT_SIZE(2) // bluetooth_decives
+                          + JSON_OBJECT_SIZE(1)   // barrier_info
+                          + JSON_OBJECT_SIZE(3);  // root
+  DynamicJsonDocument jDoc(jsonCapacity);
+  
+  jDoc["data_type"] = "m5_transmit";
+  
+  JsonObject barrierInfo = jDoc.createNestedObject("barrier_info");
+  barrierInfo["barrier_id"] = BARRIER_ID;
+  
+  JsonArray bthDevices = jDoc.createNestedArray("bluetooth_devices");
   for(int i=0; i<deviceCount; i++){
     BLEAdvertisedDevice BLEad = results.getDevice(i);
-    jDoc.add(BLEad.getAddress().toString().c_str());
-    //Serial.println(BLEad.getAddress().toString().c_str());
+    JsonObject bthDeviceInfo = bthDevices.createNestedObject();
+    bthDeviceInfo["bluetooth_address"] = BLEad.getAddress().toString().c_str();
+    bthDeviceInfo["RSSI"] = BLEad.getRSSI();
   }
-  serializeJson(jDoc, Serial);
+  serializeJsonPretty(jDoc, Serial);
 }
 
 void handleButtonInterrupt(){
