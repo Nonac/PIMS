@@ -17,9 +17,10 @@ void printFromSerial(){
   int byteCount = Serial.available();
   if(byteCount <=0){return;}
   
-  char *byteBuffer { new char[byteCount + 1] {} }; 
+  byte *byteBuffer { new byte[byteCount + 1] {} }; 
   Serial.readBytes(byteBuffer, byteCount);
-  M5.Lcd.println(byteBuffer);
+  // no overloaded method for M5.Lcd.println() which takes in byte&
+  M5.Lcd.println((char *) byteBuffer); 
   delete[] byteBuffer;
 }
 

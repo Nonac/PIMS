@@ -5,6 +5,8 @@ WiFiClient wifi_client;
 #include <PubSubClient.h>
 PubSubClient ps_client( wifi_client );
 
+//#define MQTT_MAX_PACKET_SIZE 4096
+
 // Wifi settings
 char wifi_ssid[] = "LAPTOP-3MHBNCLF 4177";   
 char wifi_password[] = "malvinas";                     
@@ -18,15 +20,17 @@ const char* MQTT_pub_topic = "m5comm"; // You might want to create your own
 const char* server = "broker.mqttdashboard.com";
 const int port = 1883;
 
-void publishFromSerial11(){
+void publishFromSerial1(){
   int byteCount = Serial1.available();
   if(byteCount <=0){return;}
   
-  char *byteBuffer { new char[byteCount + 1] {} }; 
+  byte *byteBuffer { new byte[byteCount + 1] {} }; 
   Serial1.readBytes(byteBuffer, byteCount);
   if(ps_client.connected()){
-    Serial.println(byteBuffer);
-    //ps_client.publish( MQTT_pub_topic, byteBuffer );
+    //Serial.write(byteBuffer, byteCount);
+    //ps_client.subscribe(MQTT_pub_topic);
+    //ps_client.write(byteBuffer, byteCount);
+    ps_client.publish(MQTT_pub_topic, (uint8_t*) byteBuffer, byteCount);
   }else{
     Serial1.println("Can't publish message: Not connected to MQTT :( ");
   }
@@ -148,6 +152,6 @@ void loop() {
   }
   ps_client.loop();
 
-  publishFromSerial11();
+  publishFromSerial1();
 
 }
