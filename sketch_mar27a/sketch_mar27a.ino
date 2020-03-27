@@ -7,9 +7,14 @@ PubSubClient ps_client( wifi_client );
 
 //#define MQTT_MAX_PACKET_SIZE 4096
 
+#define SERIAL_DELIMITER '#'
+
 // Wifi settings
 char wifi_ssid[] = "LAPTOP-3MHBNCLF 4177";   
-char wifi_password[] = "malvinas";                     
+char wifi_password[] = "malvinas";   
+
+// Serial settings
+const int serial1_timeout {300}; // in milliseconds
 
 // MQTT Settings
 const char* MQTT_clientname = "barrier"; // Make up a short name
@@ -23,20 +28,23 @@ const int port = 1883;
 void publishFromSerial1(){
   int byteCount = Serial1.available();
   if(byteCount <=0){return;}
-  
-  byte *byteBuffer { new byte[byteCount + 1] {} }; 
-  Serial1.readBytes(byteBuffer, byteCount);
+  Serial1.find(SERIAL_DELIMITER);
+  //char *byteBuffer { new char[byteCount + 1] {} }; 
+  String serial1Read = Serial1.readStringUntil(SERIAL_DELIMITER);
   
   if(ps_client.connected()){
     //Serial.write(byteBuffer, byteCount);
     //ps_client.subscribe(MQTT_pub_topic);
     //ps_client.write(byteBuffer, byteCount);
-    Serial.println((char *)byteBuffer);
-    ps_client.publish(MQTT_pub_topic, (uint8_t*) byteBuffer, byteCount);
+    //Serial.println(byteBuffer);
+    //ps_client.publish(MQTT_pub_topic, byteBuffer);
+    Serial.println(serial1Read);
+    publishMessage(serial1Read);
   }else{
     Serial1.println("Can't publish message: Not connected to MQTT :( ");
+    Serial.println("Can't publish message: Not connected to MQTT :( ");
   }
-  delete[] byteBuffer;
+  //delete[] byteBuffer;
 }
 
 void setupWifi(){
@@ -54,6 +62,42 @@ void setupWifi(){
   }while(WiFi.status() != WL_CONNECTED);
 
   Serial1.println("wifi connected.");
+}
+
+
+// Use this function to publish a message.  It currently
+// checks for a connection, and checks for a zero length
+// message.  Note, it doens't do anything if these fail.
+//
+// Note that, it publishes to MQTT_topic value
+//
+// Also, it doesn't seem to like a concatenated String
+// to be passed in directly as an argument like:
+// publishMessage( "my text" + millis() );
+// So instead, pre-prepare a String variable, and then
+// pass that.
+void publishMessage( String message ) {
+
+  if( ps_client.connected() ) {
+
+    // Make sure the message isn't blank.
+    if( message.length() > 0 ) {
+
+      // Convert to char array
+      char msg[ message.length() ];
+      message.toCharArray( msg, message.length() );
+
+      Serial.print(">> Tx: ");
+      Serial.println( message );
+
+      // Send
+      ps_client.publish( MQTT_pub_topic, msg );
+    }
+
+  } else {
+    Serial.println("Can't publish message: Not connected to MQTT :( ");
+
+  }
 }
 
 
@@ -142,6 +186,7 @@ String generateID() {
 void setup() {
   Serial.begin(115200);
   Serial1.begin(115200);
+  //Serial1.setTimeout(serial1_timeout);
   setupWifi();
   setupMQTT();
 }
