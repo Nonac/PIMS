@@ -39,7 +39,7 @@ void handleScanResult(BLEScanResults results){
     bthDeviceInfo["bluetooth_address"] = BLEad.getAddress().toString().c_str();
     bthDeviceInfo["RSSI"] = BLEad.getRSSI();
   }
-  serializeJsonPretty(jDoc, Serial);
+  serializeJson(jDoc, Serial);
 }
 
 void handleButtonInterrupt(){
