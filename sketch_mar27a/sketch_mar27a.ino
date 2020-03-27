@@ -29,6 +29,19 @@ const char* MQTT_pub_topic = "m5comm"; // You might want to create your own
 const char* server = "broker.mqttdashboard.com";
 const int port = 1883;
 
+void publishFromSerial(){
+  int byteCount = Serial.available();
+  if(byteCount <=0){return;}
+  
+  char *byteBuffer { new char[byteCount + 1] {} }; 
+  Serial.readBytes(byteBuffer, byteCount);
+  if(ps_client.connected()){
+    ps_client.publish( MQTT_pub_topic, byteBuffer );
+  }else{
+    Serial.println("Can't publish message: Not connected to MQTT :( ");
+  }
+}
+
 void setupWifi(){
   Serial.println("Connecting to wifi.");
   WiFi.begin(wifi_ssid, wifi_password);
@@ -171,22 +184,6 @@ void loop() {
   }
   ps_client.loop();
 
-    // This is an example of using our timer class to
-  // publish a message every 2000 milliseconds, as
-  // set when we initalised the class above.
-  if( publishing_timer.isReady() ) {
-
-      // Prepare a string to send.
-      // Here we include millis() so that we can
-      // tell when new messages are arrive in hiveMQ
-      String new_string = "hello?";
-      new_string += millis();
-      publishMessage( new_string );
-
-      // Remember to reset your timer when you have
-      // used it. This starts the clock again.
-      publishing_timer.reset();
-  }
-
+  publishFromSerial();
 
 }
