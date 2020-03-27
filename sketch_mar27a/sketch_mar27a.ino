@@ -38,12 +38,20 @@ void publishFromSerial(){
 
 void setupWifi(){
   Serial.println("Connecting to wifi.");
-  WiFi.begin(wifi_ssid, wifi_password);
-  while(WiFi.status() != WL_CONNECTED){
+  do{
+    WiFi.begin(wifi_ssid, wifi_password);
     Serial.println("unable to connect to wifi. Still trying...");
-    delay(500);
-  }
-  Serial.println("wifi connection done");
+    const int waitSectionCount = 10;
+    for(int i=0; i<waitSectionCount; i++){
+      if(WiFi.status() == WL_CONNECTED){
+        break;
+      }
+      Serial.println("unable to connect to wifi. Still trying...");
+    }   
+  }while(WiFi.status() != WL_CONNECTED);
+
+  
+  Serial.println("wifi connected.");
 }
 
 
