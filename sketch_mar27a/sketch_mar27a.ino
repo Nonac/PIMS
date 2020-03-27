@@ -37,17 +37,16 @@ void setupWifi(){
   Serial1.println("Connecting to wifi.");
   do{
     WiFi.begin(wifi_ssid, wifi_password);
-    Serial1.println("unable to connect to wifi. Still trying...");
     const int waitSectionCount = 10;
     for(int i=0; i<waitSectionCount; i++){
       if(WiFi.status() == WL_CONNECTED){
         break;
       }
       Serial1.println("unable to connect to wifi. Still trying...");
+      delay(500);
     }   
   }while(WiFi.status() != WL_CONNECTED);
 
-  
   Serial1.println("wifi connected.");
 }
 
