@@ -5,7 +5,11 @@ WiFiClient wifi_client;
 #include <PubSubClient.h>
 PubSubClient ps_client( wifi_client );
 
-//#define MQTT_MAX_PACKET_SIZE 4096
+//Default: 128bytes, which is too small.
+//change the header file there: C:\Users\?\Documents\Arduino\libraries\PubSubClient\src
+//#define MQTT_MAX_PACKET_SIZE 8192
+
+
 
 #define SERIAL_DELIMITER '#'
 
@@ -84,14 +88,15 @@ void publishMessage( String message ) {
     if( message.length() > 0 ) {
 
       // Convert to char array
-      char msg[ message.length() ];
+      char *msg {new char[message.length()] {}};
       message.toCharArray( msg, message.length() );
 
       Serial.print(">> Tx: ");
-      Serial.println( message );
+      Serial.println( msg );
 
       // Send
-      ps_client.publish( MQTT_pub_topic, msg );
+      ps_client.publish( MQTT_pub_topic, msg);
+      delete[] msg;
     }
 
   } else {
