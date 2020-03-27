@@ -44,13 +44,34 @@ void handleScanResult(BLEScanResults results){
   barrierInfo["barrier_id"] = BARRIER_ID;
   
   JsonArray bthDevices = jDoc.createNestedArray("bluetooth_devices");
+  // Stores references to dynamically allocated c-style strings in the following loop
+  // so we can delete them later.
+  // (There is a scope issue if we don't do it like this.)
+  char **addresses {new char*[deviceCount] {}}; 
   for(int i=0; i<deviceCount; i++){
     BLEAdvertisedDevice BLEad = results.getDevice(i);
+    std::string addressStr = BLEad.getAddress().toString();
+    char *addressArr {new char[addressStr.size() + 1] {}};
+    addressStr.copy(addressArr, addressStr.size() + 1);
+    addresses[i] = addressArr;
+
     JsonObject bthDeviceInfo = bthDevices.createNestedObject();
-    bthDeviceInfo["bluetooth_address"] = BLEad.getAddress().toString().c_str();
-    bthDeviceInfo["RSSI"] = BLEad.getRSSI();
+    if(bthDeviceInfo == NULL){
+      M5.Lcd.println("allocation of a JsonObject failed.");
+    }
+    bthDeviceInfo["bluetooth_address"] = addressArr;
+    Serial.printf("addr: %s\n", addressArr);
+    Serial.printf("RSSI: %d\n", BLEad.getRSSI());
+    bthDeviceInfo["RSSI"] = BLEad.getRSSI(); // returns a int
   }
-  serializeJson(jDoc, Serial);
+
+  serializeJsonPretty(jDoc, Serial);
+  Serial.flush();
+
+  for(int i=0; i<deviceCount; i++){
+    delete[] addresses[i];
+  }
+  delete[] addresses;
 }
 
 void handleButtonInterrupt(){
@@ -67,7 +88,7 @@ void setup() {
   BLEDevice::init(BLE_DEVICE_NAME);
   pBLEScan = BLEDevice::getScan();
 
-  Serial.begin(9600);
+  Serial.begin(115200);
 } 
 
 

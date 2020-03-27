@@ -26,10 +26,12 @@ void publishFromSerial1(){
   
   byte *byteBuffer { new byte[byteCount + 1] {} }; 
   Serial1.readBytes(byteBuffer, byteCount);
+  
   if(ps_client.connected()){
     //Serial.write(byteBuffer, byteCount);
     //ps_client.subscribe(MQTT_pub_topic);
     //ps_client.write(byteBuffer, byteCount);
+    Serial.println((char *)byteBuffer);
     ps_client.publish(MQTT_pub_topic, (uint8_t*) byteBuffer, byteCount);
   }else{
     Serial1.println("Can't publish message: Not connected to MQTT :( ");
@@ -138,8 +140,8 @@ String generateID() {
 }
 
 void setup() {
-  Serial.begin(9600);
-  Serial1.begin(9600);
+  Serial.begin(115200);
+  Serial1.begin(115200);
   setupWifi();
   setupMQTT();
 }
