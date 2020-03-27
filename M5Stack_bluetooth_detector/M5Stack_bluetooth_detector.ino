@@ -13,6 +13,16 @@
 
 BLEScan *pBLEScan;
 
+void printFromSerial(){
+  int byteCount = Serial.available();
+  if(byteCount <=0){return;}
+  
+  char *byteBuffer { new char[byteCount + 1] {} }; 
+  Serial.readBytes(byteBuffer, byteCount);
+  M5.Lcd.println(byteBuffer);
+  delete[] byteBuffer;
+}
+
 void handleScanResult(BLEScanResults results){
   M5.Lcd.clear(BLACK);
   M5.Lcd.setCursor(0, 0);
@@ -64,6 +74,5 @@ void setup() {
 void loop() {
   handleScanResult(pBLEScan->start(BLE_SCAN_DURATION));
   handleButtonInterrupt();
-  delay(1000);
-
+  printFromSerial();
 } 

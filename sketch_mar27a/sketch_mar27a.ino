@@ -5,15 +5,8 @@ WiFiClient wifi_client;
 #include <PubSubClient.h>
 PubSubClient ps_client( wifi_client );
 
-// Extra, created by SEGP team
-#include "Timer.h"
-// Instance of a Timer class, which allows us
-// a basic task scheduling of some code.  See
-// it used in Loop().
-// See Timer.h for more details.
-// Argument = millisecond period to schedule
-// task.  Here, 2 seconds.
-Timer publishing_timer(2000);
+// redirect serial output from USB to M5Stack
+#define Serial Serial1
 
 
 // Wifi settings
@@ -40,6 +33,7 @@ void publishFromSerial(){
   }else{
     Serial.println("Can't publish message: Not connected to MQTT :( ");
   }
+  delete[] byteBuffer;
 }
 
 void setupWifi(){
@@ -50,41 +44,6 @@ void setupWifi(){
     delay(500);
   }
   Serial.println("wifi connection done");
-}
-
-// Use this function to publish a message.  It currently
-// checks for a connection, and checks for a zero length
-// message.  Note, it doens't do anything if these fail.
-//
-// Note that, it publishes to MQTT_topic value
-//
-// Also, it doesn't seem to like a concatenated String
-// to be passed in directly as an argument like:
-// publishMessage( "my text" + millis() );
-// So instead, pre-prepare a String variable, and then
-// pass that.
-void publishMessage( String message ) {
-
-  if( ps_client.connected() ) {
-
-    // Make sure the message isn't blank.
-    if( message.length() > 0 ) {
-
-      // Convert to char array
-      char msg[ message.length() ];
-      message.toCharArray( msg, message.length() );
-
-      Serial.print(">> Tx: ");
-      Serial.println( message );
-
-      // Send
-      ps_client.publish( MQTT_pub_topic, msg );
-    }
-
-  } else {
-    Serial.println("Can't publish message: Not connected to MQTT :( ");
-
-  }
 }
 
 
