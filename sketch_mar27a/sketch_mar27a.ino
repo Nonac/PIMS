@@ -5,10 +5,6 @@ WiFiClient wifi_client;
 #include <PubSubClient.h>
 PubSubClient ps_client( wifi_client );
 
-// redirect serial output from USB to M5Stack
-#define Serial Serial1
-
-
 // Wifi settings
 char wifi_ssid[] = "LAPTOP-3MHBNCLF 4177";   
 char wifi_password[] = "malvinas";                     
@@ -22,36 +18,37 @@ const char* MQTT_pub_topic = "m5comm"; // You might want to create your own
 const char* server = "broker.mqttdashboard.com";
 const int port = 1883;
 
-void publishFromSerial(){
-  int byteCount = Serial.available();
+void publishFromSerial11(){
+  int byteCount = Serial1.available();
   if(byteCount <=0){return;}
   
   char *byteBuffer { new char[byteCount + 1] {} }; 
-  Serial.readBytes(byteBuffer, byteCount);
+  Serial1.readBytes(byteBuffer, byteCount);
   if(ps_client.connected()){
-    ps_client.publish( MQTT_pub_topic, byteBuffer );
+    Serial.println(byteBuffer);
+    //ps_client.publish( MQTT_pub_topic, byteBuffer );
   }else{
-    Serial.println("Can't publish message: Not connected to MQTT :( ");
+    Serial1.println("Can't publish message: Not connected to MQTT :( ");
   }
   delete[] byteBuffer;
 }
 
 void setupWifi(){
-  Serial.println("Connecting to wifi.");
+  Serial1.println("Connecting to wifi.");
   do{
     WiFi.begin(wifi_ssid, wifi_password);
-    Serial.println("unable to connect to wifi. Still trying...");
+    Serial1.println("unable to connect to wifi. Still trying...");
     const int waitSectionCount = 10;
     for(int i=0; i<waitSectionCount; i++){
       if(WiFi.status() == WL_CONNECTED){
         break;
       }
-      Serial.println("unable to connect to wifi. Still trying...");
+      Serial1.println("unable to connect to wifi. Still trying...");
     }   
   }while(WiFi.status() != WL_CONNECTED);
 
   
-  Serial.println("wifi connected.");
+  Serial1.println("wifi connected.");
 }
 
 
@@ -66,22 +63,22 @@ void setupWifi(){
 
 void callback(char* topic, byte* payload, unsigned int length) {
 
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
+  Serial1.print("Message arrived [");
+  Serial1.print(topic);
+  Serial1.print("] ");
 
   String in_str = "";
 
   // Copy chars to a String for convenience.
-  // Also prints to USB serial for debugging
+  // Also prints to USB Serial1 for debugging
   for (int i=0;i<length;i++) {
     in_str += (char)payload[i];
-    Serial.print((char)payload[i]);
+    Serial1.print((char)payload[i]);
   }
-  Serial.println();
+  Serial1.println();
 
-  Serial.print(" << Rx: " );
-  Serial.println( in_str );
+  Serial1.print(" << Rx: " );
+  Serial1.println( in_str );
 }
 
 void setupMQTT() {
@@ -94,7 +91,7 @@ void reconnect() {
   // Loop until we're reconnected
   while (!ps_client.connected()) {
 
-    Serial.print("Attempting MQTT connection...");
+    Serial1.print("Attempting MQTT connection...");
 
     // Attempt to connect
     // Sometimes a connection with HiveMQ is refused
@@ -103,30 +100,30 @@ void reconnect() {
     // every time we need to reconnect.
     String new_id = generateID();
 
-    Serial.print("connecting with ID ");
-    Serial.println( new_id );
+    Serial1.print("connecting with ID ");
+    Serial1.println( new_id );
 
     char id_array[ (int)new_id.length() ];
     new_id.toCharArray(id_array, sizeof( id_array ) );
 
     if (ps_client.connect( id_array ) ) {
-      Serial.println("connected");
+      Serial1.println("connected");
 
       // Once connected, publish an announcement...
       ps_client.publish( MQTT_pub_topic, "reconnected");
       // ... and resubscribe
       ps_client.subscribe( MQTT_sub_topic );
     } else {
-      Serial.println(" - Coudn't connect to HiveMQ :(");
-      Serial.println("   Trying again.");
-      Serial.print("failed, rc=");
-      Serial.print(ps_client.state());
-      Serial.println(" try again in 5 seconds");
+      Serial1.println(" - Coudn't connect to HiveMQ :(");
+      Serial1.println("   Trying again.");
+      Serial1.print("failed, rc=");
+      Serial1.print(ps_client.state());
+      Serial1.println(" try again in 5 seconds");
       // Wait 5 seconds before retrying
       delay(5000);
     }
   }
-  Serial.println(" - Success!  Connected to HiveMQ\n\n");
+  Serial1.println(" - Success!  Connected to HiveMQ\n\n");
 }
 
 String generateID() {
@@ -139,6 +136,7 @@ String generateID() {
 
 void setup() {
   Serial.begin(9600);
+  Serial1.begin(9600);
   setupWifi();
   setupMQTT();
 }
@@ -151,6 +149,6 @@ void loop() {
   }
   ps_client.loop();
 
-  publishFromSerial();
+  publishFromSerial11();
 
 }
