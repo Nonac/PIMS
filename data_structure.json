@@ -2,7 +2,7 @@
 
 	"data_type": "m5_transmit",   //sent from m5
 	"barrier_info":{
-		"barrier_id": 12345, // everything else is optional. Let me know if you need more
+		"barrier_id": 12345, 
 	},
 	
 	"bluetooth_devices":
@@ -17,6 +17,10 @@
 
 {
 	"data_type": "m5_receive",   //send to m5
+	"op_code": 'A' // which stands for lifting the barrier (for example).
+}
+
+//stray:
 	/*"parking":{ 
 		"barrier_type": "out",
 		"time_in": "2020-03-20T17:53:30",
@@ -27,8 +31,6 @@
 		"postcode": "BS1 5UL",
 		}
 	}*/
-	"operation_code": 'A' // which stands for lifting the barrier (for example).
-}
 
 {
 
