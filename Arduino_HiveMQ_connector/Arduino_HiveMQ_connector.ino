@@ -105,6 +105,12 @@ void publishMessage( String message ) {
   }
 }
 
+void printCallbackToSerial1(const char* payload){
+  Serial1.print(SERIAL_DELIMITER);
+  Serial1.print(payload);
+  Serial1.flush();
+  Serial1.print(SERIAL_DELIMITER);
+}
 
 // This is where we pick up messages from the MQTT broker.
 // This function is called automatically when a message is
@@ -117,22 +123,11 @@ void publishMessage( String message ) {
 
 void callback(char* topic, byte* payload, unsigned int length) {
 
-  Serial1.print("Message arrived [");
-  Serial1.print(topic);
-  Serial1.print("] ");
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.println("] ");
 
-  String in_str = "";
-
-  // Copy chars to a String for convenience.
-  // Also prints to USB Serial1 for debugging
-  for (int i=0;i<length;i++) {
-    in_str += (char)payload[i];
-    Serial1.print((char)payload[i]);
-  }
-  Serial1.println();
-
-  Serial1.print(" << Rx: " );
-  Serial1.println( in_str );
+  printCallbackToSerial1((const char*)payload);
 }
 
 void setupMQTT() {
