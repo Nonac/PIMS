@@ -21,8 +21,8 @@ const int receivedJDocCapacity = JSON_OBJECT_SIZE(2) // root
 void handleSerialInput(){
   if(!Serial.available()){return;}
   
-  Serial1.find(SERIAL_DELIMITER);
-  String inStr = Serial1.readStringUntil(SERIAL_DELIMITER);
+  Serial.find(SERIAL_DELIMITER);
+  String inStr = Serial.readStringUntil(SERIAL_DELIMITER);
   // cast to const char* so the Json deserialiser copies the contents of the string
   const char* inCStr = (const char *) inStr.c_str();
 
@@ -35,16 +35,29 @@ void handleSerialInput(){
     return;
   }
 
-   
+  JsonVariant value = jDoc["data_type"];
+  if(value.isNull()){return;}
   
+  String dataType = value.as<String>();
+  if(!dataType.equals("m5_receive")){return;}
+  M5.Lcd.println(dataType.c_str());
   
+  value = jDoc["op_code"];
+  if(value.isNull()){return;}
+
+  char opCode = value.as<char>();
+  handleOpCode(opCode);
+}
+
+void handleOpCode(char opcode){
+  M5.Lcd.println(opcode);
 }
 
 void handleJsonDeserializationErr(DeserializationError err){
   if(err == DeserializationError::NoMemory){
     M5.Lcd.println("receival err: json doc too small for deserialisation");
   }else{
-    M5.Lcd.println("receival err:");
+    M5.Lcd.print("receival err: ");
     M5.Lcd.println(err.c_str());
   }
 }
@@ -63,8 +76,6 @@ const JsonDocument& getInputJsonDocFilter(){
 }
 
 void handleScanResult(BLEScanResults results){
-  M5.Lcd.clear(BLACK);
-  M5.Lcd.setCursor(0, 0);
   M5.Lcd.println("scan finished");
   int deviceCount = results.getCount();
   M5.Lcd.print("There are ");
@@ -106,7 +117,7 @@ void handleScanResult(BLEScanResults results){
 
   Serial.print(SERIAL_DELIMITER);
   serializeJson(jDoc, Serial);
-  Serial.flush();
+  //Serial.flush();
   Serial.print(SERIAL_DELIMITER);
 
   for(int i=0; i<deviceCount; i++){
@@ -122,6 +133,13 @@ void handleButtonInterrupt(){
   }
 }
 
+void clearScreen(){
+  if( M5.Lcd.getCursorY() > M5.Lcd.height() ) {
+    M5.Lcd.clear(BLACK);
+    M5.Lcd.setCursor(0, 0);
+  }
+}
+
 // Arduino setup
 void setup() {
   M5.begin();
@@ -130,12 +148,15 @@ void setup() {
   pBLEScan = BLEDevice::getScan();
 
   Serial.begin(115200);
+  Serial.setTimeout(300);
 } 
 
 
 // Arduino main loop
 void loop() {
+  clearScreen();
+  handleSerialInput(); 
+
   handleScanResult(pBLEScan->start(BLE_SCAN_DURATION));
   handleButtonInterrupt();
-  handleSerialInput();
 } 

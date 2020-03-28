@@ -22,8 +22,8 @@ const int serial1_timeout {300}; // in milliseconds
 
 // MQTT Settings
 const char* MQTT_clientname = "barrier"; // Make up a short name
-const char* MQTT_sub_topic = "m5comm"; // pub/sub topics
-const char* MQTT_pub_topic = "m5comm"; // You might want to create your own
+const char* MQTT_sub_topic = "m5_receive"; // pub/sub topics
+const char* MQTT_pub_topic = "m5_transmit"; // You might want to create your own
 
 // Please leave this alone - to connect to HiveMQ
 const char* server = "broker.mqttdashboard.com";
@@ -108,7 +108,7 @@ void publishMessage( String message ) {
 void printCallbackToSerial1(const char* payload){
   Serial1.print(SERIAL_DELIMITER);
   Serial1.print(payload);
-  Serial1.flush();
+  //Serial1.flush();
   Serial1.print(SERIAL_DELIMITER);
 }
 
