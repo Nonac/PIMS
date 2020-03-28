@@ -14,8 +14,52 @@
 
 BLEScan *pBLEScan;
 
-void printFromSerial(){
+// RECALCULATE if the format of json file changes
+const int receivedJDocCapacity = JSON_OBJECT_SIZE(2) // root
+                          + 63;     // string copy
+
+void handleSerialInput(){
+  if(!Serial.available()){return;}
   
+  Serial1.find(SERIAL_DELIMITER);
+  String inStr = Serial1.readStringUntil(SERIAL_DELIMITER);
+  // cast to const char* so the Json deserialiser copies the contents of the string
+  const char* inCStr = (const char *) inStr.c_str();
+
+
+  DynamicJsonDocument jDoc(receivedJDocCapacity);
+  DeserializationError dErr = 
+    deserializeJson(jDoc, inCStr, DeserializationOption::Filter(getInputJsonDocFilter()));
+  if(dErr != DeserializationError::Ok){
+    handleJsonDeserializationErr(dErr);
+    return;
+  }
+
+   
+  
+  
+}
+
+void handleJsonDeserializationErr(DeserializationError err){
+  if(err == DeserializationError::NoMemory){
+    M5.Lcd.println("receival err: json doc too small for deserialisation");
+  }else{
+    M5.Lcd.println("receival err:");
+    M5.Lcd.println(err.c_str());
+  }
+}
+
+// returns a ancillary json document which serves as a filter, 
+// which filters out irrelevant fields 
+const JsonDocument& getInputJsonDocFilter(){
+  static StaticJsonDocument<receivedJDocCapacity> filter;
+  static bool initialised = false;
+  if(!initialised){
+    filter["data_type"] = true;
+    filter["op_code"] = true;
+    initialised = true;
+  }
+  return filter;
 }
 
 void handleScanResult(BLEScanResults results){
@@ -93,5 +137,5 @@ void setup() {
 void loop() {
   handleScanResult(pBLEScan->start(BLE_SCAN_DURATION));
   handleButtonInterrupt();
-  printFromSerial();
+  handleSerialInput();
 } 
