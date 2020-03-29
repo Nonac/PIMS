@@ -20,6 +20,27 @@ BLEScan *pBLEScan;
 const int receivedJDocCapacity = JSON_OBJECT_SIZE(2) // root
                           + 63;     // string copy
 
+
+void startInputHandler(){
+  xTaskCreatePinnedToCore(
+                    listenToSerial,     /* Function to implement the task */
+                    "listenToSerial",   /* Name of the task */
+                    4096,      /* Stack size in words */
+                    NULL,      /* Task input parameter */
+                    1,         /* Priority of the task */
+                    NULL,      /* Task handle. */
+                    0);        /* Core where the task should run */
+}
+
+// Thread entry
+// Continuously checks serial input.
+void listenToSerial(void *pvParameters){
+  for(;;){
+    handleSerialInput();
+    delay(SERIAL_TIMEOUT);
+  }
+}
+
 void handleSerialInput(){
   if(!Serial.available()){return;}
   int8_t firstByte = Serial.peek();
@@ -179,13 +200,14 @@ void setup() {
 
   Serial.begin(115200);
   Serial.setTimeout(SERIAL_TIMEOUT);
+  startInputHandler();
 } 
 
 
 // Arduino main loop
 void loop() {
   clearScreen();
-  handleSerialInput(); 
+  //handleSerialInput(); 
 
   handleScanResult(pBLEScan->start(BLE_SCAN_DURATION));
   handleButtonInterrupt();
