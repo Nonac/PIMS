@@ -11,7 +11,7 @@ PubSubClient ps_client( wifi_client );
 
 
 
-#define SERIAL_DELIMITER '#'
+#define SERIAL_JSON_DELIMITER '#'
 
 // Wifi settings
 char wifi_ssid[] = "LAPTOP-3MHBNCLF 4177";   
@@ -32,9 +32,9 @@ const int port = 1883;
 void publishFromSerial1(){
   int byteCount = Serial1.available();
   if(byteCount <=0){return;}
-  Serial1.find(SERIAL_DELIMITER);
+  Serial1.find(SERIAL_JSON_DELIMITER);
   //char *byteBuffer { new char[byteCount + 1] {} }; 
-  String serial1Read = Serial1.readStringUntil(SERIAL_DELIMITER);
+  String serial1Read = Serial1.readStringUntil(SERIAL_JSON_DELIMITER);
   
   if(ps_client.connected()){
     //Serial.write(byteBuffer, byteCount);
@@ -106,10 +106,10 @@ void publishMessage( String message ) {
 }
 
 void printCallbackToSerial1(const char* payload){
-  Serial1.print(SERIAL_DELIMITER);
+  Serial1.print(SERIAL_JSON_DELIMITER);
   Serial1.print(payload);
   //Serial1.flush();
-  Serial1.print(SERIAL_DELIMITER);
+  Serial1.print(SERIAL_JSON_DELIMITER);
 }
 
 // This is where we pick up messages from the MQTT broker.

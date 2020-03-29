@@ -8,7 +8,9 @@
 #define BLE_DEVICE_NAME "BLEScanner001" // BLE name of this device
 #define BARRIER_ID 12345 // id of this barrier
 
-#define SERIAL_DELIMITER '#'
+#define SERIAL_JSON_DELIMITER '#' // signify a json file is being sent
+#define SERIAL_TIMEOUT 300
+#define SERIAL_NORMAL_INPUT_SIZE 50
 
 #define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
 
@@ -20,9 +22,35 @@ const int receivedJDocCapacity = JSON_OBJECT_SIZE(2) // root
 
 void handleSerialInput(){
   if(!Serial.available()){return;}
-  
-  Serial.find(SERIAL_DELIMITER);
-  String inStr = Serial.readStringUntil(SERIAL_DELIMITER);
+  int8_t firstByte = Serial.peek();
+  switch(firstByte){
+    case SERIAL_JSON_DELIMITER:
+      handleJsonSerialInput();
+      break;
+    default:
+      handleNormalSerialInput();
+  }
+}
+
+void handleNormalSerialInput(){
+  static char byteBuffer[SERIAL_NORMAL_INPUT_SIZE + 1] {};
+  int index = 0;
+  int8_t incomingByte;
+  while((incomingByte = Serial.read()) != -1){
+    if(index == SERIAL_NORMAL_INPUT_SIZE - 1){
+      M5.Lcd.print(byteBuffer);
+      index = 0;
+    }
+    byteBuffer[index++] = incomingByte;
+  }
+  byteBuffer[index] = '\0';
+  index = 0;
+  M5.Lcd.println(byteBuffer);
+}
+
+void handleJsonSerialInput(){
+  Serial.read(); // discard the left delimiter
+  String inStr = Serial.readStringUntil(SERIAL_JSON_DELIMITER);
   // cast to const char* so the Json deserialiser copies the contents of the string
   const char* inCStr = (const char *) inStr.c_str();
 
@@ -48,6 +76,8 @@ void handleSerialInput(){
   char opCode = value.as<char>();
   handleOpCode(opCode);
 }
+
+
 
 void handleOpCode(char opcode){
   M5.Lcd.println(opcode);
@@ -115,10 +145,10 @@ void handleScanResult(BLEScanResults results){
     bthDeviceInfo["RSSI"] = BLEad.getRSSI(); // returns a int
   }
 
-  Serial.print(SERIAL_DELIMITER);
+  Serial.print(SERIAL_JSON_DELIMITER);
   serializeJson(jDoc, Serial);
   //Serial.flush();
-  Serial.print(SERIAL_DELIMITER);
+  Serial.print(SERIAL_JSON_DELIMITER);
 
   for(int i=0; i<deviceCount; i++){
     delete[] addresses[i];
@@ -148,7 +178,7 @@ void setup() {
   pBLEScan = BLEDevice::getScan();
 
   Serial.begin(115200);
-  Serial.setTimeout(300);
+  Serial.setTimeout(SERIAL_TIMEOUT);
 } 
 
 
