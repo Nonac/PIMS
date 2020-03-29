@@ -2,6 +2,9 @@
 #include "BLEDevice.h"
 #include <ArduinoJson.h>
 
+#include "Barrier_simulator.h"
+BarrierSimulator& barrierSimulator = BarrierSimulator::getBarrierSimulator();
+
 /*
  * device specific 
  */
@@ -94,14 +97,14 @@ void handleJsonSerialInput(){
   value = jDoc["op_code"];
   if(value.isNull()){return;}
 
-  char opCode = value.as<char>();
+  const char* opCode = value.as<const char*>();
   handleOpCode(opCode);
 }
 
 
 
-void handleOpCode(char opcode){
-  M5.Lcd.println(opcode);
+void handleOpCode(const char* opCode){
+  barrierSimulator.handleOpCode(opCode);
 }
 
 void handleJsonDeserializationErr(DeserializationError err){
