@@ -2,33 +2,42 @@
 #include "BLEDevice.h"
 #include <ArduinoJson.h>
 
+/* simple barrier simulator for m5Stack */
 #include "Barrier_simulator.h"
 BarrierSimulator& barrierSimulator = BarrierSimulator::getBarrierSimulator();
 
-/*
- * device specific 
- */
-#define BLE_DEVICE_NAME "BLEScanner001" // BLE name of this device
+/* device specific identifications */
+#define BLE_DEVICE_NAME "barrier001" // BLE name of this device
 #define BARRIER_ID 12345 // id of this barrier
 
+/* BLE config */
+#define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
+BLEScan *pBLEScan;
+
+/* serial communication config */
 #define SERIAL_JSON_DELIMITER '#' // signify a json file is being sent
 #define SERIAL_TIMEOUT 300
 #define SERIAL_NORMAL_INPUT_SIZE 50
 
-#define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
-
-BLEScan *pBLEScan;
-
-// messages only show up on the screen in debug mode
+/*  state of M5Stack
+ *   
+ *  DEBUG: show log and error messages
+ *  BARRIER: hand over the control of the screen to BarrierSimulator class 
+ */
 enum M5State {DEBUG, BARRIER} m5State = DEBUG;
 #define PRINT_WHEN_DEBUG(p) if(m5State == M5State::DEBUG){M5.Lcd.print(p);}
 #define PRINTLN_WHEN_DEBUG(p) if(m5State == M5State::DEBUG){M5.Lcd.println(p);}
 
-// RECALCULATE if the format of json file changes
-const int receivedJDocCapacity = JSON_OBJECT_SIZE(2) // root
-                          + 63;     // string copy
+/* Json config */
+// incoming json file size. (JsonDocument has a fixed size)
+// RECALCULATE if the format of json file changes.
+const int receivedJDocCapacity { 
+                            JSON_OBJECT_SIZE(2) // root
+                          + 63 };     // string copy
 
 
+/* multi-tasking entries */
+// Continuously checks serial input.
 void startInputHandler(){
   xTaskCreatePinnedToCore(
                     listenToSerial,     /* Function to implement the task */
@@ -40,8 +49,6 @@ void startInputHandler(){
                     0);        /* Core where the task should run */
 }
 
-// Thread entry
-// Continuously checks serial input.
 void listenToSerial(void *pvParameters){
   for(;;){
     handleSerialInput();
@@ -49,7 +56,7 @@ void listenToSerial(void *pvParameters){
   }
 }
 
-
+// Continuously checks and handles button interrupts
 void startInterruptHandler(){
    xTaskCreatePinnedToCore(
                     handleButtonInterrupts,     /* Function to implement the task */
@@ -68,6 +75,15 @@ void handleButtonInterrupts(void *pvParameters){
   }
 }
 
+
+
+
+
+/* support functions */
+
+
+/* Group: serial input handler */
+// handles serial input when available
 void handleSerialInput(){
   if(!Serial.available()){return;}
   int8_t firstByte = Serial.peek();
@@ -80,6 +96,7 @@ void handleSerialInput(){
   }
 }
 
+// handles serial input that is not enclosed in SERIAL_JSON_DELIMITER
 void handleNormalSerialInput(){
   static char byteBuffer[SERIAL_NORMAL_INPUT_SIZE + 1] {};
   int index = 0;
@@ -92,51 +109,31 @@ void handleNormalSerialInput(){
     byteBuffer[index++] = incomingByte;
   }
   byteBuffer[index] = '\0';
-  index = 0;
   PRINTLN_WHEN_DEBUG(byteBuffer);
 }
 
+// process Json string from serial
 void handleJsonSerialInput(){
   Serial.read(); // discard the left delimiter
   String inStr = Serial.readStringUntil(SERIAL_JSON_DELIMITER);
   // cast to const char* so the Json deserialiser copies the contents of the string
   const char* inCStr = (const char *) inStr.c_str();
 
-
   DynamicJsonDocument jDoc(receivedJDocCapacity);
+  buildIncomingJdoc(jDoc, inCStr);
+
+  const char* opCode = getOpCode(jDoc);
+  if(opCode != NULL){
+    handleOpCode(opCode);
+  }
+}
+
+// deserialise json string into JsonDocument
+void buildIncomingJdoc(JsonDocument& jDoc, const char* jsonString){
   DeserializationError dErr = 
-    deserializeJson(jDoc, inCStr, DeserializationOption::Filter(getInputJsonDocFilter()));
+    deserializeJson(jDoc, jsonString, DeserializationOption::Filter(getInputJsonDocFilter()));
   if(dErr != DeserializationError::Ok){
     handleJsonDeserializationErr(dErr);
-    return;
-  }
-
-  JsonVariant value = jDoc["data_type"];
-  if(value.isNull()){return;}
-  
-  String dataType = value.as<String>();
-  if(!dataType.equals("m5_receive")){return;}
-  PRINTLN_WHEN_DEBUG(dataType.c_str());
-  
-  value = jDoc["op_code"];
-  if(value.isNull()){return;}
-
-  const char* opCode = value.as<const char*>();
-  handleOpCode(opCode);
-}
-
-
-
-void handleOpCode(const char* opCode){
-  barrierSimulator.handleOpCode(opCode);
-}
-
-void handleJsonDeserializationErr(DeserializationError err){
-  if(err == DeserializationError::NoMemory){
-    PRINTLN_WHEN_DEBUG("receival err: json doc too small for deserialisation");
-  }else{
-    PRINT_WHEN_DEBUG("receival err: ");
-    PRINTLN_WHEN_DEBUG(err.c_str());
   }
 }
 
@@ -153,6 +150,43 @@ const JsonDocument& getInputJsonDocFilter(){
   return filter;
 }
 
+// handles error occurred during deserialisation of incoming json string
+void handleJsonDeserializationErr(const DeserializationError& err){
+  if(err == DeserializationError::NoMemory){
+    PRINTLN_WHEN_DEBUG("receival err: json doc too small for deserialisation");
+  }else{
+    PRINT_WHEN_DEBUG("receival err: ");
+    PRINTLN_WHEN_DEBUG(err.c_str());
+  }
+}
+
+// find operation code from the JsonDocument
+// returns: the operation code if found.
+//          NULL otherwise.
+const char* getOpCode(JsonDocument& jDoc){
+  JsonVariant value = jDoc["data_type"];
+  if(value.isNull()){return NULL;}
+  
+  String dataType = value.as<String>();
+  if(!dataType.equals("m5_receive")){return NULL;}
+  PRINTLN_WHEN_DEBUG(dataType.c_str());
+  
+  value = jDoc["op_code"];
+  if(value.isNull()){return NULL;}
+
+  return value.as<const char*>();
+}
+
+// process the opCode and then pass it to BarrierSimulator class
+// although there is nothing being done here right now
+inline void handleOpCode(const char* opCode){
+  barrierSimulator.handleOpCode(opCode);
+}
+
+
+
+
+/* Group: BLE detector */
 void handleScanResult(BLEScanResults results){
   PRINTLN_WHEN_DEBUG("scan finished");
   int deviceCount = results.getCount();
@@ -168,6 +202,23 @@ void handleScanResult(BLEScanResults results){
                           + 128;                  // fixed string duplication
   DynamicJsonDocument jDoc(jsonCapacity);
   
+  char **addresses = buildOutgoingJDoc(jDoc, results, deviceCount);
+  Serial.print(SERIAL_JSON_DELIMITER);
+  serializeJson(jDoc, Serial);
+  //Serial.flush();
+  Serial.print(SERIAL_JSON_DELIMITER);
+
+  deleteAddresses(addresses, deviceCount);
+
+
+}
+
+// build outgoing JsonDocument from BLEScanResults
+// deviceCount : got from results.getCount().
+// returns: pointer to char[deviceCount][?], 
+//          which stores address strings 
+// NOTE: call deleteAddresses() on this pointer with deviceCount to free memory
+char **buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int deviceCount){
   jDoc["data_type"] = "m5_transmit";
   
   JsonObject barrierInfo = jDoc.createNestedObject("barrier_info");
@@ -192,17 +243,19 @@ void handleScanResult(BLEScanResults results){
     bthDeviceInfo["bluetooth_address"] = addressArr;
     bthDeviceInfo["RSSI"] = BLEad.getRSSI(); // returns a int
   }
+  return addresses;
+}
 
-  Serial.print(SERIAL_JSON_DELIMITER);
-  serializeJson(jDoc, Serial);
-  //Serial.flush();
-  Serial.print(SERIAL_JSON_DELIMITER);
-
+void deleteAddresses(char **addresses, int deviceCount){
   for(int i=0; i<deviceCount; i++){
     delete[] addresses[i];
   }
   delete[] addresses;
 }
+
+
+
+/* Group: M5Stack control */
 
 void handleButtonInterrupt(){
   if(m5State == M5State::DEBUG){
