@@ -19,6 +19,11 @@ BarrierSimulator& barrierSimulator = BarrierSimulator::getBarrierSimulator();
 
 BLEScan *pBLEScan;
 
+// messages only show up on the screen in debug mode
+enum M5State {DEBUG, BARRIER} m5State = DEBUG;
+#define PRINT_WHEN_DEBUG(p) if(m5State == M5State::DEBUG){M5.Lcd.print(p);}
+#define PRINTLN_WHEN_DEBUG(p) if(m5State == M5State::DEBUG){M5.Lcd.println(p);}
+
 // RECALCULATE if the format of json file changes
 const int receivedJDocCapacity = JSON_OBJECT_SIZE(2) // root
                           + 63;     // string copy
@@ -30,7 +35,7 @@ void startInputHandler(){
                     "listenToSerial",   /* Name of the task */
                     4096,      /* Stack size in words */
                     NULL,      /* Task input parameter */
-                    1,         /* Priority of the task */
+                    2,         /* Priority of the task. The higher the more important */
                     NULL,      /* Task handle. */
                     0);        /* Core where the task should run */
 }
@@ -41,6 +46,25 @@ void listenToSerial(void *pvParameters){
   for(;;){
     handleSerialInput();
     delay(SERIAL_TIMEOUT);
+  }
+}
+
+
+void startInterruptHandler(){
+   xTaskCreatePinnedToCore(
+                    handleButtonInterrupts,     /* Function to implement the task */
+                    "handleButtonInterrupts",   /* Name of the task */
+                    1024,      /* Stack size in words */
+                    NULL,      /* Task input parameter */
+                    1,         /* Priority of the task */
+                    NULL,      /* Task handle. */
+                    0);        /* Core where the task should run */
+}
+
+void handleButtonInterrupts(void *pvParameters){
+  for(;;){
+    handleButtonInterrupt();
+    delay(300);
   }
 }
 
@@ -62,14 +86,14 @@ void handleNormalSerialInput(){
   int8_t incomingByte;
   while((incomingByte = Serial.read()) != -1){
     if(index == SERIAL_NORMAL_INPUT_SIZE - 1){
-      M5.Lcd.print(byteBuffer);
+      PRINT_WHEN_DEBUG(byteBuffer);
       index = 0;
     }
     byteBuffer[index++] = incomingByte;
   }
   byteBuffer[index] = '\0';
   index = 0;
-  M5.Lcd.println(byteBuffer);
+  PRINTLN_WHEN_DEBUG(byteBuffer);
 }
 
 void handleJsonSerialInput(){
@@ -92,7 +116,7 @@ void handleJsonSerialInput(){
   
   String dataType = value.as<String>();
   if(!dataType.equals("m5_receive")){return;}
-  M5.Lcd.println(dataType.c_str());
+  PRINTLN_WHEN_DEBUG(dataType.c_str());
   
   value = jDoc["op_code"];
   if(value.isNull()){return;}
@@ -109,10 +133,10 @@ void handleOpCode(const char* opCode){
 
 void handleJsonDeserializationErr(DeserializationError err){
   if(err == DeserializationError::NoMemory){
-    M5.Lcd.println("receival err: json doc too small for deserialisation");
+    PRINTLN_WHEN_DEBUG("receival err: json doc too small for deserialisation");
   }else{
-    M5.Lcd.print("receival err: ");
-    M5.Lcd.println(err.c_str());
+    PRINT_WHEN_DEBUG("receival err: ");
+    PRINTLN_WHEN_DEBUG(err.c_str());
   }
 }
 
@@ -130,11 +154,11 @@ const JsonDocument& getInputJsonDocFilter(){
 }
 
 void handleScanResult(BLEScanResults results){
-  M5.Lcd.println("scan finished");
+  PRINTLN_WHEN_DEBUG("scan finished");
   int deviceCount = results.getCount();
-  M5.Lcd.print("There are ");
-  M5.Lcd.print(deviceCount);
-  M5.Lcd.println(" devices in the vicinity:");
+  PRINT_WHEN_DEBUG("There are ");
+  PRINT_WHEN_DEBUG(deviceCount);
+  PRINTLN_WHEN_DEBUG(" devices in the vicinity:");
 
   // RECALCULATE if the format of json file changes
   const int jsonCapacity =  JSON_OBJECT_SIZE(3)   // root
@@ -163,7 +187,7 @@ void handleScanResult(BLEScanResults results){
 
     JsonObject bthDeviceInfo = bthDevices.createNestedObject();
     if(bthDeviceInfo == NULL){
-      M5.Lcd.println("allocation of a JsonObject failed.");
+      PRINTLN_WHEN_DEBUG("allocation of a JsonObject failed.");
     }
     bthDeviceInfo["bluetooth_address"] = addressArr;
     bthDeviceInfo["RSSI"] = BLEad.getRSSI(); // returns a int
@@ -181,9 +205,38 @@ void handleScanResult(BLEScanResults results){
 }
 
 void handleButtonInterrupt(){
+  if(m5State == M5State::DEBUG){
+    handleButtonInterruptDebug();
+  }else if(m5State == M5State::BARRIER){
+    handleButtonInterruptBarrier();
+  }
+
+}
+
+void handleButtonInterruptDebug(){
   M5.update();
-  if(M5.BtnC.isPressed()){
+  if(M5.BtnB.isPressed()){
     M5.powerOFF();
+  }else if(M5.BtnA.isPressed()){
+    m5State = M5State::BARRIER; // switch to barrier simulator mode
+    barrierSimulator.setDisplay(true);
+  }
+}
+
+void handleButtonInterruptBarrier(){
+  M5.update();
+  if(M5.BtnA.isPressed()){
+    const char opCode[2] {BARRIER_ACTION_OPEN, '\0'};
+    handleOpCode((const char*)opCode);
+  }else if(M5.BtnB.isPressed()){
+    const char opCode[2] {BARRIER_ACTION_CLOSE, '\0'};
+    handleOpCode((const char*)opCode);
+  }else if(M5.BtnC.isPressed()){
+    m5State = M5State::DEBUG;  // switch back to debug mode
+    barrierSimulator.setDisplay(false);
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.setTextColor(WHITE, BLACK);
+    M5.Lcd.clear(BLACK);
   }
 }
 
@@ -197,21 +250,22 @@ void clearScreen(){
 // Arduino setup
 void setup() {
   M5.begin();
-  M5.Lcd.println("BLE client initialising...");
+  PRINTLN_WHEN_DEBUG("BLE client initialising...");
   BLEDevice::init(BLE_DEVICE_NAME);
   pBLEScan = BLEDevice::getScan();
 
   Serial.begin(115200);
   Serial.setTimeout(SERIAL_TIMEOUT);
   startInputHandler();
+  startInterruptHandler();
+  m5State = M5State::BARRIER;
 } 
 
 
 // Arduino main loop
 void loop() {
-  clearScreen();
-  //handleSerialInput(); 
-
+  if(m5State == M5State::DEBUG){
+    clearScreen();
+  }
   handleScanResult(pBLEScan->start(BLE_SCAN_DURATION));
-  handleButtonInterrupt();
 } 

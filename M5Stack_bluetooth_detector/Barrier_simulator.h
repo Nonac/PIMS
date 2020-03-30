@@ -1,6 +1,6 @@
 #ifndef BARRIER_SIMULATOR_H
 #define BARRIER_SIMULATOR_H
-
+#include "Barrier_orders.h"
 #include <M5Stack.h>
 
 class BarrierSimulator {
