@@ -188,69 +188,60 @@ inline void handleOpCode(const char* opCode){
 
 /* Group: BLE detector */
 void handleScanResult(BLEScanResults results){
+  int deviceCount = getBTDeviceCount(results);
+
+  // RECALCULATE if the format of json file changes
+  const int outgoingJDocCapacity {  
+                            JSON_OBJECT_SIZE(3)   // root
+                          + JSON_OBJECT_SIZE(1)   // barrier_info
+                          + JSON_ARRAY_SIZE(deviceCount) + (deviceCount) * JSON_OBJECT_SIZE(2) // bluetooth_decives
+                          + deviceCount * 55      // duplication of strings of keys
+                          + 128};                 // fixed string duplication
+  DynamicJsonDocument jDoc(outgoingJDocCapacity);
+  
+  buildOutgoingJDoc(jDoc, results, deviceCount);
+  sendJDocToSerial(jDoc);
+}
+
+// returns the number of bluetooth devices in the vicinity
+inline int getBTDeviceCount(BLEScanResults& results){
   PRINTLN_WHEN_DEBUG("scan finished");
   int deviceCount = results.getCount();
   PRINT_WHEN_DEBUG("There are ");
   PRINT_WHEN_DEBUG(deviceCount);
   PRINTLN_WHEN_DEBUG(" devices in the vicinity:");
-
-  // RECALCULATE if the format of json file changes
-  const int jsonCapacity =  JSON_OBJECT_SIZE(3)   // root
-                          + JSON_OBJECT_SIZE(1)   // barrier_info
-                          + JSON_ARRAY_SIZE(deviceCount) + (deviceCount) * JSON_OBJECT_SIZE(2) // bluetooth_decives
-                          + deviceCount * 55      // duplication of strings of keys
-                          + 128;                  // fixed string duplication
-  DynamicJsonDocument jDoc(jsonCapacity);
-  
-  char **addresses = buildOutgoingJDoc(jDoc, results, deviceCount);
-  Serial.print(SERIAL_JSON_DELIMITER);
-  serializeJson(jDoc, Serial);
-  //Serial.flush();
-  Serial.print(SERIAL_JSON_DELIMITER);
-
-  deleteAddresses(addresses, deviceCount);
-
-
+  return deviceCount;
 }
 
 // build outgoing JsonDocument from BLEScanResults
-// deviceCount : got from results.getCount().
-// returns: pointer to char[deviceCount][?], 
-//          which stores address strings 
-// NOTE: call deleteAddresses() on this pointer with deviceCount to free memory
-char **buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int deviceCount){
+// deviceCount : number of BT devices in results
+void buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int deviceCount){
   jDoc["data_type"] = "m5_transmit";
   
   JsonObject barrierInfo = jDoc.createNestedObject("barrier_info");
   barrierInfo["barrier_id"] = BARRIER_ID;
   
   JsonArray bthDevices = jDoc.createNestedArray("bluetooth_devices");
-  // Stores references to dynamically allocated c-style strings in the following loop
-  // so we can delete them later.
-  // (There is a scope issue if we don't do it like this.)
-  char **addresses {new char*[deviceCount] {}}; 
   for(int i=0; i<deviceCount; i++){
     BLEAdvertisedDevice BLEad = results.getDevice(i);
     std::string addressStr = BLEad.getAddress().toString();
-    char *addressArr {new char[addressStr.size() + 1] {}};
-    addressStr.copy(addressArr, addressStr.size() + 1);
-    addresses[i] = addressArr;
 
     JsonObject bthDeviceInfo = bthDevices.createNestedObject();
     if(bthDeviceInfo == NULL){
       PRINTLN_WHEN_DEBUG("allocation of a JsonObject failed.");
     }
-    bthDeviceInfo["bluetooth_address"] = addressArr;
+    // cast to const char* to force a copy of the string
+    // otherwise there will be a scope issue
+    bthDeviceInfo["bluetooth_address"] = (const char*)addressStr.c_str();
     bthDeviceInfo["RSSI"] = BLEad.getRSSI(); // returns a int
   }
-  return addresses;
 }
 
-void deleteAddresses(char **addresses, int deviceCount){
-  for(int i=0; i<deviceCount; i++){
-    delete[] addresses[i];
-  }
-  delete[] addresses;
+// serialise JsonDocument and send to serial port
+inline void sendJDocToSerial(JsonDocument& jDoc){
+  Serial.print(SERIAL_JSON_DELIMITER);
+  serializeJson(jDoc, Serial);
+  Serial.print(SERIAL_JSON_DELIMITER);
 }
 
 
