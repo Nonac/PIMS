@@ -14,8 +14,8 @@ PubSubClient ps_client( wifi_client );
 #define SERIAL_JSON_DELIMITER '#'
 
 // Wifi settings
-char wifi_ssid[] = "LAPTOP-3MHBNCLF 4177";   
-char wifi_password[] = "malvinas";   
+char wifi_ssid[] = "wifi_ssid";   
+char wifi_password[] = "wifi_password";   
 
 // Serial settings
 const int serial1_timeout {300}; // in milliseconds
@@ -29,28 +29,24 @@ const char* MQTT_pub_topic = "m5_transmit"; // You might want to create your own
 const char* server = "broker.mqttdashboard.com";
 const int port = 1883;
 
+// publish message to MQTT broker from serial1
+// Note: serial1 port is supposed to be connected to M5Stack
 void publishFromSerial1(){
   int byteCount = Serial1.available();
   if(byteCount <=0){return;}
   Serial1.find(SERIAL_JSON_DELIMITER);
-  //char *byteBuffer { new char[byteCount + 1] {} }; 
   String serial1Read = Serial1.readStringUntil(SERIAL_JSON_DELIMITER);
   
   if(ps_client.connected()){
-    //Serial.write(byteBuffer, byteCount);
-    //ps_client.subscribe(MQTT_pub_topic);
-    //ps_client.write(byteBuffer, byteCount);
-    //Serial.println(byteBuffer);
-    //ps_client.publish(MQTT_pub_topic, byteBuffer);
     Serial.println(serial1Read);
     publishMessage(serial1Read);
   }else{
     Serial1.println("Can't publish message: Not connected to MQTT :( ");
     Serial.println("Can't publish message: Not connected to MQTT :( ");
   }
-  //delete[] byteBuffer;
 }
 
+// connects to wifi
 void setupWifi(){
   Serial1.println("Connecting to wifi.");
   do{
@@ -69,17 +65,7 @@ void setupWifi(){
 }
 
 
-// Use this function to publish a message.  It currently
-// checks for a connection, and checks for a zero length
-// message.  Note, it doens't do anything if these fail.
-//
-// Note that, it publishes to MQTT_topic value
-//
-// Also, it doesn't seem to like a concatenated String
-// to be passed in directly as an argument like:
-// publishMessage( "my text" + millis() );
-// So instead, pre-prepare a String variable, and then
-// pass that.
+// publish message to MQTT broker
 void publishMessage( String message ) {
 
   if( ps_client.connected() ) {
@@ -105,13 +91,6 @@ void publishMessage( String message ) {
   }
 }
 
-void printCallbackToSerial1(const char* payload){
-  Serial1.print(SERIAL_JSON_DELIMITER);
-  Serial1.print(payload);
-  //Serial1.flush();
-  Serial1.print(SERIAL_JSON_DELIMITER);
-}
-
 // This is where we pick up messages from the MQTT broker.
 // This function is called automatically when a message is
 // received.
@@ -130,11 +109,20 @@ void callback(char* topic, byte* payload, unsigned int length) {
   printCallbackToSerial1((const char*)payload);
 }
 
+// print callback from MQTT broker to serial1 port
+inline void printCallbackToSerial1(const char* payload){
+  Serial1.print(SERIAL_JSON_DELIMITER);
+  Serial1.print(payload);
+  //Serial1.flush();
+  Serial1.print(SERIAL_JSON_DELIMITER);
+}
+
 void setupMQTT() {
     ps_client.setServer(server, port);
     ps_client.setCallback(callback);
 }
 
+// reconnects to MQTT broker
 void reconnect() {
 
   // Loop until we're reconnected
