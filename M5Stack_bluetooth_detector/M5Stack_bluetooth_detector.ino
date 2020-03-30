@@ -247,16 +247,19 @@ inline void sendJDocToSerial(JsonDocument& jDoc){
 
 
 /* Group: M5Stack control */
-
-void handleButtonInterrupt(){
+// designate interrupt handler according to the current state of M5Stack
+inline void handleButtonInterrupt(){
   if(m5State == M5State::DEBUG){
     handleButtonInterruptDebug();
   }else if(m5State == M5State::BARRIER){
     handleButtonInterruptBarrier();
   }
-
 }
 
+// interrupt handler on debug mode
+// Actions:
+// press BtnB: switch off M5Stack
+// press BtnA: switch to barrier simulation mode
 void handleButtonInterruptDebug(){
   M5.update();
   if(M5.BtnB.isPressed()){
@@ -267,6 +270,11 @@ void handleButtonInterruptDebug(){
   }
 }
 
+// interrupt handler on barrier simulation mode
+// Actions:
+// press BtnA: open barrier
+// press BtnB: close barrier
+// press BtnC: switch to debug mode
 void handleButtonInterruptBarrier(){
   M5.update();
   if(M5.BtnA.isPressed()){
@@ -284,6 +292,8 @@ void handleButtonInterruptBarrier(){
   }
 }
 
+// If text has gone beyond the frame of the screen,
+// clears the screen and moves cursor back to origin.
 void clearScreen(){
   if( M5.Lcd.getCursorY() > M5.Lcd.height() ) {
     M5.Lcd.clear(BLACK);
@@ -291,7 +301,7 @@ void clearScreen(){
   }
 }
 
-// Arduino setup
+/* Arduino setup */
 void setup() {
   M5.begin();
   PRINTLN_WHEN_DEBUG("BLE client initialising...");
@@ -306,7 +316,7 @@ void setup() {
 } 
 
 
-// Arduino main loop
+/* Arduino main loop */
 void loop() {
   if(m5State == M5State::DEBUG){
     clearScreen();
