@@ -184,9 +184,8 @@ inline void handleOpCode(const char* opCode){
 }
 
 
-
-
 /* Group: BLE detector */
+// handles bluetooth scan results
 void handleScanResult(BLEScanResults results){
   PRINTLN_WHEN_DEBUG("scan finished");
   int deviceCount = results.getCount();
@@ -203,14 +202,8 @@ void handleScanResult(BLEScanResults results){
   DynamicJsonDocument jDoc(jsonCapacity);
   
   char **addresses = buildOutgoingJDoc(jDoc, results, deviceCount);
-  Serial.print(SERIAL_JSON_DELIMITER);
-  serializeJson(jDoc, Serial);
-  //Serial.flush();
-  Serial.print(SERIAL_JSON_DELIMITER);
-
+  printJDocToSerial(jDoc);
   deleteAddresses(addresses, deviceCount);
-
-
 }
 
 // build outgoing JsonDocument from BLEScanResults
@@ -246,11 +239,20 @@ char **buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int device
   return addresses;
 }
 
+// called on the pointer returned by buildOutgoingJDoc() 
+// when the jDoc outlived its usefulness
 void deleteAddresses(char **addresses, int deviceCount){
   for(int i=0; i<deviceCount; i++){
     delete[] addresses[i];
   }
   delete[] addresses;
+}
+
+// serialise JsonDocument and print it to serial
+inline void printJDocToSerial(JsonDocument& jDoc){
+  Serial.print(SERIAL_JSON_DELIMITER);
+  serializeJson(jDoc, Serial);
+  Serial.print(SERIAL_JSON_DELIMITER);
 }
 
 
