@@ -42,6 +42,13 @@ function onConnectionLost(responseObject) {
 // called when a message arrives
 function onMessageArrived(message) {
     console.log("onMessageArrived:"+message.payloadString);
+    let respondObj = JSON.parse(message.payloadString);
+    // console.log(respondObj);
+    if (respondObj['data_type'] === 'web_login') {
+        if (respondObj['access'] === 1) {
+            window.location.href = 'userAccount.html'
+        }
+    }
 }
 
 // called to generate the IDs
