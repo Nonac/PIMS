@@ -123,7 +123,7 @@
 
 	"data_type": "web_recharge",  // recharge some money
 	"info": {
-            		"user_id":"aaaaa",
+            		"username":"lea_tong",
 			"balance": 21331,
 			"currency":"GBP",
             		"card_number":"326173173718",
