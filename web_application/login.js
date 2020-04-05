@@ -7,6 +7,7 @@ client.onMessageArrived = onMessageArrived;
 
 client.connect(    {onSuccess: onConnect});
 
+//submit user information when the button is clicked
 let button = document.getElementById('login_button');
 button.onclick = function () {
     console.log('clicked');
