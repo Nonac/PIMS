@@ -1,8 +1,8 @@
-﻿# test
+# test
 
 
-## Git 分支练习
-- [ ] leatong
+## Git branch practise
+- [x] leatong
 - [x] 524534852
 - [x] wangfuzhou110
 - [x] ZzAllenZz
