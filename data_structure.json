@@ -95,13 +95,13 @@
 	"data_type": "web_vehicle_history",
 	"info": {
 		"vehicle_id": "fweewfew",
-		0: 4.3,	   // This means today this vehicle has been parked in the parking lot for 4.3 hours
-		1: 15,     // This means: on the day that was 1 day before today, this vehicle was in the parking lot for 15 hours.
-		2: 10.9,
-		3: 11.4,
-		4: 18.7,
-		5: 0,
-		6: 7,
+		"0": 4.3,	   // This means today this vehicle has been parked in the parking lot for 4.3 hours
+		"1": 15,     // This means: on the day that was 1 day before today, this vehicle was in the parking lot for 15 hours.
+		"2": 10.9,
+		"3": 11.4,
+		"4": 18.7,
+		"5": 0,
+		"6": 7,
 		"status": 1
 	}
 }
@@ -123,7 +123,7 @@
 
 	"data_type": "web_recharge",  // recharge some money
 	"recharge_info": {
-            		"user_id":"aaaaa"
+            		"user_id":"aaaaa",
 			"balance": 21331,
 			"currency":"GBP",
             		"card_number":"326173173718",
