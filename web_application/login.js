@@ -48,6 +48,9 @@ function onMessageArrived(message) {
         if (respondObj['access'] === 1) {
             window.location.href = 'userAccount.html'
         }
+        if (respondObj['access'] === 0) {
+            alert('Wrong username or password!');
+        }
     }
 }
 
