@@ -41,12 +41,11 @@
 	}*/
 
 {
-
 	"data_type": "web_register",  //register for an account
 	"login_info": {
 			"username": "lea_tong",
 			"password": "*******",
-            "userid":"aaaaa"
+			"status": 1
 		}
 }
 
@@ -56,38 +55,80 @@
 	"login_info": {
 			"username": "lea_tong",
 			"password": "*******",
-            "access":0;
+            		"access":0
 		}
 }
+
 
 {
 
-	"data_type": "web_vehicle",   //register for a vehicle
-	"vehicle_info": {
-            "user_id":"aaaaa"
-			"vehicle_id": "acdjcidjd"
-			"vehicle_type":"car"
+	"data_type": "web_vehicle_register",   //register for a vehicle
+	"info": {
+            		"username":"lea_tong",
+			"vehicle_id": "acdjcidjd",
+			"vehicle_type":"car",
+			"status": 2
 		}
 }
+
+
+{
+	"data_type": "web_vehicle_query",    //Request for all vehicles' information of a certain user.
+	"info": {
+		"username": "lea_tong",
+		"vehicle_list": [
+			{
+				"vehicle_id": "fewfe",
+				"vehicle_type": "car"
+			},
+			{
+				"vehicle_id": "fweweww",
+				"vehicle_type": "lorry"
+			}
+		],
+		"status": 2
+	}
+}
+
+
+{
+	"data_type": "web_vehicle_history",
+	"info": {
+		"vehicle_id": "fweewfew",
+		"0": 4.3,	   // This means today this vehicle has been parked in the parking lot for 4.3 hours
+		"1": 15,     // This means: on the day that was 1 day before today, this vehicle was in the parking lot for 15 hours.
+		"2": 10.9,
+		"3": 11.4,
+		"4": 18.7,
+		"5": 0,
+		"6": 7,
+		"status": 1
+	}
+}
+
+
 {
 
 	"data_type": "web_finance",  // check the balance
 	"finance_info": {
-            "user_id":"aaaaa"
+           		"username":"lea_tong",
 			"balance": 21331,
-			"currency":"GBP"
+			"currency":"GBP",
+			"status": 2
 		}
 }
+
 
 {
 
 	"data_type": "web_recharge",  // recharge some money
 	"recharge_info": {
-            "user_id":"aaaaa"
+            		"user_id":"aaaaa",
 			"balance": 21331,
 			"currency":"GBP",
-            "card_number":"326173173718",
-            "pay_amount":"10"
+            		"card_number":"326173173718",
+            		"pay_amount":"10",
+	    		"status": 1
 		}
 }
 
