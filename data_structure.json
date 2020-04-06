@@ -94,6 +94,7 @@
 {
 	"data_type": "web_vehicle_history",
 	"info": {
+		"username": "lea_tong",
 		"vehicle_id": "fweewfew",
 		"0": 4.3,	   // This means today this vehicle has been parked in the parking lot for 4.3 hours
 		"1": 15,     // This means: on the day that was 1 day before today, this vehicle was in the parking lot for 15 hours.
