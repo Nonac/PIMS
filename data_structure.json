@@ -42,7 +42,7 @@
 
 {
 	"data_type": "web_register",  //register for an account
-	"login_info": {
+	"info": {
 			"username": "lea_tong",
 			"password": "*******",
 			"status": 1
@@ -52,7 +52,7 @@
 {
 
 	"data_type": "web_login",  //login
-	"login_info": {
+	"info": {
 			"username": "lea_tong",
 			"password": "*******",
             		"access":0
@@ -110,7 +110,7 @@
 {
 
 	"data_type": "web_finance",  // check the balance
-	"finance_info": {
+	"info": {
            		"username":"lea_tong",
 			"balance": 21331,
 			"currency":"GBP",
@@ -122,8 +122,8 @@
 {
 
 	"data_type": "web_recharge",  // recharge some money
-	"recharge_info": {
-            		"user_id":"aaaaa",
+	"info": {
+            		"username":"lea_tong",
 			"balance": 21331,
 			"currency":"GBP",
             		"card_number":"326173173718",
