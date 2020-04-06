@@ -7,6 +7,12 @@ static abstract class MessageType{
     static final String FINANCE = "finance_info";
     static final String RECHARGE= "top_up_info";
     static final String CHARGE= "charge_info";
+    
+    
+    
+    
+    static final String USER_REGISTER = "web_register";
+    static final String USER_LOGIN = "web_login";
 }
 
 //Database
@@ -57,6 +63,24 @@ void refreshData() {
        return res;
   }
   
+  
+  //get a JSONObject from disk according to datatype and username
+  JSONObject getObjWithUsername(String datatype , String username)
+  {
+       JSONObject res=null;
+       for(JSONObject message:db.messages)
+       {
+         if(message!=null&&message.getString("data_type").equals(datatype))
+         {
+           JSONObject info = message.getJSONObject("info");
+           if(info.getString("username").equals(username))
+             {
+               res=message;
+             }
+         }
+       }
+       return res;
+  }
 
 //Provide API for view, m5stack and web
 public class MessageData{
@@ -73,25 +97,40 @@ public class MessageData{
      return result;
   }
   //receive message from web
-   void saveMessageToDB(JSONObject message) {
+   JSONObject saveMessageToDB(JSONObject message) {
         if (message == null) {
-            return;
-        } else {
-          //file's name should have datatype identifier since it is useful for searching
-            saveJSONObject(message, "data/" +message.getString("data_type") + makeUUID()+ ".json");
+            return null;
+        }
+        JSONObject res = message;
+        //file's name should have datatype identifier since it is useful for searching
+        if(getObjWithUsername("web_register", message.getJSONObject("info").getString("username"))==null){
+            saveJSONObject(message, "data/"+message.getString("data_type") + makeUUID()+ ".json");
+            res.getJSONObject("info").setInt("status",1);  
+            return res;
+        }else{
+            res.getJSONObject("info").setInt("status",0);  
+            return res;
         }
     }
     
    //send message to web to allow access or not
    JSONObject sendConfirmInfoToWeb(JSONObject loginMessage){
-         String userId=loginMessage.getString("user_id");
+         //String userId=loginMessage.getString("user_id");
          // use reg_info object to check whether password is correct
-         String datatype="reg_info";
-         JSONObject obj= getObjWithId(datatype,userId);
-         if(obj!=null&&obj.getString("password").equals(loginMessage.getString("password")))
+         String datatype="web_register";
+         JSONObject infoFromWeb = loginMessage.getJSONObject("info");
+         String username = infoFromWeb.getString("username");
+         JSONObject obj= getObjWithUsername(datatype,username);
+         if(obj!=null&&obj.getJSONObject("info").getString("password").equals(infoFromWeb.getString("password")))
          {
-            loginMessage.setBoolean("access",true);
+            //loginMessage.setInt("access",1);
+            infoFromWeb.setInt("status",1);
         }
+        else {
+            //loginMessage.setInt("access",0);
+            infoFromWeb.setInt("status",0);
+        }
+          
          return loginMessage;
         }
    
