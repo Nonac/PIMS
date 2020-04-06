@@ -27,6 +27,7 @@ client.onMessageArrived = function (message) {
             case 'web_recharge': renderRecharge(respondObj); break;
             case 'web_vehicle_query': renderVehicleList(respondObj); break;
             case 'web_vehicle_register': renderVehicleRegister(); break;
+            case 'web_vehicle_history': renderChart(respondObj); break;
             default: return;
         }
     }
@@ -34,6 +35,33 @@ client.onMessageArrived = function (message) {
         alert('Back-end error.');
     }
 };
+
+function renderChart(respondObj) {
+    let myChart = echarts.init(document.getElementById('echart_canvas'));
+    let info = respondObj.info;
+    let nowDate = new Date();
+    let option = {
+        title: {
+            text: 'Parking in Last 7 Days'
+        },
+        tooltip: {},
+        legend: {
+            data: ['hrs']
+        },
+        xAxis: {data:[]},
+        yAxis: {},
+        series: [{name: 'hrs', type: 'line', data: []}]
+    }
+    for (let i in info) {
+        if (parseInt(i) || parseInt(i) === 0) {
+            let tempDate = new Date(nowDate.getTime() - (parseInt(i) * 24 * 60 * 60 * 1000));
+            console.log(tempDate);
+            option.xAxis.data[6 - parseInt(i)] = tempDate.getDate() + '/' + (tempDate.getMonth() + 1);
+            option.series[0].data[6 - parseInt(i)] = info[i];
+        }
+    }
+    myChart.setOption(option);
+}
 
 function renderRecharge(respondObj) {
     sendQuery('web_finance', {username: username, status: 2});
