@@ -1,4 +1,4 @@
-String MQTT_topic="/PIMS/do";
+String MQTT_topic="PIMS/test";
 
 void clientConnected() {
   println("client connected");
@@ -7,6 +7,7 @@ void clientConnected() {
 
 void messageReceived(String topic, byte[] payload) {
    JSONObject json = parseJSONObject(new String(payload));
+   println(topic);
     if (json == null) {
      println("Order could not be parsed");
     }
@@ -15,12 +16,14 @@ void messageReceived(String topic, byte[] payload) {
       
       String datatype=json.getString("data_type");
       
-      if(datatype.equals(MessageType.REGISTER))
+      if(datatype.equals(MessageType.USER_REGISTER)&&json.getJSONObject("info").getInt("status")==2)
       {
-        api.saveMessageToDB(json);
+        JSONObject res = api.saveMessageToDB(json);
         refreshData();
+        client.publish(MQTT_topic,res.toString());
+        println("register");
       }
-      else if(datatype.equals(MessageType.LOGIN))
+      else if(datatype.equals(MessageType.USER_LOGIN)&&json.getJSONObject("info").getInt("status")==2)
       {
         
         JSONObject tmp=api.sendConfirmInfoToWeb(json);
