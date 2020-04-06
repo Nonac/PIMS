@@ -7,7 +7,6 @@ void clientConnected() {
 
 void messageReceived(String topic, byte[] payload) {
    JSONObject json = parseJSONObject(new String(payload));
-   println(topic);
     if (json == null) {
      println("Order could not be parsed");
     }
@@ -18,23 +17,29 @@ void messageReceived(String topic, byte[] payload) {
       
       if(datatype.equals(MessageType.USER_REGISTER)&&json.getJSONObject("info").getInt("status")==2)
       {
-        JSONObject res = api.saveMessageToDB(json);
-        refreshData();
+        JSONObject res = api.receiveRegisterFromWeb(json);
+        //refreshData();
         client.publish(MQTT_topic,res.toString());
-        println("register");
       }
       else if(datatype.equals(MessageType.USER_LOGIN)&&json.getJSONObject("info").getInt("status")==2)
       {
         
-        JSONObject tmp=api.sendConfirmInfoToWeb(json);
+        JSONObject tmp=api.receiveLoginFromWeb(json);
         //convert the JSONObject to String
-        println("login");
         client.publish(MQTT_topic,tmp.toString());
-      }else if(datatype.equals(MessageType.FINANCE))
+      }else if(datatype.equals(MessageType.FINANCE)&&json.getJSONObject("info").getInt("status")==2)
       {
-          JSONObject tmp=api.sendFinanceInfoToWeb(json);
+          JSONObject tmp=api.receiveFinanceFromWeb(json);
+          //refreshData();
+          client.publish(MQTT_topic,tmp.toString());
+      }else if(datatype.equals(MessageType.RECHARGE)&&json.getJSONObject("info").getInt("status")==2)
+      {
+     
+          JSONObject tmp=api.receiveRechargeFromWeb(json);
+          //refreshData();
           client.publish(MQTT_topic,tmp.toString());
       }
+      
     }
 
 }
