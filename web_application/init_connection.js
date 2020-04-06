@@ -9,7 +9,6 @@ client.connect(    {onSuccess: onConnect});
 
 // called when the client connects
 function onConnect() {
-    client.subscribe(topicName, {});
     console.log("Connected");
 }
 
@@ -33,4 +32,15 @@ function make_id(length) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+function buildMessage(type, messageBody) {
+    let dataObj = {
+        data_type: type,
+        info: messageBody
+    };
+    let data = JSON.stringify(dataObj);
+    let message = new Paho.MQTT.Message(data);
+    message.destinationName = topicName;
+    return message;
 }
