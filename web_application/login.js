@@ -2,13 +2,13 @@
 client.onMessageArrived = function (message) {
     console.log("onMessageArrived:"+message.payloadString);
     let respondObj = JSON.parse(message.payloadString);
-    if (respondObj['data_type'] === 'web_login') {
-        if (respondObj.login_info['access'] === 1 ) {
-            setCookie('username', respondObj.login_info['user']);
+    let username = document.getElementById('username').value;
+    if (respondObj['data_type'] === 'web_login' && username === respondObj.info['username']) {
+        if (respondObj.info['access'] === 1 ) {
+            setCookie('username', respondObj.info['user']);
             window.location.href = 'user_account.html';
-            console.log(getCookie('username'));
         }
-        if (respondObj.login_info['access'] === 0) {
+        if (respondObj.info['access'] === 0) {
             alert('Wrong username or password!');
         }
     }
@@ -17,19 +17,20 @@ client.onMessageArrived = function (message) {
 //submit user information when the button is clicked
 let button = document.getElementById('login_button');
 button.onclick = function () {
+    client.subscribe(topicName, {});
     let username = document.getElementById('username').value;
     let password = document.getElementById('user_pass').value;
-    let dataObj = {
-        data_type: 'web_login',
-        login_info: {
-            user: username,
-            pass: password,
-            access: 2
-        }
+    if (!username || !password) {
+        alert("Username or password cannot be empty.");
+        return;
+    }
+    let messageBody = {
+        username: username,
+        password: password,
+        access: 2
     };
-    let data = JSON.stringify(dataObj);
-    let message = new Paho.MQTT.Message(data);
-    message.destinationName = topicName;
+    let message = buildMessage('web_login', messageBody);
     client.send(message);
 };
+
 
