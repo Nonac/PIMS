@@ -3,8 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>My PIMS Account</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+
 </head>
 <body>
-<p>hihihihihi</p>
+<div id="username">--</div>
+<div id="balance">--</div>
+<button id="topUp">Top Up Now!</button>
+<form id="pay_form">
+    <input id="card_number" type="text"/>
+    <input id="pay_amount" type="text"/>
+    <input id="submit_pay_button" type="button" href="javascript:" value="pay"/>
+</form>
+<button>Add a vehicle!!</button>
+<form id="add_vehicle_form">
+    <input id="vehicle_id" type="text"/>
+    <input id="vehicle_type" type="text"/>
+    <input id="add_vehicle_button" type="button" href="javascript:" value="add">
+</form>
+<ul id="vehicle_list">
+</ul>
+<div id="echart_canvas" style="height: 300px; width: 600px">
+</div>
+
 </body>
+
+<script src="my_js_libs/cookie_lib.js" type="text/javascript"></script>
+<script src="init_connection.js" type="text/javascript"></script>
+<script src="user_account.js" type="text/javascript"></script>
+
 </html>

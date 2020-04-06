@@ -1,11 +1,9 @@
-let topicName = 'PIMS';
+let topicName = 'PIMS/test';
 
 client = new Paho.MQTT.Client("broker.mqttdashboard.com", 8000, make_id());
 
 client.onConnectionLost = onConnectionLost;
 client.onMessageArrived = onMessageArrived;
-
-client.connect(    {onSuccess: onConnect});
 
 // called when the client connects
 function onConnect() {

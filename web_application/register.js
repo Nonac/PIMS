@@ -6,7 +6,7 @@ client.onMessageArrived = function (message) {
     let username = document.getElementById('username').value;
     if (respondObj['data_type'] === 'web_register' && username === respondObj.info['username']) {
         if (respondObj.info['status'] === 1 ) {
-            setCookie('username', respondObj.info['user']);
+            setCookie('username', respondObj.info['username']);
             window.location.href = 'user_account.html';
         }
         if (respondObj.info['status'] === 0) {
@@ -15,22 +15,26 @@ client.onMessageArrived = function (message) {
     }
 };
 
-let button = document.getElementById('register_button');
-button.onclick = function () {
-    client.subscribe(topicName, {});
-    let username = document.getElementById('username').value;
-    let password = document.getElementById('user_pass').value;
-    if (!checkUserInput(username, password)) {
-        return;
-    }
-    let messageBody = {
-            username: username,
-            password: password,
-            status: 2
+client.connect(    {onSuccess: function() {
+        let button = document.getElementById('register_button');
+        button.onclick = function () {
+            client.subscribe(topicName, {});
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('user_pass').value;
+            if (!checkUserInput(username, password)) {
+                return;
+            }
+            let messageBody = {
+                username: username,
+                password: password,
+                status: 2
+            };
+            let message = buildMessage('web_register', messageBody);
+            client.send(message);
         };
-    let message = buildMessage('web_register', messageBody);
-    client.send(message);
-};
+    }
+});
+
 
 function checkUserInput(username, password) {
     if (!username || !password) {
