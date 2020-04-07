@@ -13,13 +13,13 @@ input.input-material {
     padding: 10px 0;
 }
 
-input.input-material.is-invalid {
-    border-color: #dc3545 !important;
-}
+/*input.input-material.is-invalid {*/
+/*    border-color: #dc3545 !important;*/
+/*}*/
 
-input.input-material.invalid-feedback {
-    color: #dc3545;
-}
+/*input.input-material.invalid-feedback {*/
+/*    color: #dc3545;*/
+/*}*/
 /*input.input-material.is-invalid ~ label {*/
 /*    color: #dc3545;*/
 /*}*/

@@ -1,3 +1,17 @@
+(function () {
+    let usernameEle = document.getElementById('username');
+    let passwordEle = document.getElementById('user_pass');
+    let checkEle = document.getElementById('check')
+    let check = localStorage.getItem("check");
+    console.log(check);
+    if (check === 'true') {
+        console.log(typeof check);
+        usernameEle.value = localStorage.getItem('username');
+        passwordEle.value = localStorage.getItem('password');
+        checkEle.checked = true;
+    }
+}) ();
+
 // called when a message arrives
 client.onMessageArrived = function (message) {
     console.log("onMessageArrived:"+message.payloadString);
@@ -19,8 +33,11 @@ client.connect({onSuccess: function() {
         let button = document.getElementById('login_button');
         button.onclick = function () {
             client.subscribe(topicName, {});
-            let username = document.getElementById('username').value;
-            let password = document.getElementById('user_pass').value;
+            let username = document.getElementById('username');
+            let password = document.getElementById('user_pass');
+            if (!checkUserInput(username, password)) {
+                return;
+            }
             let messageBody = {
                 username: username,
                 password: password,
@@ -31,6 +48,26 @@ client.connect({onSuccess: function() {
         };
     }
 });
+
+function checkUserInput(username, password) {
+    let errInfo;
+    let check = document.getElementById('check').checked;
+    if (!username.value) {
+        errInfo = 'Username cannot be empty.';
+    }
+    else if (!password.value) {
+        errInfo = 'Password cannot be empty.'
+    }
+    else {
+        localStorage.setItem("username", username.value);
+        localStorage.setItem("password", password.value);
+        localStorage.setItem("check", check);
+        console.log(localStorage.getItem('check'));
+        return true;
+    }
+    alert(errInfo);
+    return false;
+}
 
 
 

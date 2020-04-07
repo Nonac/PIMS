@@ -5,32 +5,51 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Sign Up</title>
 
-    <link rel="stylesheet" href="login_register.default.css" type="text/css">
+    <title>PIMS - Sign Up</title>
+
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
-
+    <link rel="stylesheet" href="login_register.default.css" type="text/css">
 
 </head>
 <body>
-
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-
+<div class="login-page">
+    <div class="container d-flex align-items-center">
+        <div class="form-holder has-shadow">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="info d-flex align-items-center">
+                        <div class="content">
+                            <div>
+                                <h1>Sign Up</h1>
+                            </div>
+                            <p>PIMS, the national parking lot management system</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Form Panel    -->
+                <div class="col-lg-6">
+                    <div class="form d-flex align-items-center">
+                        <div class="content">
+                            <form class="form-validate" id="user_login">
+                                <div class="form-group">
+                                    <input id="username" name="userName" type="text" required placeholder="username" class="input-material">
+                                </div>
+                                <div class="form-group">
+                                    <input id="user_pass" name="passWord" type="password" required placeholder="password" class="input-material">
+                                </div>
+                                <div class="form-group">
+                                    <input id="user_pass_verify" name="passWord" type="password" required placeholder="confirm your password" class="input-material">
+                                </div>
+                                <button type="button" id="register_button" class="btn">Sign Up</button>
+                            </form>
+                            <small>Have an account?</small><a href="index.html" class="signup">&nbsp;Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-8">
-            <form id="user_login">
-                <label for="username" class="input-label">Username: </label>
-                <input id="username" type="text"> <br/>
-                <label for="user_pass" class="input-label">Password: </label>
-                <input id="user_pass" type="password"> <br/>
-                <input type="button" href="javascript:" id="register_button" value="Sign Up">
-            </form>
-        </div>
-        <div class="clearfix"></div>
     </div>
 </div>
 

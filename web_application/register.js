@@ -19,14 +19,15 @@ client.connect(    {onSuccess: function() {
         let button = document.getElementById('register_button');
         button.onclick = function () {
             client.subscribe(topicName, {});
-            let username = document.getElementById('username').value;
-            let password = document.getElementById('user_pass').value;
-            if (!checkUserInput(username, password)) {
+            let username = document.getElementById('username');
+            let password = document.getElementById('user_pass');
+            let confirmPassword = document.getElementById('user_pass_verify');
+            if (!checkUserInput(username, password, confirmPassword)) {
                 return;
             }
             let messageBody = {
-                username: username,
-                password: password,
+                username: username.value,
+                password: password.value,
                 status: 2
             };
             let message = buildMessage('web_register', messageBody);
@@ -36,20 +37,28 @@ client.connect(    {onSuccess: function() {
 });
 
 
-function checkUserInput(username, password) {
-    if (!username || !password) {
-        alert('Username and password cannot be empty.');
-        return false;
+function checkUserInput(username, password, verify) {
+    let alertInfo;
+    if (!username.value) {
+        alertInfo = 'Username cannot be empty.';
     }
-    else if (!checkUsernameFormat(username)) {
-        alert('Username can only contain numbers, English letters, and underlines.');
-        return false;
+    else if (!password.value) {
+        alertInfo = 'Password cannot be empty.'
     }
-    else if (!checkPasswordFormat(password)) {
-        alert('Password should not contain any blank characters.');
-        return false;
+    else if (!checkUsernameFormat(username.value)) {
+        alertInfo = 'Username can only contain numbers, English letters, and underlines.';
+    }
+    else if (!checkPasswordFormat(password.value)) {
+        alertInfo = 'Password should not contain any blank characters.';
+    }
+    else if (password.value !== verify.value) {
+        alertInfo = 'Passwords you entered are inconsistent.';
     }
     else {
         return true;
     }
+    alert(alertInfo);
+    return false;
 }
+
+// Add an advanced error style.
