@@ -4,8 +4,8 @@ static abstract class MessageType{
     static final String REGISTER = "reg_info";
     static final String LOGIN = "login_info";
     static final String VEHICLE = "vehicle_reg_info";
-    static final String FINANCE = "finance_info";
-    static final String RECHARGE= "top_up_info";
+    static final String FINANCE = "web_finance";
+    static final String RECHARGE= "web_recharge";
     static final String CHARGE= "charge_info";
     
     
@@ -36,6 +36,7 @@ void refreshData() {
     for (int i = 0; i <= files.length - 1; i++) {
       
         String path = files[i].getAbsolutePath();
+        
         if (path.toLowerCase().endsWith(".json")) {
             json = loadJSONObject(path);
             if (json != null) {
@@ -45,6 +46,12 @@ void refreshData() {
     }
 }
 
+void deleteFile(String path){
+    File f = new File(path);
+    if(f.exists()){
+      f.delete();
+    }
+}
   
 //get a JSONObject from disk according to datatype and userId
   JSONObject getObjWithId(String datatype , String userId)
@@ -84,6 +91,8 @@ void refreshData() {
 
 //Provide API for view, m5stack and web
 public class MessageData{
+  /* Do not use makeUUID as a part of name in file, it is useless and impossible to find and delete file
+     the file name 's format is  "data/"+message.getString("data_type") +"_"+ message.getJSONObject("info").getString("username") + ".json"
   String makeUUID()
   {
     String result="";
@@ -95,26 +104,28 @@ public class MessageData{
       result += characters.charAt((int)Math.floor(Math.random() * charactersLength));
     }
      return result;
-  }
-  //receive message from web
-   JSONObject saveMessageToDB(JSONObject message) {
+  }*/
+  //receive register message from web
+   JSONObject receiveRegisterFromWeb(JSONObject message) {
         if (message == null) {
             return null;
         }
         JSONObject res = message;
         //file's name should have datatype identifier since it is useful for searching
         if(getObjWithUsername("web_register", message.getJSONObject("info").getString("username"))==null){
-            saveJSONObject(message, "data/"+message.getString("data_type") + makeUUID()+ ".json");
+            saveJSONObject(message, "data/"+message.getString("data_type") +"_"+ message.getJSONObject("info").getString("username") + ".json");
+            refreshData();
             res.getJSONObject("info").setInt("status",1);  
             return res;
-        }else{
+        }
+        else {
             res.getJSONObject("info").setInt("status",0);  
             return res;
         }
     }
     
    //send message to web to allow access or not
-   JSONObject sendConfirmInfoToWeb(JSONObject loginMessage){
+   JSONObject receiveLoginFromWeb(JSONObject loginMessage){
          //String userId=loginMessage.getString("user_id");
          // use reg_info object to check whether password is correct
          String datatype="web_register";
@@ -132,24 +143,48 @@ public class MessageData{
         }
           
          return loginMessage;
+       }
+       
+       //receive finance message from web and sent validation message back
+   JSONObject receiveFinanceFromWeb(JSONObject financeMessage){
+         if (financeMessage == null) {
+            return null;
+          }
+        if(getObjWithUsername("web_finance", financeMessage.getJSONObject("info").getString("username"))==null){
+            JSONObject info = financeMessage.getJSONObject("info");
+            info.setInt("balance",0);
+            info.setString("currency","GBP");
+            info.setInt("status",1);
+            saveJSONObject(financeMessage, "data/"+financeMessage.getString("data_type") + "_"+ financeMessage.getJSONObject("info").getString("username") + ".json");
+            refreshData();
+            return financeMessage;
+          }
+          JSONObject res = getObjWithUsername("web_finance", financeMessage.getJSONObject("info").getString("username"));
+          res.getJSONObject("info").setInt("status",1);
+
+          return res;
         }
+       
+   JSONObject receiveRechargeFromWeb(JSONObject rechargeMessage){
+         JSONObject infoFromWeb = rechargeMessage.getJSONObject("info");
+         String username = infoFromWeb.getString("username");
+         JSONObject financeMessage= getObjWithUsername(MessageType.FINANCE,username);
+         if(financeMessage==null){
+           rechargeMessage.getJSONObject("info").setInt("status",0);
+           return rechargeMessage;
+         }
+         
+         int rechargeAmount = rechargeMessage.getJSONObject("info").getInt("pay_amount");
+         int balance = financeMessage.getJSONObject("info").getInt("balance");
+         balance = balance+ rechargeAmount;
+         financeMessage.getJSONObject("info").setInt("balance",balance);
    
-   //send message to web to show finance state
-   JSONObject sendFinanceInfoToWeb(JSONObject financeMessage)
-   {
-      String userId=financeMessage.getString("user_id");
-      String datatype=financeMessage.getString("data_type");
-      JSONObject obj=getObjWithId(datatype,userId);
-      
-      //The first time to check the finance state;
-      if(obj==null)
-      {
-       financeMessage.setInt("balance",0);
-       financeMessage.setString("currency","GBP");
-       return financeMessage;
-      }
-      
-      return obj;
-   
-   }
+         String path = dataPath("")+"\\"+MessageType.FINANCE+"_"+financeMessage.getJSONObject("info").getString("username")+".json";
+         deleteFile(path);
+         saveJSONObject(financeMessage, "data/"+financeMessage.getString("data_type") + "_"+ financeMessage.getJSONObject("info").getString("username") + ".json");
+         refreshData();
+         rechargeMessage.getJSONObject("info").setInt("balance",balance);
+         rechargeMessage.getJSONObject("info").setInt("status",1);
+         return rechargeMessage;
+       }
 }        

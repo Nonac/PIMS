@@ -45,7 +45,7 @@
 	"info": {
 			"username": "lea_tong",
 			"password": "*******",
-			"status": 1
+			"status": 2
 		}
 }
 
@@ -55,7 +55,7 @@
 	"info": {
 			"username": "lea_tong",
 			"password": "*******",
-            		"access":0
+		    "status": 2
 		}
 }
 
@@ -64,7 +64,7 @@
 
 	"data_type": "web_vehicle_register",   //register for a vehicle
 	"info": {
-            		"username":"lea_tong",
+			"username":"lea_tong",
 			"vehicle_id": "acdjcidjd",
 			"vehicle_type":"car",
 			"status": 2
@@ -78,11 +78,11 @@
 		"username": "lea_tong",
 		"vehicle_list": [
 			{
-				"vehicle_id": "fewfe",
+				"vehicle_id": "A007",
 				"vehicle_type": "car"
 			},
 			{
-				"vehicle_id": "fweweww",
+				"vehicle_id": "AOO8",
 				"vehicle_type": "lorry"
 			}
 		],
@@ -95,7 +95,7 @@
 	"data_type": "web_vehicle_history",
 	"info": {
 		"username": "lea_tong",
-		"vehicle_id": "fweewfew",
+		"vehicle_id": "A007",
 		"0": 4.3,	   // This means today this vehicle has been parked in the parking lot for 4.3 hours
 		"1": 15,     // This means: on the day that was 1 day before today, this vehicle was in the parking lot for 15 hours.
 		"2": 10.9,
@@ -103,7 +103,7 @@
 		"4": 18.7,
 		"5": 0,
 		"6": 7,
-		"status": 1
+		"status": 2
 	}
 }
 
@@ -112,7 +112,7 @@
 
 	"data_type": "web_finance",  // check the balance
 	"info": {
-           		"username":"lea_tong",
+			"username":"lea_tong",
 			"balance": 21331,
 			"currency":"GBP",
 			"status": 2
@@ -124,12 +124,12 @@
 
 	"data_type": "web_recharge",  // recharge some money
 	"info": {
-            		"username":"lea_tong",
+			"username":"lea_tong",
 			"balance": 21331,
 			"currency":"GBP",
-            		"card_number":"326173173718",
-            		"pay_amount":"10",
-	    		"status": 1
+			"card_number":"326173173718",
+			"pay_amount":"10",
+			"status": 2
 		}
 }
 
