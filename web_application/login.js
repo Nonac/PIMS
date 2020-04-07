@@ -21,10 +21,6 @@ client.connect({onSuccess: function() {
             client.subscribe(topicName, {});
             let username = document.getElementById('username').value;
             let password = document.getElementById('user_pass').value;
-            if (!username || !password) {
-                alert("Username or password cannot be empty.");
-                return;
-            }
             let messageBody = {
                 username: username,
                 password: password,

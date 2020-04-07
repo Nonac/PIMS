@@ -17,6 +17,13 @@ input.input-material.is-invalid {
     border-color: #dc3545 !important;
 }
 
+input.input-material.invalid-feedback {
+    color: #dc3545;
+}
+/*input.input-material.is-invalid ~ label {*/
+/*    color: #dc3545;*/
+/*}*/
+
 input.input-material:focus {
     outline: none;
     border-color: rgb(46, 169, 223);
@@ -125,13 +132,16 @@ input.input-material:focus {
     font-size: 1rem;
     line-height: 1.5;
     border-radius: 0.25rem;
+    color: white;
 }
 
 .btn:focus{
     box-shadow: 0 0 0 0.2rem rgba(0, 96, 150, 0.25);
+    color: white;
 }
 
 .btn:hover {
     background-color: rgb(0, 98, 132);
     border-color: rgb(0, 92, 175);
+    color: white;
 }
