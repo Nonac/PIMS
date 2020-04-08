@@ -1,0 +1,96 @@
+.navbar {
+    background: rgba(46, 169, 223, 0.8);
+    max-height: 15vh;
+}
+
+.has-shadow {
+    box-shadow: 2px 2px 5px rgba(50, 50, 50, 0.2);
+}
+
+.panel-container {
+    width: 100%;
+}
+
+.navbar .navbar-logo {
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.navbar .navbar-subtitle {
+    color: white;
+    font-size: 1em;
+}
+
+.account-page {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.account-page::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: -1;
+    background: url(./imgs/parking_lot.jpg);
+    background-size: cover;
+    filter: blur(10px);
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.account-page .container {
+    z-index: 999;
+    padding: 20px;
+    position: relative;
+    top: 15vh;
+}
+
+.account-page .info-holder {
+    height: 50vh;
+    background: rgba(101, 103, 101, 0.3);
+    color: white;
+}
+
+.account-page .side-bar {
+    background: rgba(101, 103, 101, 0.3);
+    color: white;
+    margin-right: -5%;
+}
+
+.account-page .side-bar a:link, .account-page .side-bar a:visited {
+    color: white;
+}
+
+.account-page .side-bar img {
+    width: 100%;
+}
+
+@media (max-width: 991px) {
+    .account-page .side-bar {
+        margin: 0;
+    }
+}
+
+.side-bar .profile-container {
+    height: 6em;
+}
+
+.side-bar .profile-container span {
+    display: block;
+    font-weight: bold;
+    line-height: 1.5em;
+}
+
+.side-bar .profile-container small {
+    display: block;
+    font-style: italic;
+}
+
+.side-bar .carousel-control-next, .side-bar .carousel-control-prev {
+    bottom: 6em;
+}
+
