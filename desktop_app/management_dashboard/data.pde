@@ -324,7 +324,7 @@ public class MessageData{
      int flag=0;
      while(list.size()>0)
      {
-       int max=0;
+       int max=-1000;
        int k=-1;
        for(int i=0;i<list.size();i++)
        {
@@ -390,7 +390,7 @@ public class MessageData{
        String date=year()+"-"+month()+"-"+day()+"-"+hour()+"-"+minute()+"-"+second();
        newInfo.setString("time_in",date);
        newInfo.setString("time_out",null);
-       newInfo.setString("barrier_id",transmitMessage.getJSONObject("barrier_info").getString("barrier_id"));
+       newInfo.setInt("barrier_id",transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
        newInfo.setString("vehicle_id",targetId);
        newInfo.setString("vehicle_type",targetType);
        newInfo.setString("barrier_type","in");
