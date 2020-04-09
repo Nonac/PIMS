@@ -13,8 +13,9 @@
 }
 
 {
-	"data_type": "m5_receive",   //send to m5
-	"op_code": 'A' // which stands for lifting the barrier (for example).
+	"data_type": "m5_receive",   //sending to m5
+	"barrier_id": 12345,
+	"op_code": 'A' // defined in Barrier_orders.h
 }
 
 {
