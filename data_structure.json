@@ -2,17 +2,14 @@
 
 	"data_type": "m5_transmit",   //sent from m5
 	"barrier_info":{
-		"barrier_id": 12345, 
+		"barrier_id": "12345"
 	},
-	
 	"bluetooth_devices":
 		[{
-			"bluetooth_address": "47:a9:af:d2:63:cd"
+			"bluetooth_address": "47:a9:af:d2:63:cd",
 	//Received signal strength indication. The closer the value is to 0, the stronger the received signal has been.
 			"RSSI": -80
 		},...,{...}]
-	
-	
 }
 
 {
@@ -20,25 +17,18 @@
 	"op_code": 'A' // which stands for lifting the barrier (for example).
 }
 
-//stray:
-	/*"parking":{ 
-		"barrier_type": "out",
-		"time_in": "2020-03-20T17:53:30",
-		"time_out": "2020-03-20T17:59:40",
-<<<<<<< HEAD
-		"customer_id": 01,
-		"vehicle": {
-			"vehicle_id": 01,
-			"vehicle_type": "car"
-		},
-=======
-		"vehicle_id": "acdjcidjd"
->>>>>>> 73a19c2ca88fe7855d3ecb82abd38d0bf34fef90
-		"parking_lot": {
-		"parking_id": 01,
-		"postcode": "BS1 5UL",
-		}
-	}*/
+{
+			"data_type":"parking",   //parking info
+			"info": {
+				"barrier_type": "out",
+				"time_in": "2020-3-20-15-4-21",
+				"time_out": "2020-3-20-18-4-21",
+				"username": "lea",
+				"barrier_id": 12345,
+				"vehicle_id": "acdjcidjd",
+				"vehicle_type":"car"
+				}
+}
 
 {
 	"data_type": "web_register",  //register for an account
@@ -133,4 +123,3 @@
 			"status": 2
 		}
 }
-

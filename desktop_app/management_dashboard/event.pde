@@ -1,4 +1,4 @@
-String MQTT_topic="PIMS/test0";
+String MQTT_topic="PIMS/test";
 
 void clientConnected() {
   println("client connected");
@@ -50,6 +50,9 @@ void messageReceived(String topic, byte[] payload) {
           JSONObject tmp=api.receiveVehicleQueryFromWeb(json);
           //refreshData();
           client.publish(MQTT_topic,tmp.toString());
+      }else if(datatype.equals(MessageType.TRANSMIT))
+      {
+        api.receiveTransmitFromM5(json);
       }
       
     }

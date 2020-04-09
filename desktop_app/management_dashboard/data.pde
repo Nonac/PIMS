@@ -3,19 +3,16 @@ static abstract class MessageType{
     static final String PARKING = "parking";
     static final String REGISTER = "reg_info";
     static final String LOGIN = "login_info";
-    static final String VEHICLE = "vehicle_reg_info";
 
-    
-    
     
     static final String VEHICLE_REGISTER = "web_vehicle_register";
     static final String VEHICLE_QUERY = "web_vehicle_query";
     static final String VEHICLE_HISTORY= "web_vehicle_history";
     
+    static final String TRANSMIT="m5_transmit";
     
     static final String FINANCE = "web_finance";
     static final String RECHARGE= "web_recharge";
-    
     static final String USER_REGISTER = "web_register";
     static final String USER_LOGIN = "web_login";
 }
@@ -31,6 +28,16 @@ private class Database{
 }
 
 
+private class Device{
+   String address;
+   int rssi;
+   public Device(String address,int rssi)
+   {
+     this.address=address;
+     this.rssi=rssi;
+   }
+}
+
 // copy any JSON objects on disk into working memory
 void refreshData() {
     File dir;
@@ -39,16 +46,6 @@ void refreshData() {
     files = dir.listFiles();
     JSONObject json;
     
-    //not necessary
-    if(db.messages.length>files.length){
-     for(int i =files.length ;i<db.messages.length;i++){
-          db.messages[i] = null;
-     }
-    }
-    for(int i =0;i<db.messages.length;i++){
-
-    
-    }
     for (int i = 0; i <= files.length - 1; i++) {
       
         String path = files[i].getAbsolutePath();
@@ -310,6 +307,117 @@ public class MessageData{
        }
     
     
+   void receiveTransmitFromM5(JSONObject transmitMessage)
+   {
+     JSONArray arr=transmitMessage.getJSONArray("bluetooth_devices");
+     ArrayList<Device> list=new ArrayList<Device>();
+     String targetUser=null;
+     String targetType=null;
+     String targetId=null;
+     for(int i=0;i<arr.size();i++)
+     {
+       JSONObject item=arr.getJSONObject(i);
+       String address=item.getString("bluetooth_address");
+       int rssi=item.getInt("RSSI");
+       list.add(new Device(address,rssi));
+     }
+     int flag=0;
+     while(list.size()>0)
+     {
+       int max=0;
+       int k=-1;
+       for(int i=0;i<list.size();i++)
+       {
+         if(list.get(i).rssi>max)
+         {
+           max=list.get(i).rssi;
+           k=i;
+         }
+       }
+        refreshData();
+       //find a registerd vehicle
+        for(JSONObject message:db.messages)
+       {
+         if(message!=null&&message.getString("data_type").equals(MessageType.VEHICLE_REGISTER))
+         {
+           JSONObject info = message.getJSONObject("info");
+           if(info.getString("bluetooth_address").equals(list.get(k).address))
+             {
+               flag=1;
+               targetUser=info.getString("username");
+               targetId=info.getString("vehicle_id");
+               targetType=info.getString("vehicle_type");
+               break;
+             }
+         }
+       }
+       if(flag==1)
+       break;
+       else
+       {
+         list.remove(k);
+       }
+
+     }
+
+     if(flag==1)
+     {
+        for(JSONObject message:db.messages)
+       {
+         if(message!=null&&message.getString("data_type").equals(MessageType.PARKING))
+         {
+           JSONObject info = message.getJSONObject("info");
+           if(info.getString("username").equals(targetUser)&&info.getString("barrier_type").equals("in"))
+             {
+
+                 String path = dataPath("")+"\\"+MessageType.PARKING+"_"+message.getJSONObject("info").getString("username")+"_"+message.getJSONObject("info").getString("time_in")+".json";
+                 deleteFile(path);
+                 String date=year()+"-"+month()+"-"+day()+"-"+hour()+"-"+minute()+"-"+second();
+                 info.setString("time_out",date);
+                 info.setString("barrier_type","out");
+                 message.setJSONObject("info",info);
+                 saveJSONObject(message, "data/"+message.getString("data_type") + "_"+ message.getJSONObject("info").getString("username") +"_"+ message.getJSONObject("info").getString("time_in")+".json");
+                 refreshData();
+                 parkingCharge(info.getString("time_in"),date,targetUser);
+                 return;
+             }
+         }
+       }
+       JSONObject json=new JSONObject();
+       JSONObject newInfo=new JSONObject();
+       json.setString("data_type",MessageType.PARKING);
+       newInfo.setString("username",targetUser);
+       String date=year()+"-"+month()+"-"+day()+"-"+hour()+"-"+minute()+"-"+second();
+       newInfo.setString("time_in",date);
+       newInfo.setString("time_out",null);
+       newInfo.setString("barrier_id",transmitMessage.getJSONObject("barrier_info").getString("barrier_id"));
+       newInfo.setString("vehicle_id",targetId);
+       newInfo.setString("vehicle_type",targetType);
+       newInfo.setString("barrier_type","in");
+       json.setJSONObject("info",newInfo);
+       saveJSONObject(json, "data/"+json.getString("data_type") + "_"+ json.getJSONObject("info").getString("username") +"_"+ json.getJSONObject("info").getString("time_in")+".json");
+       refreshData();
+       return;
+     }
+
+       }
+       /*Charge the fee after parking*/
+        void parkingCharge(String time_in,String time_out,String username){
+
+         JSONObject financeMessage= getObjWithUsername(MessageType.FINANCE,username);
+         String[] in_fee=time_in.split("-");
+         String[] out_fee=time_out.split("-");
+         /*Using seconds here because it's easy to demonstrate, it's not the real thing*/
+         int seconds=int((float(out_fee[0])-float(in_fee[0]))*365*24*3600+(float(out_fee[1])-float(in_fee[1]))*30*24*3600+(float(out_fee[2])-float(in_fee[2]))*24*3600+(float(out_fee[3])-float(in_fee[3]))*3600+(float(out_fee[4])-float(in_fee[4]))*60+(float(out_fee[5])-float(in_fee[5])));
+         int balance = financeMessage.getJSONObject("info").getInt("balance");
+         balance = balance- seconds;
+         financeMessage.getJSONObject("info").setInt("balance",balance);
+         String path = dataPath("")+"\\"+MessageType.FINANCE+"_"+financeMessage.getJSONObject("info").getString("username")+".json";
+         deleteFile(path);
+         saveJSONObject(financeMessage, "data/"+financeMessage.getString("data_type") + "_"+ financeMessage.getJSONObject("info").getString("username") + ".json");
+         refreshData();
+
+       }
        
        
 }        
