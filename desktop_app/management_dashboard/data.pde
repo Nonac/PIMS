@@ -4,12 +4,17 @@ static abstract class MessageType{
     static final String REGISTER = "reg_info";
     static final String LOGIN = "login_info";
     static final String VEHICLE = "vehicle_reg_info";
+
+    
+    
+    
+    static final String VEHICLE_REGISTER = "web_vehicle_register";
+    static final String VEHICLE_QUERY = "web_vehicle_query";
+    static final String VEHICLE_HISTORY= "web_vehicle_history";
+    
+    
     static final String FINANCE = "web_finance";
     static final String RECHARGE= "web_recharge";
-    static final String CHARGE= "charge_info";
-    
-    
-    
     
     static final String USER_REGISTER = "web_register";
     static final String USER_LOGIN = "web_login";
@@ -33,6 +38,17 @@ void refreshData() {
     dir = new File(dataPath(""));
     files = dir.listFiles();
     JSONObject json;
+    
+    //not necessary
+    if(db.messages.length>files.length){
+     for(int i =files.length ;i<db.messages.length;i++){
+          db.messages[i] = null;
+     }
+    }
+    for(int i =0;i<db.messages.length;i++){
+
+    
+    }
     for (int i = 0; i <= files.length - 1; i++) {
       
         String path = files[i].getAbsolutePath();
@@ -81,6 +97,23 @@ void deleteFile(String path){
          {
            JSONObject info = message.getJSONObject("info");
            if(info.getString("username").equals(username))
+             {
+               res=message;
+             }
+         }
+       }
+       return res;
+  }
+  //get a JSONObject from disk according to datatype and identifier
+  JSONObject getObjFromDb(String datatype , String identifier, String str)
+  {
+       JSONObject res=null;
+       for(JSONObject message:db.messages)
+       {
+         if(message!=null&&message.getString("data_type").equals(datatype))
+         {
+           JSONObject info = message.getJSONObject("info");
+           if(info.getString(identifier).equals(str))
              {
                res=message;
              }
@@ -187,4 +220,96 @@ public class MessageData{
          rechargeMessage.getJSONObject("info").setInt("status",1);
          return rechargeMessage;
        }
+       
+  JSONObject receiveVehicleRegisterFromWeb(JSONObject message) {
+        if (message == null) {
+            return null;
+        }
+        JSONObject res = message;
+        //file's name should have datatype identifier since it is useful for searching
+        if(getObjFromDb("web_vehicle_register","vehicle_id", message.getJSONObject("info").getString("vehicle_id"))==null){
+            saveJSONObject(message, "data/"+message.getString("data_type") +"_"+ message.getJSONObject("info").getString("username")+
+            "_"+ message.getJSONObject("info").getString("vehicle_id") + ".json");
+            refreshData();
+            res.getJSONObject("info").setInt("status",1);  
+            return res;
+        }
+        else {
+            res.getJSONObject("info").setInt("status",0);  
+            return res;
+        }
+    }
+    
+       //send message to web to allow access or not
+   JSONObject receiveVehicleQueryFromWeb(JSONObject queryMessage){
+
+         String datatype="web_vehicle_register";
+         JSONObject infoFromWeb = queryMessage.getJSONObject("info");
+         String username = infoFromWeb.getString("username");
+         
+         
+         JSONArray values = new JSONArray();
+         int count = 0;
+         for(JSONObject message:db.messages)
+           {
+           if(message!=null&&message.getString("data_type").equals(datatype)
+           && message.getJSONObject("info").getString("username").equals(username)
+           )
+           {
+                 JSONObject vehicleInfo = new JSONObject();
+                 JSONObject infoFromDb = message.getJSONObject("info");
+                 String vehicle_id =  infoFromDb.getString("vehicle_id");
+                 String vehicle_type =  infoFromDb.getString("vehicle_type");
+                 vehicleInfo.setString("vehicle_id",vehicle_id );
+                 vehicleInfo.setString("vehicle_type",vehicle_type );
+                 values.setJSONObject(count, vehicleInfo);
+                 count++;
+           }
+           }
+           if(count==0){
+               infoFromWeb.setInt("status",0);
+           }else{
+               infoFromWeb.setJSONArray("vehicle_list",values);
+               infoFromWeb.setInt("status",1);
+           }
+           return queryMessage;
+       }
+    
+       JSONObject receiveVehicleHistoryFromWeb(JSONObject queryMessage){
+
+         String datatype="web_vehicle_register";
+         JSONObject infoFromWeb = queryMessage.getJSONObject("info");
+         String username = infoFromWeb.getString("username");
+         
+         
+         JSONArray values = new JSONArray();
+         int count = 0;
+         for(JSONObject message:db.messages)
+           {
+           if(message!=null&&message.getString("data_type").equals(datatype)
+           && message.getJSONObject("info").getString("username").equals(username)
+           )
+           {
+                 JSONObject vehicleInfo = new JSONObject();
+                 JSONObject infoFromDb = message.getJSONObject("info");
+                 String vehicle_id =  infoFromDb.getString("vehicle_id");
+                 String vehicle_type =  infoFromDb.getString("vehicle_type");
+                 vehicleInfo.setString("vehicle_id",vehicle_id );
+                 vehicleInfo.setString("vehicle_type",vehicle_type );
+                 values.setJSONObject(count, vehicleInfo);
+                 count++;
+           }
+           }
+           if(count==0){
+               infoFromWeb.setInt("status",0);
+           }else{
+               infoFromWeb.setJSONArray("vehicle_list",values);
+               infoFromWeb.setInt("status",1);
+           }
+           return queryMessage;
+       }
+    
+    
+       
+       
 }        
