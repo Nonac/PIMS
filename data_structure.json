@@ -67,7 +67,8 @@
 			"username":"lea_tong",
 			"vehicle_id": "acdjcidjd",
 			"vehicle_type":"car",
-			"status": 2
+			"status": 2,
+			"bluetooth_address" : "47:a9:af:d2:63:cd"
 		}
 }
 
