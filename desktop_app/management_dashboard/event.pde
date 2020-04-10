@@ -38,6 +38,21 @@ void messageReceived(String topic, byte[] payload) {
           JSONObject tmp=api.receiveRechargeFromWeb(json);
           //refreshData();
           client.publish(MQTT_topic,tmp.toString());
+      }else if(datatype.equals(MessageType.VEHICLE_REGISTER)&&json.getJSONObject("info").getInt("status")==2)
+      {
+     
+          JSONObject tmp=api.receiveVehicleRegisterFromWeb(json);
+          //refreshData();
+          client.publish(MQTT_topic,tmp.toString());
+      }else if(datatype.equals(MessageType.VEHICLE_QUERY)&&json.getJSONObject("info").getInt("status")==2)
+      {
+     
+          JSONObject tmp=api.receiveVehicleQueryFromWeb(json);
+          //refreshData();
+          client.publish(MQTT_topic,tmp.toString());
+      }else if(datatype.equals(MessageType.TRANSMIT))
+      {
+        api.receiveTransmitFromM5(json);
       }
       
     }
