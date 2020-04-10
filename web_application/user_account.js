@@ -44,7 +44,7 @@ client.onMessageArrived = function (message) {
         }
     }
     if (respondObj.info.username === username && respondObj.info.status === 0) {
-        alert('Back-end error.');
+        alert('Back-end rejected your request.');
     }
 };
 
@@ -90,6 +90,13 @@ function renderChart(respondObj) {
 
 function renderRecharge(respondObj) {
     sendQuery('web_finance', {username: username, status: 2});
+    closeModal('top_up_modal');
+    showSuccess('You have successfully recharged.');
+}
+
+function closeModal(modalId) {
+    let closeButton = '#' + modalId + ' .close';
+    $(closeButton).click();
 }
 
 function recharge() {
@@ -113,6 +120,8 @@ function renderVehicleRegister() {
     let vehicleListEle = document.getElementById('vehicle_list');
     vehicleListEle.innerHTML = '';
     sendQuery('web_vehicle_query', {username: username, status: 2});
+    closeModal('add_vehicle_modal');
+    showSuccess('You have registered a new vehicle.');
 }
 
 function registerVehicle() {
@@ -183,4 +192,17 @@ function renderUserBalance(respondObj) {
 function sendQuery(dataType, messageBody) {
     let message = buildMessage(dataType, messageBody);
     client.send(message);
+}
+
+function showSuccess(successInfo) {
+    let bodyEle = document.getElementsByTagName('body')[0];
+    let newAlert = document.createElement('div');
+    newAlert.setAttribute('class', 'alert alert-success alert-dismissible fade show');
+    newAlert.setAttribute('id', 'success_info');
+    newAlert.innerHTML = '<button type="button" class="close" data-dismiss="alert">&times;</button> ' +
+        '<strong>Success!</strong><span class="success-info">' + successInfo + '</span>';
+    bodyEle.insertBefore(newAlert, bodyEle.children[0]);
+    setTimeout(function() {
+        $('#success_info .close').click();
+    }, 1000);
 }

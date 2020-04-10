@@ -43,7 +43,7 @@
 }
 
 .account-page .container {
-    z-index: 999;
+    z-index: 998;
     padding: 20px;
     position: relative;
     top: 15vh;
@@ -195,4 +195,11 @@
 
 .list-group-item:active {
     background: rgb(145, 152, 159);
+}
+
+.alert-success {
+    z-index: 1031;
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
