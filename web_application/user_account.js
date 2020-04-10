@@ -2,9 +2,21 @@ if (!getCookie('username')) {
     alert('Please log in first.');
     window.location.href = 'index.html';
 }
+
 let username = getCookie('username');
 let nameElement = document.getElementById('username');
 nameElement.innerHTML = username;
+
+setCanvas();
+
+function setCanvas() {
+    let canvas = $('#echart_canvas');
+    let canvasWidth = canvas.width();
+    let canvasHeight = canvas.height()
+    console.log(canvasWidth);
+    canvas.css('width', canvasWidth).css('height', canvasHeight);
+
+}
 
 client.connect({onSuccess: function () {
     let addVehicleButton = document.getElementById('add_vehicle_button');
@@ -37,20 +49,33 @@ client.onMessageArrived = function (message) {
 };
 
 function renderChart(respondObj) {
-    let myChart = echarts.init(document.getElementById('echart_canvas'));
+    let myChart = echarts.init(document.getElementById('echart_canvas'), 'light');
     let info = respondObj.info;
     let nowDate = new Date();
     let option = {
         title: {
-            text: 'Parking in Last 7 Days'
+            text: 'Parking time in Last 7 Days',
+            fontSize: '12',
+            top: 0,
+            textStyle: {
+                color: 'white'
+            }
         },
         tooltip: {},
         legend: {
-            data: ['hrs']
+            data: ['hrs'],
+            top: 25,
+            right: 0,
+            textStyle: {
+                color: 'white'
+            }
         },
         xAxis: {data:[]},
         yAxis: {},
-        series: [{name: 'hrs', type: 'line', data: []}]
+        series: [{name: 'hrs', type: 'line', data: []}],
+        textStyle: {
+            color: 'white'
+        }
     }
     for (let i in info) {
         if (parseInt(i) || parseInt(i) === 0) {
@@ -111,11 +136,42 @@ function registerVehicle() {
 function renderVehicleList(respondObj) {
     let vehicleListEle = document.getElementById('vehicle_list');
     let vehicleArr = respondObj.info.vehicle_list;
+    vehicleListEle.innerHTML = '';
     for (let i in vehicleArr) {
         let newLi = document.createElement('li');
-        newLi.innerHTML = vehicleArr[i].vehicle_id + vehicleArr[i].vehicle_type
+        newLi.setAttribute('class', 'list-group-item list-group-item-light');
+        newLi.innerHTML = vehicleArr[i].vehicle_type + ':&nbsp' + vehicleArr[i].vehicle_id;
         vehicleListEle.appendChild(newLi);
     }
+    if (vehicleListEle.children.length > 0) {
+        let firstChild = vehicleListEle.children[0];
+        firstChild.setAttribute('class', firstChild.getAttribute('class') + ' active');
+        setClick($('#vehicle_list'));
+        sendHistoryQuery(firstChild.innerHTML.split(':')[1].trim().split(';')[1]);
+    }
+}
+
+function setClick(list) {
+    list.children().click(function(){
+        if($(this).hasClass('active')){
+        }else{
+            $(this).addClass('active');
+            sendHistoryQuery($(this).text().split(':')[1].trim());
+            console.log('success');
+        }
+        if($(this).siblings().hasClass('active')){
+            $(this).siblings().removeClass('active');
+        }
+    })
+}
+
+function sendHistoryQuery(vehicleId) {
+    let messageBody = {
+        username: username,
+        vehicleId: vehicleId,
+        status: 2
+    };
+    sendQuery('web_vehicle_history', messageBody);
 }
 
 function renderUserBalance(respondObj) {

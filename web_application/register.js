@@ -43,7 +43,7 @@ function checkUserInput(username, password, verify) {
         alertInfo = 'Username cannot be empty.';
     }
     else if (!password.value) {
-        alertInfo = 'Password cannot be empty.'
+        alertInfo = 'Password cannot be empty.';
     }
     else if (!checkUsernameFormat(username.value)) {
         alertInfo = 'Username can only contain numbers, English letters, and underlines.';

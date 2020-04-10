@@ -39,8 +39,8 @@ client.connect({onSuccess: function() {
                 return;
             }
             let messageBody = {
-                username: username,
-                password: password,
+                username: username.value,
+                password: password.value,
                 status: 2
             };
             let message = buildMessage('web_login', messageBody);
