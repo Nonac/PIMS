@@ -24,5 +24,8 @@ void setup() {
 
 // we don't really use the draw function as controlP5 does the work
 void draw() {
-    
+    //////////////////////////////////// LOOK HERE ///////////////////////////////////////////////////////
+    /* Although it doesn't do much but we still need to draw, otherwise the dropdown lists don't work */
+    background(41,75,140);
+    /* Now just need to figure out how to change backgroud colors after clicking */
 }
