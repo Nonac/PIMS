@@ -62,3 +62,23 @@ void messageReceived(String topic, byte[] payload) {
 void connectionLost() {
   println("connection lost");
 }
+
+//Close the barrier
+void barrierClose(int barrierId)
+{
+  JSONObject json=new JSONObject();
+   json.setString("data_type","m5_receive");
+   json.setInt("barrier_id",barrierId);
+   json.setString("op_code","A");
+   client.publish(MQTT_topic,json.toString());
+}
+
+//Open the barrier
+void barrierOpen(int barrierId)
+{
+  JSONObject json=new JSONObject();
+   json.setString("data_type","m5_receive");
+   json.setInt("barrier_id",barrierId);
+   json.setString("op_code","B");
+   client.publish(MQTT_topic,json.toString());
+}

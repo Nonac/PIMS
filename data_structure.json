@@ -15,7 +15,7 @@
 {
 	"data_type": "m5_receive",   //sending to m5
 	"barrier_id": 12345,
-	"op_code": 'A' // defined in Barrier_orders.h
+	"op_code": "A" // defined in Barrier_orders.h. "A" means closed, "B" means open.
 }
 
 {

@@ -27,7 +27,7 @@ private class Database{
      }
 }
 
-
+//Record a bluetooth address and its strength
 private class Device{
    String address;
    int rssi;
@@ -310,6 +310,7 @@ public class MessageData{
    void receiveTransmitFromM5(JSONObject transmitMessage)
    {
      JSONArray arr=transmitMessage.getJSONArray("bluetooth_devices");
+     //Store all the bluetooth address and strengths
      ArrayList<Device> list=new ArrayList<Device>();
      String targetUser=null;
      String targetType=null;
@@ -326,6 +327,7 @@ public class MessageData{
      {
        int max=-1000;
        int k=-1;
+       //Find the bluetooth address with the strongest signal
        for(int i=0;i<list.size();i++)
        {
          if(list.get(i).rssi>max)
@@ -344,6 +346,7 @@ public class MessageData{
            if(info.getString("bluetooth_address").equals(list.get(k).address))
              {
                flag=1;
+               // flag=1 means find the target vehicle which is registered
                targetUser=info.getString("username");
                targetId=info.getString("vehicle_id");
                targetType=info.getString("vehicle_type");
@@ -408,7 +411,8 @@ public class MessageData{
          String[] in_fee=time_in.split("-");
          String[] out_fee=time_out.split("-");
          /*Using seconds here because it's easy to demonstrate, it's not the real thing*/
-         int seconds=int((float(out_fee[0])-float(in_fee[0]))*365*24*3600+(float(out_fee[1])-float(in_fee[1]))*30*24*3600+(float(out_fee[2])-float(in_fee[2]))*24*3600+(float(out_fee[3])-float(in_fee[3]))*3600+(float(out_fee[4])-float(in_fee[4]))*60+(float(out_fee[5])-float(in_fee[5])));
+         int seconds=int((float(out_fee[0])-float(in_fee[0]))*365*24*3600+(float(out_fee[1])-float(in_fee[1]))*30*24*3600+(float(out_fee[2])-float(in_fee[2]))*24*3600+
+         (float(out_fee[3])-float(in_fee[3]))*3600+(float(out_fee[4])-float(in_fee[4]))*60+(float(out_fee[5])-float(in_fee[5])));
          int balance = financeMessage.getJSONObject("info").getInt("balance");
          balance = balance- seconds;
          financeMessage.getJSONObject("info").setInt("balance",balance);
