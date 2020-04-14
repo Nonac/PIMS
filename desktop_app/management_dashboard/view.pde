@@ -1,9 +1,9 @@
 //Todo:
-//1. bulid a tableView class.
+//1. bulid two tableView class.
 //2. bulid a dinamic reflesh tableView for last ten records I/O
 //3. bulid a class for data visualization.
 
-
+//dark/light mode switch
 boolean colorModeSwitch=true;
 
 
@@ -15,12 +15,11 @@ void refreshDashboardData() {
 void updateDashboardData() {
     refreshData();
     surface.setTitle("Parking IOT Management System");
-    view.build();
-    
-    
+    view.build(); 
 }
 
 public class Dashboard_view {
+  //color mode
     int darkModeBackGround=color(41,75,140);
     int lightModeBackGround=color(213,223,241);
     int darkModeFontColor=color(213,223,241);
@@ -28,19 +27,20 @@ public class Dashboard_view {
     int darkModeInfoWindowColor=color(132,160,215);
     int lightModeInfoWindowColor=color(171,192,227);
     int titleBackGround=color(87,106,195);
+    int settingsBackGround=color(184,197,229);
     
     Textlabel timer,accountLabel,title,subtitle,detailLabel,newCarsComingInLabel,barrierControlLabel;
-;
-    ListBox list;
+    ScrollableList list;
     
+    //build() is for those complement won't change color with color switch
     void build(){
+      //set Berlin Sans FB as Font
       PFont p = createFont("Berlin Sans FB",20); 
       ControlFont font = new ControlFont(p);
       cp5.setFont(font);
+      
       view.buildTitle();
-      view.buildSettingSwitch();
-      
-      
+      view.buildSettingSwitch();      
     }
     
     void buildBackGround(){ 
@@ -51,18 +51,18 @@ public class Dashboard_view {
       }
     }
     
+    //color switch
     void buildSettingSwitch(){
-       list = cp5.addListBox("Settings")
+       list = cp5.addScrollableList("Settings")
        .setPosition(1638,10)
-       .setSize(120,80)
-       .setItemHeight(20)
+       .setSize(120,120)
+       .setItemHeight(40)
        .setBarHeight(20)
-       .setBackgroundColor((colorModeSwitch)?darkModeInfoWindowColor:lightModeInfoWindowColor)
+       .setColorForeground((colorModeSwitch)?darkModeBackGround:lightModeBackGround)
        .setColorBackground((colorModeSwitch)?darkModeBackGround:lightModeBackGround)
        .addItem("Light Mode",0)
        .addItem("Dark Mode",1)
-       .setColorActive((colorModeSwitch)?lightModeInfoWindowColor:darkModeInfoWindowColor)
-       
+       .close()
        ;
        
        if(colorModeSwitch){
@@ -72,7 +72,7 @@ public class Dashboard_view {
        }
     }
     
-    
+    //Timer on the middle head
     void buildTimer(){
       int s = second();  // Values from 0 - 59
       int m = minute();  // Values from 0 - 59
@@ -90,6 +90,7 @@ public class Dashboard_view {
       }
     }
     
+    //All the image are saved in ~/data/.. This function is for all the image button.
     void buildButton(){
        Button accountIcon =cp5.addButton("accountIcon")
        .setPosition(5,5)
@@ -121,6 +122,7 @@ public class Dashboard_view {
        }
     }
     
+    //This is for all the text label.
     void buildLabelText(){
       accountLabel=cp5.addTextlabel("accountLabel")
       .setText("My manager account")
@@ -159,6 +161,7 @@ public class Dashboard_view {
       }
     }
     
+    //is for title and subtitle
     void buildTitle(){
       cp5.addBang("")
         .setPosition(0,30)
@@ -183,7 +186,7 @@ public class Dashboard_view {
     } 
 }
          
-         
+//color switch function        
 void Settings(int theValue){
       switch(theValue){
          case 1: 
