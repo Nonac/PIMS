@@ -25,12 +25,11 @@ void setup() {
 // we don't really use the draw function as controlP5 does the work
 void draw() {
     //////////////////////////////////// LOOK HERE ///////////////////////////////////////////////////////
-    /* Although it doesn't do much but we still need to draw, otherwise the dropdown lists don't work */
-    view.buildBackGround();
+    //All the complements as follow could change their color with color switch.
+    //It maybe not work outside draw().
     
-    /* Now just need to figure out how to change backgroud colors after clicking */
+    view.buildBackGround();
     view.buildTimer();
     view.buildButton();
-    view.buildLabelText();
-    
+    view.buildLabelText();  
 }
