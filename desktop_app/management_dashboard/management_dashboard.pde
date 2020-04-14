@@ -27,9 +27,10 @@ void draw() {
     //////////////////////////////////// LOOK HERE ///////////////////////////////////////////////////////
     /* Although it doesn't do much but we still need to draw, otherwise the dropdown lists don't work */
     view.buildBackGround();
+    
     /* Now just need to figure out how to change backgroud colors after clicking */
     view.buildTimer();
-    view.buildIcon();
+    view.buildButton();
     view.buildLabelText();
     
 }
