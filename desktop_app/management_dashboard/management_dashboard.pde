@@ -11,11 +11,11 @@ Database db = new Database();
 
 void setup() {
     cp5 = new ControlP5(this);
-    size(1280, 720);
+    size(1760, 990);
     // connect to the broker
-    client = new MQTTClient(this);
+    //client = new MQTTClient(this);
     // connect to the broker and use a random string for clientid
-    client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop111");
+    //client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop111");
     delay(100);
     // refresh the dashboard with the information
     updateDashboardData();
@@ -26,6 +26,9 @@ void setup() {
 void draw() {
     //////////////////////////////////// LOOK HERE ///////////////////////////////////////////////////////
     /* Although it doesn't do much but we still need to draw, otherwise the dropdown lists don't work */
-    background(41,75,140);
+    view.buildBackGround();
     /* Now just need to figure out how to change backgroud colors after clicking */
+    view.buildTimer();
+    view.buildIcon();
+    
 }
