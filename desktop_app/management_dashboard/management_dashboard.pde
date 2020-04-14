@@ -30,5 +30,6 @@ void draw() {
     /* Now just need to figure out how to change backgroud colors after clicking */
     view.buildTimer();
     view.buildIcon();
+    view.buildLabelText();
     
 }
