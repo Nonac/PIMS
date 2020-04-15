@@ -31,5 +31,6 @@ void draw() {
     view.buildBackGround();
     view.buildTimer();
     view.buildButton();
-    view.buildLabelText();  
+    view.buildLabelText();
+    
 }
