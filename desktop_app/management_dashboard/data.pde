@@ -66,6 +66,26 @@ void deleteFile(String path){
     }
 }
   
+  //traverse the database and return a JSONArray
+  JSONArray traverseDb(){
+         JSONArray array = new JSONArray();
+         int count = 0;
+         for(JSONObject message:db.messages)
+           {
+           if(message!=null)
+           {
+
+                 array.setJSONObject(count, message);
+                 count++;
+           }
+           }
+
+           return array;
+  
+  }
+  
+  
+  
 //get a JSONObject from disk according to datatype and userId
   JSONObject getObjWithId(String datatype , String userId)
   {
