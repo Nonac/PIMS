@@ -1,13 +1,15 @@
-# test
+# PIMS - Parking Iot Management System
 
-
-## Git branch practise
-- [x] leatong
-- [x] 524534852
-- [x] wangfuzhou110
-- [x] ZzAllenZz
-- [x] nonac
-- [x] wzxutao 
-- [x] Boris Johnson
-- [x] Donald Trump
-- [ ] Kim Jong-un
+## Group members
+* Fuzhou Wang
+  
+* Yinan Yang
+  
+* Tao Xu
+  
+* Hongjie Yuan
+  
+* Zhen Zhang
+  
+* Shuang (Lea) Tong
+  nj19182@bristol.ac.uk
