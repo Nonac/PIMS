@@ -1,0 +1,11 @@
+{
+  "data_type": "parking",
+  "info": {
+    "barrier_type": "in",
+    "time_in": "2020-4-21-0-17-1",
+    "vehicle_type": "car",
+    "barrier_id": 12345,
+    "vehicle_id": "005",
+    "username": "curry"
+  }
+}
