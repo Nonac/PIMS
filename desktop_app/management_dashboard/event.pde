@@ -46,13 +46,14 @@ void messageReceived(String topic, byte[] payload) {
     {
 
       JSONObject tmp=api.receiveVehicleQueryFromWeb(json);
-      //refreshData();
+      refreshData();
       client.publish(MQTT_topic, tmp.toString());
     } else if (datatype.equals(MessageType.TRANSMIT))
     {
       api.receiveTransmitFromM5(json);
     }
   }
+  refreshDashboardData();
 }
 
 void connectionLost() {

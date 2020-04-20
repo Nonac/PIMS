@@ -3,7 +3,7 @@
 //2. bulid a dinamic reflesh tableView for last ten records I/O
 //3. bulid a class for data visualization.
 
-//dark/light mode switch
+//color mode
 final int darkModeBackGround=color(41, 75, 140);
 final int lightModeBackGround=color(213, 223, 241);
 final int darkModeFontColor=color(213, 223, 241);
@@ -12,9 +12,15 @@ final int darkModeInfoWindowColor=color(132, 160, 215);
 final int lightModeInfoWindowColor=color(171, 192, 227);
 final int titleBackGround=color(87, 106, 195);
 final int settingsBackGround=color(184, 197, 229);
+//dark/light mode switch
 boolean colorModeSwitch=true;
 Chart pieChart;
 Chart biChart;
+ScrollableList list;
+Textlabel timer, accountLabel, title, subtitle, detailLabel, newCarsComingInLabel, barrierControlLabel;
+Button accountIcon,settingsIcon,liftControl,closeControl,customerAccountButton;
+
+
 
 void refreshDashboardData() {
   // We just rebuild the view rather than updating existing
@@ -25,6 +31,7 @@ void updateDashboardData() {
   refreshData();
   surface.setTitle("Parking IOT Management System");
   view.build();
+  view.test();
 }
 
 
@@ -47,12 +54,7 @@ void setUpCharts(ControlP5 cp5) {
 }
 
 public class Dashboard_view {
-  //color mode
-
-
-  Textlabel timer, accountLabel, title, subtitle, detailLabel, newCarsComingInLabel, barrierControlLabel;
-  ScrollableList list;
-
+  
   //build() is for those complement won't change color with color switch
   void build() {
     //set Berlin Sans FB as Font
@@ -62,6 +64,9 @@ public class Dashboard_view {
 
     view.buildTitle();
     view.buildSettingSwitch();
+    view.buildButton();
+    view.buildLabelText();
+    view.buildTimer();
   }
 
   void buildBackGround() { 
@@ -74,6 +79,7 @@ public class Dashboard_view {
 
   //color switch
   void buildSettingSwitch() {
+    //cp5.remove("Setting");
     list = cp5.addScrollableList("Settings")
               .setPosition(1638, 10)
               .setSize(120, 120)
@@ -87,20 +93,27 @@ public class Dashboard_view {
               ;
 
     if (colorModeSwitch) {
-      list.setColorLabel(darkModeFontColor).setColorValue(darkModeFontColor);
+      list.setColorLabel(darkModeFontColor)
+      .setColorValue(darkModeFontColor);
     } else {
       list.setColorLabel(lightModeFontColor).setColorValue(lightModeFontColor);
     }
   }
+  void changeColorSettingSwitch(){
+    list.setColorForeground((colorModeSwitch)?darkModeBackGround:lightModeBackGround)
+        .setColorBackground((colorModeSwitch)?darkModeBackGround:lightModeBackGround);
+     if (colorModeSwitch) {
+      list.setColorLabel(darkModeFontColor)
+      .setColorValue(darkModeFontColor);
+    } else {
+      list.setColorLabel(lightModeFontColor).setColorValue(lightModeFontColor);
+    }
+  }
+  
 
   //Timer on the middle head
-  void buildTimer() {
-    int s = second();  // Values from 0 - 59
-    int m = minute();  // Values from 0 - 59
-    int h = hour();    // Values from 0 - 23
-
+  void buildTimer() {   
     timer= cp5.addTextlabel("timer")
-              .setText(""+h+":"+m+":"+s)
               .setFont(createFont("Berlin Sans FB", 20))
               .setPosition(840, 0);
 
@@ -110,24 +123,47 @@ public class Dashboard_view {
       timer.setColorValue(lightModeFontColor);
     }
   }
+  void changeColorTimer(){
+    if (colorModeSwitch) {
+      timer.setColorValue(darkModeFontColor);
+    } else {
+      timer.setColorValue(lightModeFontColor);
+    }
+  }
 
   //All the image are saved in ~/data/.. This function is for all the image button.
   void buildButton() {
-    Button accountIcon =cp5.addButton("accountIcon")
+    accountIcon =cp5.addButton("accountIcon")
                             .setPosition(5, 5)
                             ;
-    Button settingsIcon=cp5.addButton("settingsIcon")
+    settingsIcon=cp5.addButton("settingsIcon")
                             .setPosition(1615, 5)
                             ;
-    Button liftControl=cp5.addButton("liftControl")
+    liftControl=cp5.addButton("liftControl")
                           .setPosition(1330, 750);
 
-    Button closeControl=cp5.addButton("closeControl")
+    closeControl=cp5.addButton("closeControl")
                            .setPosition(1500, 750);
 
-    Button customerAccountButton=cp5.addButton("customerAccountButton")
+    customerAccountButton=cp5.addButton("customerAccountButton")
                                     .setPosition(1325, 900);
 
+    if (colorModeSwitch) {
+      accountIcon.setImages(loadImage("darkAccountIcon.png"), loadImage("darkAccountIcon.png"), loadImage("darkAccountIcon.png"));
+      settingsIcon.setImages(loadImage("darkSettingsIcon.png"), loadImage("darkSettingsIcon.png"), loadImage("darkSettingsIcon.png"));
+      liftControl.setImages(loadImage("darkLiftControl.png"), loadImage("darkLiftControl.png"), loadImage("lightLiftControl.png"));
+      closeControl.setImages(loadImage("darkCloseControl.png"), loadImage("darkCloseControl.png"), loadImage("lightCloseControl.png"));
+      customerAccountButton.setImages(loadImage("darkCustomerAccount.png"), loadImage("darkCustomerAccount.png"), loadImage("lightCustomerAccount.png"));
+    } else {
+      settingsIcon.setImages(loadImage("lightSettingsIcon.png"), loadImage("lightSettingsIcon.png"), loadImage("lightSettingsIcon.png"));
+      accountIcon.setImages(loadImage("lightAccountIcon.png"), loadImage("lightAccountIcon.png"), loadImage("lightAccountIcon.png"));
+      liftControl.setImages(loadImage("lightLiftControl.png"), loadImage("lightLiftControl.png"), loadImage("darkLiftControl.png"));
+      closeControl.setImages(loadImage("lightCloseControl.png"), loadImage("lightCloseControl.png"), loadImage("darkCloseControl.png"));
+      customerAccountButton.setImages(loadImage("lightCustomerAccount.png"), loadImage("lightCustomerAccount.png"), loadImage("darkCustomerAccount.png"));
+    }
+  }
+  
+  void changeColorButton(){
     if (colorModeSwitch) {
       accountIcon.setImages(loadImage("darkAccountIcon.png"), loadImage("darkAccountIcon.png"), loadImage("darkAccountIcon.png"));
       settingsIcon.setImages(loadImage("darkSettingsIcon.png"), loadImage("darkSettingsIcon.png"), loadImage("darkSettingsIcon.png"));
@@ -205,6 +241,31 @@ public class Dashboard_view {
                 .setColor(darkModeFontColor)
                 ;
   }
+  
+  void changeColorLabel(){
+    if (colorModeSwitch) {
+      accountLabel.setColor(darkModeFontColor);
+      detailLabel.setColor(darkModeFontColor);
+      newCarsComingInLabel.setColor(darkModeFontColor);
+      barrierControlLabel.setColor(darkModeFontColor);
+    } else {
+      accountLabel.setColor(lightModeFontColor);
+      detailLabel.setColor(lightModeFontColor);
+      newCarsComingInLabel.setColor(lightModeFontColor);
+      barrierControlLabel.setColor(lightModeFontColor);
+    }
+  }
+  
+  void test(){
+     JSONArray array=traverseDb();
+     if(array.size()>0){
+       for(int i=0;i<array.size();i++){
+         JSONObject o=array.getJSONObject(i);
+         println(o.get("data_type"));
+       }
+     }
+     
+  }
 }
 
 //color switch function        
@@ -212,13 +273,17 @@ void Settings(int theValue) {
   switch(theValue) {
   case 1: 
     colorModeSwitch=true;
-    view.buildBackGround();
-    view.buildSettingSwitch();
+    view.changeColorSettingSwitch();
+    view.changeColorButton();
+    view.changeColorLabel();
+    view.changeColorTimer();
     break;
   case 0:
     colorModeSwitch=false;
-    view.buildBackGround();
-    view.buildSettingSwitch();
+    view.changeColorSettingSwitch();
+    view.changeColorButton();
+    view.changeColorLabel();
+    view.changeColorTimer();
     break;
   }
 }
