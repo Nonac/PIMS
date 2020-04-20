@@ -290,38 +290,88 @@ public class MessageData {
     return queryMessage;
   }
 
-  JSONObject receiveVehicleHistoryFromWeb(JSONObject queryMessage) {
+  JSONObject receiveVehicleHistoryFromWeb(JSONObject historyMessage) {
 
-    String datatype="web_vehicle_register";
-    JSONObject infoFromWeb = queryMessage.getJSONObject("info");
+    String datatype="parking";
+    JSONObject infoFromWeb = historyMessage.getJSONObject("info");
     String username = infoFromWeb.getString("username");
-
-
-    JSONArray values = new JSONArray();
-    int count = 0;
+    String vehicle_id = infoFromWeb.getString("vehicle_id");
+    int currentYear = year();
+    int currentMonth = month();
+    int currentDay = day();
+    int flag=0;
+    int amount0=0;
+    int amount1=0;
+    int amount2=0;
+    int amount3=0;
+    int amount4=0;
+    int amount5=0;
+    int amount6=0;
+    
     for (JSONObject message : db.messages)
     {
       if (message!=null&&message.getString("data_type").equals(datatype)
         && message.getJSONObject("info").getString("username").equals(username)
+        && message.getJSONObject("info").getString("vehicle_id").equals(vehicle_id)
         )
       {
-        JSONObject vehicleInfo = new JSONObject();
-        JSONObject infoFromDb = message.getJSONObject("info");
-        String vehicle_id =  infoFromDb.getString("vehicle_id");
-        String vehicle_type =  infoFromDb.getString("vehicle_type");
-        vehicleInfo.setString("vehicle_id", vehicle_id );
-        vehicleInfo.setString("vehicle_type", vehicle_type );
-        values.setJSONObject(count, vehicleInfo);
-        count++;
+        JSONObject infoFromParking = message.getJSONObject("info");
+        String time_in = infoFromParking.getString("time_in");
+        String time_out = infoFromParking.getString("time_out");
+        String[] in_array=time_in.split("-");
+        String[] out_array=time_out.split("-");
+        flag =1;
+        if(currentYear!= Integer.valueOf(in_array[0])
+        ||currentMonth!=Integer.valueOf(in_array[1])
+        ||currentDay-Integer.valueOf(in_array[2])>6
+        ){
+            continue;
+        }
+        int amount = currentDay-Integer.valueOf(in_array[2]);
+        int seconds=int((float(out_array[0])-float(in_array[0]))*365*24*3600+(float(out_array[1])-float(in_array[1]))*30*24*3600+(float(out_array[2])-float(in_array[2]))*24*3600+
+        (float(out_array[3])-float(in_array[3]))*3600+(float(out_array[4])-float(in_array[4]))*60+(float(out_array[5])-float(in_array[5])));
+        switch(amount){
+          case 0:
+             amount0 = amount0 + seconds;
+             break;
+          case 1:
+             amount1 = amount1 + seconds;
+             break;  
+          case 2:
+             amount2 = amount2 + seconds;
+             break; 
+          case 3:
+             amount3 = amount3 + seconds;
+             break;
+          case 4:
+             amount4 = amount4 + seconds;
+             break; 
+          case 5:
+             amount5 = amount5 + seconds;
+             break; 
+          case 6:
+             amount6 = amount6 + seconds;
+             break; 
+          default:
+             break;
+          
+        }
       }
     }
-    if (count==0) {
+
+    if(flag==0){
       infoFromWeb.setInt("status", 0);
-    } else {
-      infoFromWeb.setJSONArray("vehicle_list", values);
+    }else{
       infoFromWeb.setInt("status", 1);
+      infoFromWeb.setInt("0", amount0);
+      infoFromWeb.setInt("1", amount1);
+      infoFromWeb.setInt("2", amount2);
+      infoFromWeb.setInt("3", amount3);
+      infoFromWeb.setInt("4", amount4);
+      infoFromWeb.setInt("5", amount5);
+      infoFromWeb.setInt("6", amount6);      
     }
-    return queryMessage;
+    return historyMessage;
   }
 
 

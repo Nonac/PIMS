@@ -17,7 +17,6 @@ void messageReceived(String topic, byte[] payload) {
     if (datatype.equals(MessageType.USER_REGISTER)&&json.getJSONObject("info").getInt("status")==2)
     {
       JSONObject res = api.receiveRegisterFromWeb(json);
-      //refreshData();
       client.publish(MQTT_topic, res.toString());
     } else if (datatype.equals(MessageType.USER_LOGIN)&&json.getJSONObject("info").getInt("status")==2)
     {
@@ -28,25 +27,25 @@ void messageReceived(String topic, byte[] payload) {
     } else if (datatype.equals(MessageType.FINANCE)&&json.getJSONObject("info").getInt("status")==2)
     {
       JSONObject tmp=api.receiveFinanceFromWeb(json);
-      //refreshData();
+
       client.publish(MQTT_topic, tmp.toString());
     } else if (datatype.equals(MessageType.RECHARGE)&&json.getJSONObject("info").getInt("status")==2)
     {
-
       JSONObject tmp=api.receiveRechargeFromWeb(json);
-      //refreshData();
       client.publish(MQTT_topic, tmp.toString());
     } else if (datatype.equals(MessageType.VEHICLE_REGISTER)&&json.getJSONObject("info").getInt("status")==2)
     {
 
       JSONObject tmp=api.receiveVehicleRegisterFromWeb(json);
-      //refreshData();
+
       client.publish(MQTT_topic, tmp.toString());
     } else if (datatype.equals(MessageType.VEHICLE_QUERY)&&json.getJSONObject("info").getInt("status")==2)
     {
-
       JSONObject tmp=api.receiveVehicleQueryFromWeb(json);
-      refreshData();
+      client.publish(MQTT_topic, tmp.toString());
+    }else if (datatype.equals(MessageType.VEHICLE_HISTORY)&&json.getJSONObject("info").getInt("status")==2)
+    {
+      JSONObject tmp=api.receiveVehicleHistoryFromWeb(json);
       client.publish(MQTT_topic, tmp.toString());
     } else if (datatype.equals(MessageType.TRANSMIT))
     {

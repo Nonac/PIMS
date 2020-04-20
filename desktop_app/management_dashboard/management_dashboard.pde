@@ -17,21 +17,24 @@ void setup() {
   // connect to the broker and use a random string for clientid
   client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop111");
   delay(100);
+  refreshData();
   // refresh the dashboard with the information
-  updateDashboardData();
+ // updateDashboardData();
   //run_tests();
-  setUpCharts(cp5);
+ // setUpCharts(cp5);
+
+  
 }
 
 // we don't really use the draw function as controlP5 does the work
 void draw() {
-  int s = second();  // Values from 0 - 59
-  int m = minute();  // Values from 0 - 59
-  int h = hour();    // Values from 0 - 23
+ // int s = second();  // Values from 0 - 59
+//  int m = minute();  // Values from 0 - 59
+//  int h = hour();    // Values from 0 - 23
   //////////////////////////////////// LOOK HERE ///////////////////////////////////////////////////////
   //All the complements as follow could change their color with color switch.
   //It maybe not work outside draw().
-  view.buildBackGround();
-  circle(250, 825, 245);
-  timer.setText(""+h+":"+m+":"+s);
+  //view.buildBackGround();
+ // circle(250, 825, 245);
+  //timer.setText(""+h+":"+m+":"+s);
 }
