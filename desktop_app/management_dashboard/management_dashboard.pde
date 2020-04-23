@@ -29,7 +29,7 @@ void draw() {
   int h = hour();    // Values from 0 - 23
   //////////////////////////////////// LOOK HERE ///////////////////////////////////////////////////////
   //All the complements as follow could change their color with color switch.
-  //It maybe not work outside draw().
-  view.buildBackGround();  
+  //It may not work outside draw().
+  view.buildBackground();  
   timer.setText(""+h+":"+m+":"+s);
 }

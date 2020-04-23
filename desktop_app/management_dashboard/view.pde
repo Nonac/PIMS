@@ -4,14 +4,14 @@
 //3. bulid a class for data visualization.
 
 //color mode
-final int darkModeBackGround=color(41, 75, 140);
-final int lightModeBackGround=color(213, 223, 241);
+final int darkModeBackground=color(41, 75, 140);
+final int lightModeBackground=color(213, 223, 241);
 final int darkModeFontColor=color(213, 223, 241);
 final int lightModeFontColor=color(41, 75, 140);
 final int darkModeInfoWindowColor=color(132, 160, 215);
 final int lightModeInfoWindowColor=color(171, 192, 227);
-final int titleBackGround=color(87, 106, 195);
-final int settingsBackGround=color(184, 197, 229);
+final int titleBackground=color(87, 106, 195);
+final int settingsBackground=color(184, 197, 229);
 //dark/light mode switch
 boolean colorModeSwitch=true;
 Chart pieChart;
@@ -51,11 +51,11 @@ public class Dashboard_view {
     view.buildCharts();
   }
 
-  void buildBackGround() { 
+  void buildBackground() { 
     if (colorModeSwitch) {
-      background(darkModeBackGround);
+      background(darkModeBackground);
     } else {
-      background(lightModeBackGround);
+      background(lightModeBackground);
     }
     circle(250, 825, 245);
     stroke(255);
@@ -70,8 +70,8 @@ public class Dashboard_view {
               .setSize(120, 120)
               .setItemHeight(40)
               .setBarHeight(20)
-              .setColorForeground((colorModeSwitch)?darkModeBackGround:lightModeBackGround)
-              .setColorBackground((colorModeSwitch)?darkModeBackGround:lightModeBackGround)
+              .setColorForeground((colorModeSwitch)?darkModeBackground:lightModeBackground)
+              .setColorBackground((colorModeSwitch)?darkModeBackground:lightModeBackground)
               .addItem("Light Mode", 0)
               .addItem("Dark Mode", 1)
               .close()
@@ -85,8 +85,8 @@ public class Dashboard_view {
     }
   }
   void changeColorSettingSwitch(){
-    list.setColorForeground((colorModeSwitch)?darkModeBackGround:lightModeBackGround)
-        .setColorBackground((colorModeSwitch)?darkModeBackGround:lightModeBackGround);
+    list.setColorForeground((colorModeSwitch)?darkModeBackground:lightModeBackground)
+        .setColorBackground((colorModeSwitch)?darkModeBackground:lightModeBackground);
      if (colorModeSwitch) {
       list.setColorLabel(darkModeFontColor)
       .setColorValue(darkModeFontColor);
@@ -208,7 +208,7 @@ public class Dashboard_view {
     cp5.addBang("")
        .setPosition(0, 30)
        .setSize(1760, 80)
-       .setColorBackground(titleBackGround)
+       .setColorBackground(titleBackground)
        .setLock(true)
        ;
 
@@ -253,8 +253,8 @@ public class Dashboard_view {
     pieChart.addDataSet("world");
     pieChart.setColors("world", 
                        color(255, 0, 0), 
-                       (colorModeSwitch)?darkModeBackGround:lightModeBackGround, 
-                       (colorModeSwitch)?lightModeBackGround:darkModeBackGround);
+                       (colorModeSwitch)?darkModeBackground:lightModeBackground, 
+                       (colorModeSwitch)?lightModeBackground:darkModeBackground);
     
     if (array.size()==0){
       pieChart.setData("world", 0, totalSpaces);
