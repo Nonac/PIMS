@@ -20,7 +20,7 @@ ScrollableList list;
 Textlabel timer, accountLabel, title, subtitle, detailLabel, newCarsComingInLabel, barrierControlLabel;
 Button accountIcon,settingsIcon,liftControl,closeControl,customerAccountButton;
 
-
+final int totalSpaces = 50; // The total parking spaces in the parking lot
 
 void refreshDashboardData() {
   // We just rebuild the view rather than updating existing
@@ -31,26 +31,7 @@ void updateDashboardData() {
   refreshData();
   surface.setTitle("Parking IOT Management System");
   view.build();
-  view.test();
-}
-
-
-void setUpCharts(ControlP5 cp5) {
-  pieChart = cp5.addChart("Occupancy")
-                .setPosition(125, 700)
-                .setSize(250, 250)
-                .setRange(-20, 20)
-                .setView(Chart.PIE)
-                ;
-  stroke(255);
-  strokeWeight(8);
-
-  pieChart.addDataSet("world");
-  pieChart.setColors("world", 
-    color(255, 0, 0), 
-    (colorModeSwitch)?darkModeBackGround:lightModeBackGround, 
-    (colorModeSwitch)?lightModeBackGround:darkModeBackGround);
-  pieChart.setData("world", 1, 9);
+  //view.test();
 }
 
 public class Dashboard_view {
@@ -67,6 +48,7 @@ public class Dashboard_view {
     view.buildButton();
     view.buildLabelText();
     view.buildTimer();
+    view.buildCharts();
   }
 
   void buildBackGround() { 
@@ -75,6 +57,9 @@ public class Dashboard_view {
     } else {
       background(lightModeBackGround);
     }
+    circle(250, 825, 245);
+    stroke(255);
+    strokeWeight(8);
   }
 
   //color switch
@@ -256,7 +241,29 @@ public class Dashboard_view {
     }
   }
   
-  void test(){
+  void buildCharts() {
+    JSONArray array = traverseDb();
+    pieChart = cp5.addChart("Occupancy")
+                .setPosition(125, 700)
+                .setSize(250, 250)
+                .setRange(-20, 20)
+                .setView(Chart.PIE)
+                ;
+  
+    pieChart.addDataSet("world");
+    pieChart.setColors("world", 
+                       color(255, 0, 0), 
+                       (colorModeSwitch)?darkModeBackGround:lightModeBackGround, 
+                       (colorModeSwitch)?lightModeBackGround:darkModeBackGround);
+    
+    if (array.size()==0){
+      pieChart.setData("world", 0, totalSpaces);
+    } else {
+      pieChart.setData("world", array.size(), totalSpaces-array.size());
+    }
+  }
+  
+  /*void test(){
      JSONArray array=traverseDb();
      if(array.size()>0){
        for(int i=0;i<array.size();i++){
@@ -265,7 +272,7 @@ public class Dashboard_view {
        }
      }
      
-  }
+  }*/
 }
 
 //color switch function        
