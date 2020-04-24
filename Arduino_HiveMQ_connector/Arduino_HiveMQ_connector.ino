@@ -74,8 +74,8 @@ void publishMessage( String message ) {
     if( message.length() > 0 ) {
 
       // Convert to char array
-      char *msg {new char[message.length()] {}};
-      message.toCharArray( msg, message.length() );
+      char *msg {new char[message.length() + 1] {}};
+      message.toCharArray( msg, message.length() + 1 );
 
       Serial.print(">> Tx: ");
       Serial.println( msg );

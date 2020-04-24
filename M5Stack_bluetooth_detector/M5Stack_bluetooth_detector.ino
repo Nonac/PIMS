@@ -8,7 +8,7 @@ BarrierSimulator& barrierSimulator = BarrierSimulator::getBarrierSimulator();
 
 /* device specific identifications */
 #define BLE_DEVICE_NAME "barrier001" // BLE name of this device
-#define BARRIER_ID 12345 // id of this barrier
+const unsigned long barrierId {12345}; // id of this barrier
 
 /* BLE config */
 #define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
@@ -32,8 +32,8 @@ enum M5State {DEBUG, BARRIER} m5State = DEBUG;
 // incoming json file size. (JsonDocument has a fixed size)
 // RECALCULATE if the format of json file changes.
 const int receivedJDocCapacity { 
-                            JSON_OBJECT_SIZE(2) // root
-                          + 63 };     // string copy
+                            JSON_OBJECT_SIZE(3) // root
+                          + 90 };     // string copy
 
 
 /* multi-tasking entries */
@@ -120,7 +120,11 @@ void handleJsonSerialInput(){
   const char* inCStr = (const char *) inStr.c_str();
 
   DynamicJsonDocument jDoc(receivedJDocCapacity);
-  buildIncomingJdoc(jDoc, inCStr);
+  // return if building fails
+  if(buildIncomingJdoc(jDoc, inCStr) != 0) {return;}
+
+  // return if barrier id does not match that of this device
+  if(checkBarrierId(jDoc) != 0) {return;}
 
   const char* opCode = getOpCode(jDoc);
   if(opCode != NULL){
@@ -129,12 +133,15 @@ void handleJsonSerialInput(){
 }
 
 // deserialise json string into JsonDocument
-void buildIncomingJdoc(JsonDocument& jDoc, const char* jsonString){
+// returns 0 on success. 1 otherwise
+int buildIncomingJdoc(JsonDocument& jDoc, const char* jsonString){
   DeserializationError dErr = 
     deserializeJson(jDoc, jsonString, DeserializationOption::Filter(getInputJsonDocFilter()));
   if(dErr != DeserializationError::Ok){
     handleJsonDeserializationErr(dErr);
+    return 1;
   }
+  return 0;
 }
 
 // returns a ancillary json document which serves as a filter, 
@@ -144,10 +151,21 @@ const JsonDocument& getInputJsonDocFilter(){
   static bool initialised = false;
   if(!initialised){
     filter["data_type"] = true;
+    filter["barrier_id"] = true;
     filter["op_code"] = true;
     initialised = true;
   }
   return filter;
+}
+
+// returns 0 if the id in json document mathes that of this device.
+//         1 otherwise.
+int checkBarrierId(const JsonDocument& jDoc){
+  JsonVariantConst value = jDoc["barrier_id"];
+  if(value.isNull()){return 1;}
+
+  unsigned long receivedId = value.as<unsigned long>();
+  return receivedId == barrierId ? 0 : 1;
 }
 
 // handles error occurred during deserialisation of incoming json string
@@ -163,8 +181,8 @@ void handleJsonDeserializationErr(const DeserializationError& err){
 // find operation code from the JsonDocument
 // returns: the operation code if found.
 //          NULL otherwise.
-const char* getOpCode(JsonDocument& jDoc){
-  JsonVariant value = jDoc["data_type"];
+const char* getOpCode(const JsonDocument& jDoc){
+  JsonVariantConst value = jDoc["data_type"];
   if(value.isNull()){return NULL;}
   
   String dataType = value.as<String>();
@@ -215,7 +233,7 @@ char **buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int device
   jDoc["data_type"] = "m5_transmit";
   
   JsonObject barrierInfo = jDoc.createNestedObject("barrier_info");
-  barrierInfo["barrier_id"] = BARRIER_ID;
+  barrierInfo["barrier_id"] = barrierId;
   
   JsonArray bthDevices = jDoc.createNestedArray("bluetooth_devices");
   // Stores references to dynamically allocated c-style strings in the following loop
@@ -249,7 +267,7 @@ void deleteAddresses(char **addresses, int deviceCount){
 }
 
 // serialise JsonDocument and print it to serial
-inline void printJDocToSerial(JsonDocument& jDoc){
+inline void printJDocToSerial(const JsonDocument& jDoc){
   Serial.print(SERIAL_JSON_DELIMITER);
   serializeJson(jDoc, Serial);
   Serial.print(SERIAL_JSON_DELIMITER);
