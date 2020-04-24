@@ -44,7 +44,7 @@ void startInputHandler(){
                     "listenToSerial",   /* Name of the task */
                     4096,      /* Stack size in words */
                     NULL,      /* Task input parameter */
-                    2,         /* Priority of the task. The higher the more important */
+                    1,         /* Priority of the task. The higher the more important */
                     NULL,      /* Task handle. */
                     0);        /* Core where the task should run */
 }
@@ -63,7 +63,7 @@ void startInterruptHandler(){
                     "handleButtonInterrupts",   /* Name of the task */
                     1024,      /* Stack size in words */
                     NULL,      /* Task input parameter */
-                    1,         /* Priority of the task */
+                    2,         /* Priority of the task */
                     NULL,      /* Task handle. */
                     0);        /* Core where the task should run */
 }
