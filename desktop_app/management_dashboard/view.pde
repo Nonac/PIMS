@@ -371,21 +371,33 @@ public class Dashboard_view {
 void newRecord(int theValue){
     JSONObject o=newCarsComingArray.getJSONObject(theValue).getJSONObject("info");
     Pattern p=Pattern.compile("-");
-    String[] entryTime=p.split(o.getString("time_in"));
-    //String[] exitTime=p.split(o.getString("time_out"));
+    String[] entryTime=null;
+    String[] exitTime=null;
+    int balance=0;
+    
+    if(o.getString("time_in")!=null){
+      entryTime=p.split(o.getString("time_in"));
+    }
+    if(o.getString("time_out")!=null){
+      exitTime=p.split(o.getString("time_out"));
+    }
+    if(getObjWithUsername("web_finance",o.getString("username"))!=null)
+    {
+      balance= getObjWithUsername("web_finance",o.getString("username")).getJSONObject("info").getInt("balance");
+    }
     infoTextarea.setText("Vehicle details (hover over to see)\n\n"
                     +"Entrance #:                  "+o.getString("")+"\n"
-                    +"Exit #:                           "+o.getString("")+"\n"
                     +"ID                                  "+o.getString("vehicle_id")+"\n"
                     +"Entry date:                   "+entryTime[2]+"\\"+entryTime[1]+"\\"+entryTime[0]+"\n"
-                    +"Entry time:                   "+entryTime[3]+":"+entryTime[4]+"\n"
-                    +"Exit date:        "+"\n"
-                    +"Exit time:        "+"\n"
+                    +"Entry time:                   "+entryTime[3]+":"+entryTime[4]+":"+entryTime[5]+"\n"
+                    +"Exit date:                      "+((o.getString("time_out")!=null)?(exitTime[2]+"\\"+exitTime[1]+"\\"+exitTime[0]):"")+"\n"
+                    +"Exit time:                      "+((o.getString("time_out")!=null)?(exitTime[3]+"\\"+exitTime[4]+"\\"+exitTime[5]):"")+"\n"
                     +"Account owner:            "+o.getString("username")+"\n"
                     +"Car:                               "+o.getString("vehicle_id")+"\n"
-                    +"Account balance: "+"\n"
+                    +"Account balance:         £"+balance+"\n"
                     +"Annual membership: "+"\n"                   
                     );
+              //<>//
 }
   
 
