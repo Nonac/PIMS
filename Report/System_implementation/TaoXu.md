@@ -105,12 +105,12 @@ Where,
 The M5Stack will then execute the operation code if and only if 
 1.	the deserialization is successful and
 2.	the JSON object is in the right format and
-3.	the value of ¡°barrier_id¡± attribute is the same as the id of this barrier.
+3.	the value of "barrier_id" attribute is the same as the id of this barrier.
 
 <a name="B3"></a>
 ### 3. Handling hardware interrupts from the barriers themselves to control them manually.
 
-The buttons on a M5Stack simulate the buttons for a real barrier. Button interrupts are handled by the M5Stack and translated into operation codes, which will then make the barrier do the corresponding tasks.
+The buttons on an M5Stack simulate the buttons for a real barrier. Button interrupts are handled by the M5Stack and translated into operation codes, which will then make the barrier do the corresponding tasks.
 
 
 <a name="AK"></a>
@@ -122,6 +122,6 @@ If a user approaches one of our barriers with their M5StickC switched on, the Bl
 Our server will then decide the right operation for that barrier (e.g. open or not).
 After the user passes the barrier, they can switch off the M5StickC to save energy. Or they can leave it on if they wish, even if it is still detectable by the barrier. Our server is smart enough to know which device to check next.
 
-Currently, our barriers(M5Stacks) treats our keys (M5StickCs) equally as other Bluetooth devices. The only difference between our keys and other devices are the Bluetooth addresses of our keys are registered on our server. Therefore, our actual keys are Bluetooth addresses.
+Currently, our barriers(M5Stacks) treat our keys (M5StickCs) equally as other Bluetooth devices. The only difference between our keys and other devices are the Bluetooth addresses of our keys are registered on our server. Therefore, our actual keys are Bluetooth addresses.
 
 
