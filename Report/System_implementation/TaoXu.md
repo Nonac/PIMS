@@ -39,7 +39,7 @@ A. It is easy to migrate a sketch that was written for M5Stack to the Arduino pl
 A. 
 In [Arduino_HiveMQ_connector.ino](/Arduino_HiveMQ_connector/Arduino_HiveMQ_connector.ino):
 1. #include <Wifi.h> instead of <WiFiNINA.h>
-2. #define Serial1 Serial
+2. #define Serial1 Serial <br>
 Connect the two M5Stacks Serial to Serial. And you should be good to go.
 
 Do not forget to change the MQTT_MAX_PACKET_SIZE for the PubSubClient external library since the default value is too small.
