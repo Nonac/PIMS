@@ -85,6 +85,38 @@ JSONArray traverseDb() {
   return array;
 }
 
+JSONArray getNewCarsComingListFromDb(){
+   JSONArray array = new JSONArray();
+   int count = 0;
+   for (JSONObject message : db.messages)
+  {
+    if (message!=null)
+    {
+      if(message.getString("data_type").equals("parking")){
+        array.setJSONObject(count, message);
+        count++;
+      }
+    }
+  }
+    return array;
+}
+
+JSONArray getRechargeListFromDb(){
+   JSONArray array = new JSONArray();
+   int count = 0;
+   for (JSONObject message : db.messages)
+  {
+    if (message!=null)
+    {
+      if(message.getString("data_type").equals("web_recharge")){
+        array.setJSONObject(count, message);
+        count++;
+      }
+    }
+  }
+    return array;
+}
+
 
 
 //get a JSONObject from disk according to datatype and userId
