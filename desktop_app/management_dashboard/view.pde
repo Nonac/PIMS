@@ -11,16 +11,26 @@ final int lightModeFontColor=color(41, 75, 140);
 final int darkModeInfoWindowColor=color(132, 160, 215);
 final int lightModeInfoWindowColor=color(171, 192, 227);
 final int titleBackground=color(87, 106, 195);
-final int settingsBackground=color(184, 197, 229);
+final int settingsBackground=color(185, 195, 230);
+final int darkModeInfoBackground=color(150,165,230);
+final int lightModeInfoBackground=color(185,195,230);
 //dark/light mode switch
 boolean colorModeSwitch=true;
+boolean firstBoot=true;
 Chart pieChart;
 Chart biChart;
-ScrollableList list;
-Textlabel timer, accountLabel, title, subtitle, detailLabel, newCarsComingInLabel, barrierControlLabel;
+ScrollableList list,newCarsComingList,detailList;
+Textlabel timer, accountLabel, title, subtitle, detailLabel, newCarsComingInLabel, barrierControlLabel,newCarsComingInFirstLine
+,detailFirstLine;
 Button accountIcon,settingsIcon,liftControl,closeControl,customerAccountButton;
+Textarea infoTextarea;
+
+final int barrierId=12345;
 
 final int totalSpaces = 50; // The total parking spaces in the parking lot
+
+JSONArray newCarsComingArray;
+
 
 void refreshDashboardData() {
   // We just rebuild the view rather than updating existing
@@ -30,8 +40,12 @@ void refreshDashboardData() {
 void updateDashboardData() {
   refreshData();
   surface.setTitle("Parking IOT Management System");
-  view.build();
+  
   //view.test();
+  view.bulidNewCarsComingList();
+  view.buildDetailList();
+  firstBoot=false;
+
 }
 
 public class Dashboard_view {
@@ -48,7 +62,7 @@ public class Dashboard_view {
     view.buildButton();
     view.buildLabelText();
     view.buildTimer();
-    view.buildCharts();
+    
   }
 
   void buildBackground() { 
@@ -64,7 +78,6 @@ public class Dashboard_view {
 
   //color switch
   void buildSettingSwitch() {
-    //cp5.remove("Setting");
     list = cp5.addScrollableList("Settings")
               .setPosition(1638, 10)
               .setSize(120, 120)
@@ -125,10 +138,14 @@ public class Dashboard_view {
                             .setPosition(1615, 5)
                             ;
     liftControl=cp5.addButton("liftControl")
-                          .setPosition(1330, 750);
+                          .setPosition(1330, 750)
+                          .setSize(132,130)
+                          .updateSize();
 
     closeControl=cp5.addButton("closeControl")
-                           .setPosition(1500, 750);
+                           .setPosition(1500, 750)
+                           .setSize(132,130)
+                           .updateSize();
 
     customerAccountButton=cp5.addButton("customerAccountButton")
                                     .setPosition(1325, 900);
@@ -146,6 +163,7 @@ public class Dashboard_view {
       closeControl.setImages(loadImage("lightCloseControl.png"), loadImage("lightCloseControl.png"), loadImage("darkCloseControl.png"));
       customerAccountButton.setImages(loadImage("lightCustomerAccount.png"), loadImage("lightCustomerAccount.png"), loadImage("darkCustomerAccount.png"));
     }
+    
   }
   
   void changeColorButton(){
@@ -189,17 +207,46 @@ public class Dashboard_view {
                            .setPosition(1380, 700)
                            .setFont(createFont("Berlin Sans FB", 30))
                            ;
+                           
+     newCarsComingInFirstLine=cp5.addTextlabel("newCarsComingInFirstLine")
+                                  .setText("Entrance               |Time")
+                                  .setPosition(1250, 180)
+                                  .setFont(createFont("Berlin Sans FB", 22))
+                                  ;
+                                  
+     detailFirstLine=cp5.addTextlabel("detailFirstLine")
+                                  .setText("ID                 |Username                |Car     ")
+                                  .setPosition(150, 180)
+                                  .setFont(createFont("Berlin Sans FB", 22))
+                                  ;
+    
+    infoTextarea=cp5.addTextarea("info")
+                  .setPosition(725,250)
+                  .setSize(400,400)
+                  .setFont(createFont("Berlin Sans FB", 25))
+                  .setLineHeight(22)
+                  .setColor(color(1));
+                  
+                                  
 
     if (colorModeSwitch) {
       accountLabel.setColor(darkModeFontColor);
       detailLabel.setColor(darkModeFontColor);
       newCarsComingInLabel.setColor(darkModeFontColor);
       barrierControlLabel.setColor(darkModeFontColor);
+      newCarsComingInFirstLine.setColor(darkModeFontColor);
+      infoTextarea.setColorBackground(darkModeInfoBackground);
+      infoTextarea.setColor(darkModeFontColor);
+      detailFirstLine.setColor(darkModeFontColor);
     } else {
       accountLabel.setColor(lightModeFontColor);
       detailLabel.setColor(lightModeFontColor);
       newCarsComingInLabel.setColor(lightModeFontColor);
       barrierControlLabel.setColor(lightModeFontColor);
+      newCarsComingInFirstLine.setColor(lightModeFontColor);
+      infoTextarea.setColor(lightModeInfoBackground);
+      infoTextarea.setColor(lightModeFontColor);
+      detailFirstLine.setColor(lightModeFontColor);
     }
   }
 
@@ -225,6 +272,7 @@ public class Dashboard_view {
                 .setPosition(970, 65)
                 .setColor(darkModeFontColor)
                 ;
+                
   }
   
   void changeColorLabel(){
@@ -233,11 +281,19 @@ public class Dashboard_view {
       detailLabel.setColor(darkModeFontColor);
       newCarsComingInLabel.setColor(darkModeFontColor);
       barrierControlLabel.setColor(darkModeFontColor);
+      newCarsComingInFirstLine.setColor(darkModeFontColor);
+      infoTextarea.setColorBackground(darkModeInfoBackground);
+      infoTextarea.setColor(darkModeFontColor);
+      detailFirstLine.setColor(darkModeFontColor);
     } else {
       accountLabel.setColor(lightModeFontColor);
       detailLabel.setColor(lightModeFontColor);
       newCarsComingInLabel.setColor(lightModeFontColor);
       barrierControlLabel.setColor(lightModeFontColor);
+      newCarsComingInFirstLine.setColor(lightModeFontColor);
+      infoTextarea.setColor(lightModeInfoBackground);
+      infoTextarea.setColor(lightModeFontColor);
+      detailFirstLine.setColor(lightModeFontColor);
     }
   }
   
@@ -264,16 +320,86 @@ public class Dashboard_view {
   }
   
   /*void test(){
-     JSONArray array=traverseDb();
+     JSONArray array=getNewCarsComingListFromDb();
      if(array.size()>0){
        for(int i=0;i<array.size();i++){
-         JSONObject o=array.getJSONObject(i);
-         println(o.get("data_type"));
+         JSONObject o=array.getJSONObject(i).getJSONObject("info");
+         println(o.getString("time_in"));
        }
      }
      
   }*/
+ 
+  
+  
+  void bulidNewCarsComingList(){
+    newCarsComingArray=getNewCarsComingListFromDb();
+    newCarsComingList=cp5.addScrollableList("newRecord")
+                           .setPosition(1250,211)
+                           .setSize(450, 500)
+                           .setItemHeight(40)
+                           .setBarHeight(30)
+                           .open()
+                           .show()
+                           .bringToFront()
+                           .unregisterTooltip();
+                                
+     if(newCarsComingArray.size()>0){
+       for(int i=0;i<newCarsComingArray.size();i++){
+         JSONObject o=newCarsComingArray.getJSONObject(i).getJSONObject("info");
+         newCarsComingList.addItem(o.getString("barrier_type")+((o.getString("barrier_type").equals("in"))?"    ":"")
+         +"                         |"+o.getString("time_in"),i);
+       }
+     }
+  }
+  
+  void buildDetailList(){
+    detailList=cp5.addScrollableList("detailList")
+                           .setPosition(150,211)
+                           .setSize(450, 500)
+                           .setItemHeight(40)
+                           .setBarHeight(30)
+                           .open()
+                           .show()
+                           .bringToFront()
+                           .unregisterTooltip();
+    
+  }
+  
 }
+
+void newRecord(int theValue){
+    JSONObject o=newCarsComingArray.getJSONObject(theValue).getJSONObject("info");
+    Pattern p=Pattern.compile("-");
+    String[] entryTime=null;
+    String[] exitTime=null;
+    int balance=0;
+    
+    if(o.getString("time_in")!=null){
+      entryTime=p.split(o.getString("time_in"));
+    }
+    if(o.getString("time_out")!=null){
+      exitTime=p.split(o.getString("time_out"));
+    }
+    if(getObjWithUsername("web_finance",o.getString("username"))!=null)
+    {
+      balance= getObjWithUsername("web_finance",o.getString("username")).getJSONObject("info").getInt("balance");
+    }
+    infoTextarea.setText("Vehicle details (hover over to see)\n\n"
+                    +"Entrance #:                  "+o.getString("")+"\n"
+                    +"ID                                  "+o.getString("vehicle_id")+"\n"
+                    +"Entry date:                   "+entryTime[2]+"\\"+entryTime[1]+"\\"+entryTime[0]+"\n"
+                    +"Entry time:                   "+entryTime[3]+":"+entryTime[4]+":"+entryTime[5]+"\n"
+                    +"Exit date:                      "+((o.getString("time_out")!=null)?(exitTime[2]+"\\"+exitTime[1]+"\\"+exitTime[0]):"")+"\n"
+                    +"Exit time:                      "+((o.getString("time_out")!=null)?(exitTime[3]+"\\"+exitTime[4]+"\\"+exitTime[5]):"")+"\n"
+                    +"Account owner:            "+o.getString("username")+"\n"
+                    +"Car:                               "+o.getString("vehicle_id")+"\n"
+                    +"Account balance:         £"+balance+"\n"
+                    +"Annual membership: "+"\n"                   
+                    );
+              //<>//
+}
+  
 
 //color switch function        
 void Settings(int theValue) {
@@ -293,4 +419,19 @@ void Settings(int theValue) {
     view.changeColorTimer();
     break;
   }
+}
+
+
+public void liftControl(){
+    if(!firstBoot){
+      barrierOpen(barrierId);
+      //print(barrierId);
+    }
+}
+
+public void closeControl(){
+    if(!firstBoot){
+      barrierClose(barrierId);
+      //print(barrierId);
+    }
 }

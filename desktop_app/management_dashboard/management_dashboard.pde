@@ -2,6 +2,8 @@
 
 import mqtt.*;
 import controlP5.*;
+import java.util.*;
+ import java.util.regex.Pattern;
 
 ControlP5 cp5;
 MQTTClient client;
@@ -15,11 +17,13 @@ void setup() {
   // connect to the broker
   client = new MQTTClient(this);
   // connect to the broker and use a random string for clientid
-  client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop111");
+  //client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop111");
   delay(100);
   //refreshData();
   // refresh the dashboard with the information
+  view.build();
   updateDashboardData(); 
+  
 }
 
 // we don't really use the draw function as controlP5 does the work
