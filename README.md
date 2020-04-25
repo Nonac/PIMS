@@ -6,7 +6,7 @@
 * Yinan Yang\
   ff19085@bristol.ac.uk
 * Tao Xu\
-  @bristol.ac.uk
+  si19010@bristol.ac.uk
 * Hongjie Yuan\
   @bristol.ac.uk
 * Zhen Zhang\

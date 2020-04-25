@@ -1,5 +1,5 @@
 #include <SPI.h>
-#include <WiFiNINA.h>
+#include <WiFi.h>
 
 WiFiClient wifi_client;
 #include <PubSubClient.h>
@@ -8,7 +8,7 @@ PubSubClient ps_client( wifi_client );
 //Default: 128bytes, which is too small.
 //change the header file there: C:\Users\?\Documents\Arduino\libraries\PubSubClient\src
 //#define MQTT_MAX_PACKET_SIZE 8192
-
+#define Serial1 Serial
 
 
 #define SERIAL_JSON_DELIMITER '#'
