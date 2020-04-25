@@ -1,6 +1,6 @@
 # IOT Devices
 ##  [1. Barriers](#B)
-![barriers](IoTDevices/barriers.jpg)
+![barriers](IoTDevices/barriers.jpg) <br>
 An M5Stack and an Arduino MKR WIFI 1010 board constitute the controller of a barrier.
 The physical bar of that barrier is simulated by the display on the screen of the M5Stack.
 
@@ -70,13 +70,13 @@ Once turned on, an M5Stack scans all the Bluetooth devices that are advertising 
 	}
 Where,
 
-**"data_type"**: what type of data are stored in this JSON object. 
-	Used for differentiation during data communication with other components of our system.
-**"barrier_info"**: stores a child JSON object which contains necessary information about this barrier.
-**"barrier_id"**: a unique identification for this barrier.
-**"bluetooth_devices"**: stores Bluetooth scan result. Each child object corresponds to a single device. The length of this JSON array is the number of devices that were successfully scanned.
-**"bluetooth_address"**: the Bluetooth address of this device.
-**"RSSI"**: the RSSI of this device.
+**"data_type"**: what type of data are stored in this JSON object. <br>
+	Used for differentiation during data communication with other components of our system.<br>
+**"barrier_info"**: stores a child JSON object which contains necessary information about this barrier.<br>
+**"barrier_id"**: a unique identification for this barrier.<br>
+**"bluetooth_devices"**: stores Bluetooth scan result. Each child object corresponds to a single device. The length of this JSON array is the number of devices that were successfully scanned.<br>
+**"bluetooth_address"**: the Bluetooth address of this device.<br>
+**"RSSI"**: the RSSI of this device.<br>
 
 This newly created JSON object is then serialized (unprettified) and sent to the Serial port of the M5Stack, which is connected to the Serial1 port of an Arduino MKR WIFI 1010 board.
 The WIFI 1010 board reads the serialized JSON from Serial1 port and publish it to MQTT broker.
@@ -98,8 +98,8 @@ When the m5Stack senses a JSON string is coming from its Serial port, it tries t
 	
 Where,
 
-**"data_type"**: what information is stored in this JSON object.
-**"barrier_id"**: a unique identification for this barrier.
+**"data_type"**: what information is stored in this JSON object.<br>
+**"barrier_id"**: a unique identification for this barrier.<br>
 **"op_code"**: operation code. Indicating what operation to perform, as defined in [Barrier_orders.h](/M5Stack_bluetooth_detector/Barrier_orders.h).
 
 The M5Stack will then execute the operation code if and only if 
