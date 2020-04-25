@@ -5,7 +5,7 @@ An M5Stack and an Arduino MKR WIFI 1010 board constitute the controller of a bar
 The physical bar of that barrier is simulated by the display on the screen of the M5Stack.
 
 ## [2. Authantication Keys](#AK)
-![authantication keys](IoTDevices/authanticationKeys.jpg)
+![authantication keys](IoTDevices/authanticationKeys.jpg) <br>
 Each M5StickC is a wireless authentication key.
 <br><br><br><br><br><br><br><br><br><br><br><br>
 
@@ -13,29 +13,29 @@ Each M5StickC is a wireless authentication key.
 ## Barriers
 The function of our barriers can be divided into three parts:
 
- [1. Sending authentication information to our server.](#B1)
- [2. Receiving commands from our server and operating accordingly.](#B2)
- [3. Handling hardware interrupts from the barriers themselves to control them manually.](#B3)
+ [1. Sending authentication information to our server.](#B1) <br>
+ [2. Receiving commands from our server and operating accordingly.](#B2) <br>
+ [3. Handling hardware interrupts from the barriers themselves to control them manually.](#B3) <br>
  
 In implementation, each of the tasks runs on a separate thread, with the following precedence: 3 > 2 > 1.
 Manual control should have the highest priority to handle unexpected situations such as server failures.
 <br><br>
 ### Hardware setup
-|![M5StackSerialPins](IoTDevices/M5StackSerialPins.jpg)| |![1010SerialPins](IoTDevices/1010SerialPins.jpg) |
-|--|--|--|
-M5Stack¡¯s Serial port is connected to WIFI 1010¡¯s Serial1 port.
+| ![M5StackSerialPins](IoTDevices/M5StackSerialPins.jpg) | ![1010SerialPins](IoTDevices/1010SerialPins.jpg) |
+|--|--|
+
+M5Stack's Serial port is connected to WIFI 1010's Serial1 port.
 <br><br>
 ### Some questions you may ask...
 
 
-*Q. Why do you need an Arduino MKR WIFI 1010 board?*
-
+*Q. Why do you need an Arduino MKR WIFI 1010 board?* <br>
 A. The program storage space on our M5Stack is roughly 1.3 MB, which is less than enough for our program. We need another device to share its burden.
-<br>
-*Q. Why did you choose the Arduino MKR WIFI 1010 board?*
+<br><br>
+*Q. Why did you choose the Arduino MKR WIFI 1010 board?* <br>
 A. It is easy to migrate a sketch that was written for M5Stack to the Arduino platform, and vice versa. Any Arduino board with WIFI and Serial ports should do. Or you can use another M5Stack if you wish. But I would argue that an MKR WIFI 1010 board costs less energy and (more importantly) money than an M5Stack.
-<br>
-*Q. My stock of M5Stacks is abundant. How can I run your code on two M5Stacks?*
+<br><br>
+*Q. My stock of M5Stacks is abundant. How can I run your code on two M5Stacks?* <br>
 A. 
 In [Arduino_HiveMQ_connector.ino](/Arduino_HiveMQ_connector/Arduino_HiveMQ_connector.ino):
 1. #include <Wifi.h> instead of <WiFiNINA.h>
@@ -105,7 +105,7 @@ Where,
 The M5Stack will then execute the operation code if and only if 
 1.	the deserialization is successful and
 2.	the JSON object is in the right format and
-3.	the value of ¡°barrier_id¡± attribute is the same as the id of this barrier.
+3.	the value of Â¡Â°barrier_idÂ¡Â± attribute is the same as the id of this barrier.
 
 <a name="B3"></a>
 ### 3. Handling hardware interrupts from the barriers themselves to control them manually.
