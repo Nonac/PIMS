@@ -28,9 +28,9 @@ Textarea infoTextarea;
 final int barrierId=12345;
 
 final int totalSpaces = 50; // The total parking spaces in the parking lot
+int accuProfit = 0; // Accumulated profit of the day
 
 JSONArray newCarsComingArray;
-
 
 void refreshDashboardData() {
   // We just rebuild the view rather than updating existing
@@ -45,6 +45,7 @@ void updateDashboardData() {
   view.bulidNewCarsComingList();
   view.buildDetailList();
   firstBoot=false;
+  view.buildCharts();
 
 }
 
@@ -62,7 +63,6 @@ public class Dashboard_view {
     view.buildButton();
     view.buildLabelText();
     view.buildTimer();
-    
   }
 
   void buildBackground() { 
@@ -208,13 +208,13 @@ public class Dashboard_view {
                            .setFont(createFont("Berlin Sans FB", 30))
                            ;
                            
-     newCarsComingInFirstLine=cp5.addTextlabel("newCarsComingInFirstLine")
+    newCarsComingInFirstLine=cp5.addTextlabel("newCarsComingInFirstLine")
                                   .setText("Entrance               |Time")
                                   .setPosition(1250, 180)
                                   .setFont(createFont("Berlin Sans FB", 22))
                                   ;
                                   
-     detailFirstLine=cp5.addTextlabel("detailFirstLine")
+    detailFirstLine=cp5.addTextlabel("detailFirstLine")
                                   .setText("ID                 |Username                |Car     ")
                                   .setPosition(150, 180)
                                   .setFont(createFont("Berlin Sans FB", 22))
@@ -298,7 +298,13 @@ public class Dashboard_view {
   }
   
   void buildCharts() {
-    JSONArray array = traverseDb();
+    view.buildPieChart();
+    view.buildLineChart();
+    
+  }
+  
+  void buildPieChart() {
+    int allCarsInLotCount = getAllCarsInLotCount();
     pieChart = cp5.addChart("Occupancy")
                 .setPosition(125, 700)
                 .setSize(250, 250)
@@ -312,11 +318,13 @@ public class Dashboard_view {
                        (colorModeSwitch)?darkModeBackground:lightModeBackground, 
                        (colorModeSwitch)?lightModeBackground:darkModeBackground);
     
-    if (array.size()==0){
-      pieChart.setData("world", 0, totalSpaces);
-    } else {
-      pieChart.setData("world", array.size(), totalSpaces-array.size());
-    }
+    
+    pieChart.setData("world", allCarsInLotCount, totalSpaces-allCarsInLotCount);
+    println("number of cars "+allCarsInLotCount);
+  }
+  
+  void buildLineChart() {
+    totalProfit();
   }
   
   /*void test(){
@@ -335,14 +343,14 @@ public class Dashboard_view {
   void bulidNewCarsComingList(){
     newCarsComingArray=getNewCarsComingListFromDb();
     newCarsComingList=cp5.addScrollableList("newRecord")
-                           .setPosition(1250,211)
-                           .setSize(450, 500)
-                           .setItemHeight(40)
-                           .setBarHeight(30)
-                           .open()
-                           .show()
-                           .bringToFront()
-                           .unregisterTooltip();
+                         .setPosition(1250,211)
+                         .setSize(450, 500)
+                         .setItemHeight(40)
+                         .setBarHeight(30)
+                         .open()
+                         .show()
+                         .bringToFront()
+                         .unregisterTooltip();
                                 
      if(newCarsComingArray.size()>0){
        for(int i=0;i<newCarsComingArray.size();i++){
