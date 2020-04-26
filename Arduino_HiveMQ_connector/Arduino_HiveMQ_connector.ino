@@ -1,5 +1,11 @@
 #include <SPI.h>
-#include <WiFi.h>
+#ifdef ESP32
+  #include <WiFi.h>
+  #include <M5Stack.h>
+  #define Serial1 Serial
+#else
+  #include <WiFiNINA.h>
+#endif
 
 WiFiClient wifi_client;
 #include <PubSubClient.h>
@@ -8,7 +14,6 @@ PubSubClient ps_client( wifi_client );
 //Default: 128bytes, which is too small.
 //change the header file there: C:\Users\?\Documents\Arduino\libraries\PubSubClient\src
 //#define MQTT_MAX_PACKET_SIZE 8192
-#define Serial1 Serial
 
 
 #define SERIAL_JSON_DELIMITER '#'
@@ -172,7 +177,12 @@ String generateID() {
 }
 
 void setup() {
+#ifdef ESP32
+  M5.begin();
+#endif
+#ifndef ESP32
   Serial.begin(115200);
+#endif
   Serial1.begin(115200);
   //Serial1.setTimeout(serial1_timeout);
   setupWifi();
