@@ -150,16 +150,17 @@ int totalProfit() {
   return fee;
 }
 
+// Calculates individual parking fee
 int calcParkingFee(String time_in, String time_out)
 {
-  int tariff=1; // 1 pound per hour
+  int tariff=1; // 1 pound per hour/ per second for presentation purpose
   String[] in_fee=time_in.split("-");
   String[] out_fee=time_out.split("-");
   /*Using seconds here because it's easy to demonstrate, it's not the real thing*/
   int seconds=int((float(out_fee[0])-float(in_fee[0]))*365*24*3600+(float(out_fee[1])-float(in_fee[1]))*30*24*3600+(float(out_fee[2])-float(in_fee[2]))*24*3600+
     (float(out_fee[3])-float(in_fee[3]))*3600+(float(out_fee[4])-float(in_fee[4]))*60+(float(out_fee[5])-float(in_fee[5])));
   //println("charge is "+(int)(seconds*tariff/(60*60)+tariff));
-  return (int)(seconds*tariff/(60*60)+tariff); // Assume no one parks exactly 1 hour
+  return (int)(seconds*tariff); // Due to the limited time during presentation, we are charging by seconds.
 }
 
 //get a JSONObject from disk according to datatype and userId

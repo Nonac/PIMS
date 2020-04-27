@@ -18,7 +18,7 @@ final int lightModeInfoBackground=color(185,195,230);
 boolean colorModeSwitch=true;
 boolean firstBoot=true;
 Chart pieChart;
-Chart biChart;
+Chart lineChart;
 ScrollableList list,newCarsComingList,detailList;
 Textlabel timer, accountLabel, title, subtitle, detailLabel, newCarsComingInLabel, barrierControlLabel,newCarsComingInFirstLine
 ,detailFirstLine;
@@ -29,7 +29,7 @@ final int barrierId=12345;
 
 final int totalSpaces = 50; // The total parking spaces in the parking lot
 int accuProfit = 0; // Accumulated profit of the day
-
+int prevProfit = 0;
 JSONArray newCarsComingArray;
 
 void refreshDashboardData() {
@@ -71,9 +71,18 @@ public class Dashboard_view {
     } else {
       background(lightModeBackground);
     }
-    circle(250, 825, 245);
     stroke(255);
+    circle(250, 825, 245);
+    rect(502,702,645,245);
+    
+    textSize(16);
+    fill(255);
+    text("Occupied", 250, 975);  
+    
+    stroke(255,0,0);
     strokeWeight(8);
+    fill(255,0,0);
+    rect(235, 968, 5, 5);
   }
 
   //color switch
@@ -312,20 +321,52 @@ public class Dashboard_view {
                 .setView(Chart.PIE)
                 ;
   
-    pieChart.addDataSet("world");
-    pieChart.setColors("world", 
+    pieChart.addDataSet("occupied");
+    pieChart.setColors("occupied", 
                        color(255, 0, 0), 
                        (colorModeSwitch)?darkModeBackground:lightModeBackground, 
                        (colorModeSwitch)?lightModeBackground:darkModeBackground);
     
     
-    pieChart.setData("world", allCarsInLotCount, totalSpaces-allCarsInLotCount);
-    println("number of cars "+allCarsInLotCount);
+    pieChart.setData("occupied", allCarsInLotCount, totalSpaces-allCarsInLotCount);
+    //println("number of cars "+allCarsInLotCount);
   }
   
   void buildLineChart() {
-    totalProfit();
+    lineChart = cp5.addChart("Profit")
+                 .setPosition(500,700)
+                 .setSize(650,250)
+                 .setView(Chart.LINE)
+                 ;
+    lineChart.addDataSet("profit");
+    lineChart.setColors("profit",
+                      color(255, 255, 255));//, 
+                      //(colorModeSwitch)?darkModeBackground:lightModeBackground);
+    //lineChart.setData("profit", new int[] { 1, 10, 50, 80, 100});
   }
+  
+  void updateLineChart(int secCount, String name) {
+    prevProfit = accuProfit;
+    accuProfit = totalProfit();
+    //println("total profit is "+accuProfit);
+    /*if (secCount>=5 && secCount<=8) {
+      accuProfit=prevProfit;
+    } else {
+      accuProfit = secCount*20;
+    }*/
+    Chart newChart = cp5.addChart(name)
+                 .setPosition(500+(650/100)*secCount,700)
+                 .setSize(650/100,250)
+                 .setRange(0,1000) // Y-axis range
+                 .setLabel("")
+                 .setView(Chart.LINE)
+                 ;
+    newChart.addDataSet(name);
+    newChart.setColors(name, color(255, 255, 255));
+    newChart.setData(name, prevProfit, accuProfit);
+    //fill((colorModeSwitch)?darkModeBackground:lightModeBackground);
+    //rect(500,960,650,10);
+  }  
   
   /*void test(){
      JSONArray array=getNewCarsComingListFromDb();
@@ -337,8 +378,6 @@ public class Dashboard_view {
      }
      
   }*/
- 
-  
   
   void bulidNewCarsComingList(){
     newCarsComingArray=getNewCarsComingListFromDb();
