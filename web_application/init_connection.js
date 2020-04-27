@@ -1,4 +1,4 @@
-let topicName = 'PIMS/test0';
+let topicName = 'PIMS';
 
 client = new Paho.MQTT.Client("broker.mqttdashboard.com", 8000, make_id());
 

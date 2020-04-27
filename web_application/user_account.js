@@ -128,11 +128,13 @@ function registerVehicle() {
     let addVehicleForm = document.getElementById('add_vehicle_form');
     let vehicleId = document.getElementById('vehicle_id').value;
     let vehicleType = document.getElementById('vehicle_type').value;
+    let blueTooth = document.getElementById('blue_tooth').value;
     if (vehicleId && vehicleType) {
         let messageBody = {
             username: username,
             vehicle_id: vehicleId,
             vehicle_type: vehicleType,
+            blueTooth: blueTooth,
             status: 2
         }
         sendQuery('web_vehicle_register', messageBody);
