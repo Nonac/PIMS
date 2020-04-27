@@ -27,8 +27,8 @@ const int serial1_timeout {300}; // in milliseconds
 
 // MQTT Settings
 const char* MQTT_clientname = "barrier"; // Make up a short name
-const char* MQTT_sub_topic = "m5_receive"; // pub/sub topics
-const char* MQTT_pub_topic = "m5_transmit"; // You might want to create your own
+const char* MQTT_sub_topic = "PIMS"; // pub/sub topics
+const char* MQTT_pub_topic = "PIMS"; // You might want to create your own
 
 // Please leave this alone - to connect to HiveMQ
 const char* server = "broker.mqttdashboard.com";
