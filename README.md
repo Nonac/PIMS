@@ -2,7 +2,7 @@
 
 ## Group members
 * Fuzhou Wang\
-  @bristol.ac.uk
+  cy19158@bristol.ac.uk
 * Yinan Yang\
   ff19085@bristol.ac.uk
 * Tao Xu\
