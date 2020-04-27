@@ -74,15 +74,33 @@ public class Dashboard_view {
     stroke(255);
     circle(250, 825, 245);
     rect(502,702,645,245);
-    
-    textSize(16);
+    // Legend label for pie chart
+    textFont(createFont("Berlin Sans FB", 20));
     fill(255);
-    text("Occupied", 250, 975);  
-    
+    text("Occupied", 250, 975);
+    textFont(createFont("Berlin Sans FB", 20));
+    text("PROFIT", 505, 690);
+    // Legend red square for pie chart
     stroke(255,0,0);
     strokeWeight(8);
     fill(255,0,0);
     rect(235, 968, 5, 5);
+    // axes labels for line chart
+    textSize(16);
+    fill(255);
+    // Y axis
+    text("100", 465, 705);
+    for (Integer i=10; i<100; i+=10) {
+      text(" "+(100-i), 465, 705+250*i/100);
+    }
+    text("  0", 465, 705+250);
+    // X axis
+    for (Integer i=10; i<=100; i+=10) {
+      text(""+i, 465+650*i/100, 965);
+    }
+    // Axes labels
+    text("GBP", 430, 705);
+    text("Seconds", 465+640, 985);
   }
 
   //color switch
@@ -336,6 +354,7 @@ public class Dashboard_view {
     lineChart = cp5.addChart("Profit")
                  .setPosition(500,700)
                  .setSize(650,250)
+                 .setLabel("")
                  .setView(Chart.LINE)
                  ;
     lineChart.addDataSet("profit");
