@@ -29,20 +29,19 @@ M5Stack's Serial port is connected to WIFI 1010's Serial1 port.
 ### Some questions you may ask...
 
 
-*Q. Why do you need an Arduino MKR WIFI 1010 board?* <br>
-A. The program storage space on our M5Stack is roughly 1.3 MB, which is less than enough for our program. We need another device to share its burden.
+*Q. Why did you need an Arduino MKR WIFI 1010 board?* <br>
+A. The program storage space on our M5Stack was roughly 1.3 MB, which was less than enough for our program. We needed another device to share its burden.
 <br><br>
 *Q. Why did you choose the Arduino MKR WIFI 1010 board?* <br>
-A. It is easy to migrate a sketch that was written for M5Stack to the Arduino platform, and vice versa. Any Arduino board with WIFI and Serial ports should do. Or you can use another M5Stack if you wish. But I would argue that an MKR WIFI 1010 board costs less energy and (more importantly) money than an M5Stack.
+A. It was easy to migrate a sketch that had been written for M5Stack to the Arduino platform, and vice versa. Any Arduino board with WIFI and Serial ports should do. Or you could use another M5Stack if you wish. But I would argue that an MKR WIFI 1010 board costs less energy and (more importantly) money than an M5Stack.
 <br><br>
-*Q. My stock of M5Stacks is abundant. How can I run your code on two M5Stacks?* <br>
+*Q. My stock of M5Stacks is abundant! How can I run your code on two M5Stacks?* <br>
 A. 
-In [Arduino_HiveMQ_connector.ino](/Arduino_HiveMQ_connector/Arduino_HiveMQ_connector.ino):
-1. #include <Wifi.h> instead of <WiFiNINA.h>
-2. #define Serial1 Serial <br>
-Connect the two M5Stacks Serial to Serial. And you should be good to go.
+The [Arduino_HiveMQ_connector.ino](/Arduino_HiveMQ_connector/Arduino_HiveMQ_connector.ino) was written to be compatible with M5Stacks. <br>
+Simply compile and upload it to an M5Stack, and do the same things for [M5Stack_bluetooth_detector.ino](/M5Stack_bluetooth_detector/M5Stack_bluetooth_detector.ino) using another M5Stack. <br>
+Then, connect the two M5Stacks Serial to Serial. And you should be good to go.
 
-Do not forget to change the MQTT_MAX_PACKET_SIZE for the PubSubClient external library since the default value is too small.
+NOTE: Do not forget to change the MQTT_MAX_PACKET_SIZE to something like 1024 or larger for the PubSubClient external library since the default value would be too small.
 <br><br>
 <a name="B1"></a>
 ### 1. Sending authentication information to our server.
