@@ -1,5 +1,11 @@
 #include <SPI.h>
-#include <WiFiNINA.h>
+#ifdef ESP32
+  #include <WiFi.h>
+  #include <M5Stack.h>
+  #define Serial1 Serial
+#else
+  #include <WiFiNINA.h>
+#endif
 
 WiFiClient wifi_client;
 #include <PubSubClient.h>
@@ -8,7 +14,6 @@ PubSubClient ps_client( wifi_client );
 //Default: 128bytes, which is too small.
 //change the header file there: C:\Users\?\Documents\Arduino\libraries\PubSubClient\src
 //#define MQTT_MAX_PACKET_SIZE 8192
-
 
 
 #define SERIAL_JSON_DELIMITER '#'
@@ -22,8 +27,8 @@ const int serial1_timeout {300}; // in milliseconds
 
 // MQTT Settings
 const char* MQTT_clientname = "barrier"; // Make up a short name
-const char* MQTT_sub_topic = "m5_receive"; // pub/sub topics
-const char* MQTT_pub_topic = "m5_transmit"; // You might want to create your own
+const char* MQTT_sub_topic = "PIMS"; // pub/sub topics
+const char* MQTT_pub_topic = "PIMS"; // You might want to create your own
 
 // Please leave this alone - to connect to HiveMQ
 const char* server = "broker.mqttdashboard.com";
@@ -172,7 +177,12 @@ String generateID() {
 }
 
 void setup() {
+#ifdef ESP32
+  M5.begin();
+#endif
+#ifndef ESP32
   Serial.begin(115200);
+#endif
   Serial1.begin(115200);
   //Serial1.setTimeout(serial1_timeout);
   setupWifi();

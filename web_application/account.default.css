@@ -1,0 +1,205 @@
+.navbar {
+    background: rgba(46, 169, 223, 0.8);
+    max-height: 15vh;
+}
+
+.has-shadow {
+    box-shadow: 2px 2px 5px rgba(50, 50, 50, 0.2);
+}
+
+.panel-container {
+    width: 100%;
+}
+
+.navbar .navbar-logo {
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.navbar .navbar-subtitle {
+    color: white;
+    font-size: 1em;
+}
+
+.account-page {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.account-page::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: -1;
+    background: url(./imgs/parking_lot.jpg);
+    background-size: cover;
+    filter: blur(10px);
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.account-page .container {
+    z-index: 998;
+    padding: 20px;
+    position: relative;
+    top: 15vh;
+}
+
+.account-page .info-holder {
+    height: 50vh;
+    background: rgba(101, 103, 101, 0.3);
+    color: white;
+    padding: 20px;
+}
+
+.account-page .side-bar {
+    background: rgba(101, 103, 101, 0.3);
+    color: white;
+    margin-right: -5%;
+}
+
+.account-page .side-bar a:link, .account-page .side-bar a:visited {
+    color: white;
+}
+
+.account-page .side-bar img {
+    width: 100%;
+}
+
+.account-page .info-holder .info-inner-container {
+    background:  rgba(112, 124, 116, 0.5);;
+    padding: 7px;
+    overflow: scroll;
+}
+
+/*.account-page .info-holder .info-inner-container span {*/
+/*    line-height: 2.5em;*/
+/*}*/
+
+.account-page .info-holder .property-holder {
+    margin-bottom: 20px;
+}
+
+/*.account-page .info-holder .vehicle-list-container {*/
+/*    color: ;*/
+/*}*/
+
+@media (max-width: 991px) {
+    .account-page .side-bar {
+        margin: 0;
+        display: none;
+    }
+    .account-page .container {
+        height: 80vh;
+    }
+    .account-page .row {
+        height: 100%;
+        width: 100%;
+        margin-right: 0;
+        margin-left: 0;
+    }
+    .account-page .info-holder {
+        height: 100%;
+    }
+    .account-page .info-holder .info-inner-container {
+        width: 100% !important;
+        height: 50% !important;
+        margin-right: 0 !important;
+        margin-bottom: 5%;
+    }
+    .account-page .info-holder .canvas-container {
+        width: 100% !important;
+        height: 45% !important;
+    }
+    .account-page .info-holder .canvas-container .echart-canvas {
+        height: 100% !important;
+    }
+}
+
+.side-bar .profile-container {
+    height: 6em;
+}
+
+.side-bar .profile-container span {
+    display: block;
+    font-weight: bold;
+    line-height: 1.5em;
+}
+
+.side-bar .profile-container small {
+    display: block;
+    font-style: italic;
+}
+
+.side-bar .carousel-control-next, .side-bar .carousel-control-prev {
+    bottom: 6em;
+}
+
+.btn {
+    background: rgb(30, 136, 168);
+    font-weight: 400;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    color: white;
+}
+
+.btn:focus{
+    box-shadow: 0 0 0 0.2rem rgba(0, 96, 150, 0.25);
+    color: white;
+}
+
+.btn:hover {
+    background-color: rgb(0, 98, 132);
+    border-color: rgb(0, 92, 175);
+    color: white;
+}
+
+
+::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    background-color: rgba(0,0,0,0.1);
+}
+::-webkit-scrollbar-track{
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    background-color: rgba(0,0,0,0.1);
+}
+
+.list-group-item.active {
+    background: rgb(0, 98, 132);
+}
+
+.list-group-item.active:hover {
+    background: rgb(46, 169, 223);
+}
+
+.list-group-item.active:active {
+    background: rgb(17, 50, 133);
+}
+
+.list-group-item:hover {
+    background: rgb(189, 192, 186);
+}
+
+.list-group-item:active {
+    background: rgb(145, 152, 159);
+}
+
+.alert-success {
+    z-index: 1031;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}

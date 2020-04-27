@@ -1,0 +1,10 @@
+{
+  "data_type": "web_vehicle_register",
+  "info": {
+    "bluetooth_address": "88:c9:a9:a8:7e:3e",
+    "vehicle_type": "car",
+    "vehicle_id": "015",
+    "username": "Turn",
+    "status": 2
+  }
+}

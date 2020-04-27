@@ -1,0 +1,126 @@
+{
+
+	"data_type": "m5_transmit",   //sent from m5
+	"barrier_info":{
+		"barrier_id": 12345
+	},
+	"bluetooth_devices":
+		[{
+			"bluetooth_address": "47:a9:af:d2:63:cd",
+	//Received signal strength indication. The closer the value is to 0, the stronger the received signal has been.
+			"RSSI": -80
+		},...,{...}]
+}
+
+{
+	"data_type": "m5_receive",   //sending to m5
+	"barrier_id": 12345,
+	"op_code": "A" // defined in Barrier_orders.h. "A" means closed, "B" means open.
+}
+
+{
+			"data_type":"parking",   //parking info
+			"info": {
+				"barrier_type": "out",
+				"time_in": "2020-3-20-15-4-21",
+				"time_out": "2020-3-20-18-4-21",
+				"username": "lea",
+				"barrier_id": 12345,
+				"vehicle_id": "acdjcidjd",
+				"vehicle_type":"car"
+				}
+}
+
+{
+	"data_type": "web_register",  //register for an account
+	"info": {
+			"username": "lea_tong",
+			"password": "*******",
+			"status": 2
+		}
+}
+
+{
+
+	"data_type": "web_login",  //login
+	"info": {
+			"username": "lea_tong",
+			"password": "*******",
+		    "status": 2
+		}
+}
+
+
+{
+
+	"data_type": "web_vehicle_register",   //register for a vehicle
+	"info": {
+			"username":"lea_tong",
+			"vehicle_id": "acdjcidjd",
+			"vehicle_type":"car",
+			"status": 2,
+			"bluetooth_address" : "47:a9:af:d2:63:cd"
+		}
+}
+
+
+{
+	"data_type": "web_vehicle_query",    //Request for all vehicles' information of a certain user.
+	"info": {
+		"username": "lea_tong",
+		"vehicle_list": [
+			{
+				"vehicle_id": "A007",
+				"vehicle_type": "car"
+			},
+			{
+				"vehicle_id": "AOO8",
+				"vehicle_type": "lorry"
+			}
+		],
+		"status": 2
+	}
+}
+
+
+{
+	"data_type": "web_vehicle_history",
+	"info": {
+		"username": "lea_tong",
+		"vehicle_id": "A007",
+		"0": 4.3,	   // This means today this vehicle has been parked in the parking lot for 4.3 hours
+		"1": 15,     // This means: on the day that was 1 day before today, this vehicle was in the parking lot for 15 hours.
+		"2": 10.9,
+		"3": 11.4,
+		"4": 18.7,
+		"5": 0,
+		"6": 7,
+		"status": 2
+	}
+}
+
+
+{
+
+	"data_type": "web_finance",  // check the balance
+	"info": {
+			"username":"lea_tong",
+			"balance": 21331,
+			"currency":"GBP",
+			"status": 2
+		}
+}
+
+
+{
+
+	"data_type": "web_recharge",  // recharge some money
+	"info": {
+			"username":"lea_tong",
+			"balance": 21331,
+			"currency":"GBP",
+			"card_number":"326173173718",
+			"pay_amount":"10",
+			"status": 2
+		}
+}
