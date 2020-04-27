@@ -10,6 +10,7 @@ MQTTClient client;
 Dashboard_view view = new Dashboard_view();
 MessageData api = new MessageData();
 Database db = new Database();
+int secCount = 0;
 
 void setup() {
   cp5 = new ControlP5(this);
@@ -19,7 +20,7 @@ void setup() {
   // connect to the broker and use a random string for clientid
   //client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop111");
   delay(100);
-  //refreshData();
+  refreshData();
   // refresh the dashboard with the information
   view.build();
   updateDashboardData(); 
@@ -35,5 +36,10 @@ void draw() {
   //All the complements as follow could change their color with color switch.
   //It may not work outside draw().
   view.buildBackground();  
+  if(frameCount%60==0 && secCount<=100) { // every second. dont't modulus frameRate becuase it's not always exactly 60.
+    secCount++;
+    //println(secCount);
+    view.updateLineChart(secCount,"name"+secCount);
+  }
   timer.setText(""+h+":"+m+":"+s);
 }

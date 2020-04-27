@@ -68,56 +68,100 @@ void deleteFile(String path) {
 }
 
 
-//traverse the database and return a JSONArray
-JSONArray traverseDb() {
+//traverse the database and return a integer
+int getAllCarsInLotCount() {
+  //JSONArray array = new JSONArray();
+  int count = 0;
+  for (JSONObject message : db.messages)
+  {
+    if (message!=null && message.getString("data_type").equals(MessageType.PARKING)) 
+    {
+      if (message.getJSONObject("info").getString("barrier_type").equals("in"))
+      {
+        //array.setJSONObject(count, message);
+        count++;
+      }
+    }
+  }
+  return count;
+}
+
+JSONArray getNewCarsComingListFromDb() {
   JSONArray array = new JSONArray();
   int count = 0;
   for (JSONObject message : db.messages)
   {
     if (message!=null)
     {
-
-      array.setJSONObject(count, message);
-      count++;
+      if (message.getString("data_type").equals(MessageType.PARKING)) {
+        array.setJSONObject(count, message);
+        count++;
+      }
     }
   }
-
   return array;
 }
 
-JSONArray getNewCarsComingListFromDb(){
-   JSONArray array = new JSONArray();
-   int count = 0;
-   for (JSONObject message : db.messages)
+JSONArray getDetailListFromDb() {
+  JSONArray array = new JSONArray();
+  int count = 0;
+  for (JSONObject message : db.messages)
   {
     if (message!=null)
     {
-      if(message.getString("data_type").equals("parking")){
+      if (message.getString("data_type").equals("web_vehicle_query")) {
         array.setJSONObject(count, message);
         count++;
       }
     }
   }
-    return array;
+  return array;
 }
-
-JSONArray getRechargeListFromDb(){
-   JSONArray array = new JSONArray();
-   int count = 0;
-   for (JSONObject message : db.messages)
+JSONArray getRechargeListFromDb() {
+  JSONArray array = new JSONArray();
+  int count = 0;
+  for (JSONObject message : db.messages)
   {
     if (message!=null)
     {
-      if(message.getString("data_type").equals("web_recharge")){
+      if (message.getString("data_type").equals("web_recharge")) {
         array.setJSONObject(count, message);
         count++;
       }
     }
   }
-    return array;
+  return array;
 }
 
+int totalProfit() {
+  int fee=0;
+  String time_in, time_out;
+  for (JSONObject message : db.messages) {
+    if (message!=null && message.getString("data_type").equals(MessageType.PARKING)) {
+      JSONObject info = message.getJSONObject("info");
+      if (info.getString("barrier_type").equals("out")) {
+        time_in = info.getString("time_in");
+        time_out = info.getString("time_out");
+        // might need to modify the function
+        fee += calcParkingFee(time_in, time_out);
+      }
+    }
+  }
+  return fee;
+}
 
+// Calculates individual parking fee
+int calcParkingFee(String time_in, String time_out)
+{
+  int tariff=1; // 1 pound per hour/ per second for presentation purpose
+  String[] in_fee=time_in.split("-");
+  String[] out_fee=time_out.split("-");
+  /*Using seconds here because it's easy to demonstrate, it's not the real thing*/
+  int seconds=int((float(out_fee[0])-float(in_fee[0]))*365*24*3600+(float(out_fee[1])-float(in_fee[1]))*30*24*3600+(float(out_fee[2])-float(in_fee[2]))*24*3600+
+    (float(out_fee[3])-float(in_fee[3]))*3600+(float(out_fee[4])-float(in_fee[4]))*60+(float(out_fee[5])-float(in_fee[5])));
+  //println("charge is "+(int)(seconds*tariff/(60*60)+tariff));
+  return (int)(seconds*tariff); // Due to the limited time during presentation, we are charging by seconds.
+}
 
 //get a JSONObject from disk according to datatype and userId
 JSONObject getObjWithId(String datatype, String userId)
@@ -339,7 +383,7 @@ public class MessageData {
     int amount4=0;
     int amount5=0;
     int amount6=0;
-    
+
     for (JSONObject message : db.messages)
     {
       if (message!=null&&message.getString("data_type").equals(datatype)
@@ -353,47 +397,46 @@ public class MessageData {
         String[] in_array=time_in.split("-");
         String[] out_array=time_out.split("-");
         flag =1;
-        if(currentYear!= Integer.valueOf(in_array[0])
-        ||currentMonth!=Integer.valueOf(in_array[1])
-        ||currentDay-Integer.valueOf(in_array[2])>6
-        ){
-            continue;
+        if (currentYear!= Integer.valueOf(in_array[0])
+          ||currentMonth!=Integer.valueOf(in_array[1])
+          ||currentDay-Integer.valueOf(in_array[2])>6
+          ) {
+          continue;
         }
         int amount = currentDay-Integer.valueOf(in_array[2]);
         int seconds=int((float(out_array[0])-float(in_array[0]))*365*24*3600+(float(out_array[1])-float(in_array[1]))*30*24*3600+(float(out_array[2])-float(in_array[2]))*24*3600+
-        (float(out_array[3])-float(in_array[3]))*3600+(float(out_array[4])-float(in_array[4]))*60+(float(out_array[5])-float(in_array[5])));
-        switch(amount){
-          case 0:
-             amount0 = amount0 + seconds;
-             break;
-          case 1:
-             amount1 = amount1 + seconds;
-             break;  
-          case 2:
-             amount2 = amount2 + seconds;
-             break; 
-          case 3:
-             amount3 = amount3 + seconds;
-             break;
-          case 4:
-             amount4 = amount4 + seconds;
-             break; 
-          case 5:
-             amount5 = amount5 + seconds;
-             break; 
-          case 6:
-             amount6 = amount6 + seconds;
-             break; 
-          default:
-             break;
-          
+          (float(out_array[3])-float(in_array[3]))*3600+(float(out_array[4])-float(in_array[4]))*60+(float(out_array[5])-float(in_array[5])));
+        switch(amount) {
+        case 0:
+          amount0 = amount0 + seconds;
+          break;
+        case 1:
+          amount1 = amount1 + seconds;
+          break;  
+        case 2:
+          amount2 = amount2 + seconds;
+          break; 
+        case 3:
+          amount3 = amount3 + seconds;
+          break;
+        case 4:
+          amount4 = amount4 + seconds;
+          break; 
+        case 5:
+          amount5 = amount5 + seconds;
+          break; 
+        case 6:
+          amount6 = amount6 + seconds;
+          break; 
+        default:
+          break;
         }
       }
     }
 
-    if(flag==0){
+    if (flag==0) {
       infoFromWeb.setInt("status", 0);
-    }else{
+    } else {
       infoFromWeb.setInt("status", 1);
       infoFromWeb.setInt("0", amount0);
       infoFromWeb.setInt("1", amount1);
@@ -401,7 +444,7 @@ public class MessageData {
       infoFromWeb.setInt("3", amount3);
       infoFromWeb.setInt("4", amount4);
       infoFromWeb.setInt("5", amount5);
-      infoFromWeb.setInt("6", amount6);      
+      infoFromWeb.setInt("6", amount6);
     }
     return historyMessage;
   }
@@ -506,17 +549,15 @@ public class MessageData {
   void parkingCharge(String time_in, String time_out, String username) {
 
     JSONObject financeMessage= getObjWithUsername(MessageType.FINANCE, username);
-    String[] in_fee=time_in.split("-");
-    String[] out_fee=time_out.split("-");
-    /*Using seconds here because it's easy to demonstrate, it's not the real thing*/
-    int seconds=int((float(out_fee[0])-float(in_fee[0]))*365*24*3600+(float(out_fee[1])-float(in_fee[1]))*30*24*3600+(float(out_fee[2])-float(in_fee[2]))*24*3600+
-      (float(out_fee[3])-float(in_fee[3]))*3600+(float(out_fee[4])-float(in_fee[4]))*60+(float(out_fee[5])-float(in_fee[5])));
+
     int balance = financeMessage.getJSONObject("info").getInt("balance");
-    balance = balance- seconds;
+    balance = balance- calcParkingFee(time_in, time_out);
     financeMessage.getJSONObject("info").setInt("balance", balance);
     String path = dataPath("")+"\\"+MessageType.FINANCE+"_"+financeMessage.getJSONObject("info").getString("username")+".json";
     deleteFile(path);
     saveJSONObject(financeMessage, "data/"+financeMessage.getString("data_type") + "_"+ financeMessage.getJSONObject("info").getString("username") + ".json");
     refreshData();
   }
+
+  
 }        

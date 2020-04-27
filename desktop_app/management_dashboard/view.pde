@@ -18,7 +18,7 @@ final int lightModeInfoBackground=color(185,195,230);
 boolean colorModeSwitch=true;
 boolean firstBoot=true;
 Chart pieChart;
-Chart biChart;
+Chart lineChart;
 ScrollableList list,newCarsComingList,detailList;
 Textlabel timer, accountLabel, title, subtitle, detailLabel, newCarsComingInLabel, barrierControlLabel,newCarsComingInFirstLine
 ,detailFirstLine;
@@ -28,9 +28,9 @@ Textarea infoTextarea;
 final int barrierId=12345;
 
 final int totalSpaces = 50; // The total parking spaces in the parking lot
-
+int accuProfit = 0; // Accumulated profit of the day
+int prevProfit = 0;
 JSONArray newCarsComingArray;
-
 
 void refreshDashboardData() {
   // We just rebuild the view rather than updating existing
@@ -45,6 +45,7 @@ void updateDashboardData() {
   view.bulidNewCarsComingList();
   view.buildDetailList();
   firstBoot=false;
+  view.buildCharts();
 
 }
 
@@ -62,7 +63,6 @@ public class Dashboard_view {
     view.buildButton();
     view.buildLabelText();
     view.buildTimer();
-    
   }
 
   void buildBackground() { 
@@ -71,9 +71,36 @@ public class Dashboard_view {
     } else {
       background(lightModeBackground);
     }
-    circle(250, 825, 245);
     stroke(255);
+    circle(250, 825, 245);
+    rect(502,702,645,245);
+    // Legend label for pie chart
+    textFont(createFont("Berlin Sans FB", 20));
+    fill(255);
+    text("Occupied", 250, 975);
+    textFont(createFont("Berlin Sans FB", 20));
+    text("PROFIT", 505, 690);
+    // Legend red square for pie chart
+    stroke(255,0,0);
     strokeWeight(8);
+    fill(255,0,0);
+    rect(235, 968, 5, 5);
+    // axes labels for line chart
+    textSize(16);
+    fill(255);
+    // Y axis
+    text("100", 465, 705);
+    for (Integer i=10; i<100; i+=10) {
+      text(" "+(100-i), 465, 705+250*i/100);
+    }
+    text("  0", 465, 705+250);
+    // X axis
+    for (Integer i=10; i<=100; i+=10) {
+      text(""+i, 465+650*i/100, 965);
+    }
+    // Axes labels
+    text("GBP", 430, 705);
+    text("Seconds", 465+640, 985);
   }
 
   //color switch
@@ -208,13 +235,13 @@ public class Dashboard_view {
                            .setFont(createFont("Berlin Sans FB", 30))
                            ;
                            
-     newCarsComingInFirstLine=cp5.addTextlabel("newCarsComingInFirstLine")
+    newCarsComingInFirstLine=cp5.addTextlabel("newCarsComingInFirstLine")
                                   .setText("Entrance               |Time")
                                   .setPosition(1250, 180)
                                   .setFont(createFont("Berlin Sans FB", 22))
                                   ;
                                   
-     detailFirstLine=cp5.addTextlabel("detailFirstLine")
+    detailFirstLine=cp5.addTextlabel("detailFirstLine")
                                   .setText("ID                 |Username                |Car     ")
                                   .setPosition(150, 180)
                                   .setFont(createFont("Berlin Sans FB", 22))
@@ -298,7 +325,13 @@ public class Dashboard_view {
   }
   
   void buildCharts() {
-    JSONArray array = traverseDb();
+    view.buildPieChart();
+    view.buildLineChart();
+    
+  }
+  
+  void buildPieChart() {
+    int allCarsInLotCount = getAllCarsInLotCount();
     pieChart = cp5.addChart("Occupancy")
                 .setPosition(125, 700)
                 .setSize(250, 250)
@@ -306,18 +339,53 @@ public class Dashboard_view {
                 .setView(Chart.PIE)
                 ;
   
-    pieChart.addDataSet("world");
-    pieChart.setColors("world", 
+    pieChart.addDataSet("occupied");
+    pieChart.setColors("occupied", 
                        color(255, 0, 0), 
                        (colorModeSwitch)?darkModeBackground:lightModeBackground, 
                        (colorModeSwitch)?lightModeBackground:darkModeBackground);
     
-    if (array.size()==0){
-      pieChart.setData("world", 0, totalSpaces);
-    } else {
-      pieChart.setData("world", array.size(), totalSpaces-array.size());
-    }
+    
+    pieChart.setData("occupied", allCarsInLotCount, totalSpaces-allCarsInLotCount);
+    //println("number of cars "+allCarsInLotCount);
   }
+  
+  void buildLineChart() {
+    lineChart = cp5.addChart("Profit")
+                 .setPosition(500,700)
+                 .setSize(650,250)
+                 .setLabel("")
+                 .setView(Chart.LINE)
+                 ;
+    lineChart.addDataSet("profit");
+    lineChart.setColors("profit",
+                      color(255, 255, 255));//, 
+                      //(colorModeSwitch)?darkModeBackground:lightModeBackground);
+    //lineChart.setData("profit", new int[] { 1, 10, 50, 80, 100});
+  }
+  
+  void updateLineChart(int secCount, String name) {
+    prevProfit = accuProfit;
+    accuProfit = totalProfit();
+    //println("total profit is "+accuProfit);
+    /*if (secCount>=5 && secCount<=8) {
+      accuProfit=prevProfit;
+    } else {
+      accuProfit = secCount*20;
+    }*/
+    Chart newChart = cp5.addChart(name)
+                 .setPosition(500+(650/100)*secCount,700)
+                 .setSize(650/100,250)
+                 .setRange(0,1000) // Y-axis range
+                 .setLabel("")
+                 .setView(Chart.LINE)
+                 ;
+    newChart.addDataSet(name);
+    newChart.setColors(name, color(255, 255, 255));
+    newChart.setData(name, prevProfit, accuProfit);
+    //fill((colorModeSwitch)?darkModeBackground:lightModeBackground);
+    //rect(500,960,650,10);
+  }  
   
   /*void test(){
      JSONArray array=getNewCarsComingListFromDb();
@@ -329,20 +397,18 @@ public class Dashboard_view {
      }
      
   }*/
- 
-  
   
   void bulidNewCarsComingList(){
     newCarsComingArray=getNewCarsComingListFromDb();
     newCarsComingList=cp5.addScrollableList("newRecord")
-                           .setPosition(1250,211)
-                           .setSize(450, 500)
-                           .setItemHeight(40)
-                           .setBarHeight(30)
-                           .open()
-                           .show()
-                           .bringToFront()
-                           .unregisterTooltip();
+                         .setPosition(1250,211)
+                         .setSize(450, 500)
+                         .setItemHeight(40)
+                         .setBarHeight(30)
+                         .open()
+                         .show()
+                         .bringToFront()
+                         .unregisterTooltip();
                                 
      if(newCarsComingArray.size()>0){
        for(int i=0;i<newCarsComingArray.size();i++){
@@ -354,6 +420,9 @@ public class Dashboard_view {
   }
   
   void buildDetailList(){
+    int cnt=0;
+    String username=null;
+    newCarsComingArray=getDetailListFromDb();
     detailList=cp5.addScrollableList("detailList")
                            .setPosition(150,211)
                            .setSize(450, 500)
@@ -363,7 +432,18 @@ public class Dashboard_view {
                            .show()
                            .bringToFront()
                            .unregisterTooltip();
-    
+    if(newCarsComingArray.size()>0){
+       for(int i=0;i<newCarsComingArray.size();i++){
+         JSONArray o=newCarsComingArray.getJSONObject(i).getJSONObject("info").getJSONArray("vehicle_list");
+         username=newCarsComingArray.getJSONObject(i).getJSONObject("info").getString("username");
+         for(int j=0;j<o.size();i++){
+           detailList.addItem((cnt+1)+((i>9)?" ":"")
+         +"                     |"+username
+         +"               |"+o.getJSONObject(j).getString("vehicle_id"),cnt);
+         cnt++;
+         }     
+       }
+     }
   }
   
 }
@@ -400,6 +480,37 @@ void newRecord(int theValue){
               //<>//
 }
   
+  void detailList(int theValue){
+    JSONObject o=newCarsComingArray.getJSONObject(theValue).getJSONObject("info");
+    Pattern p=Pattern.compile("-");
+    String[] entryTime=null;
+    String[] exitTime=null;
+    int balance=0;
+    
+    if(o.getString("time_in")!=null){
+      entryTime=p.split(o.getString("time_in"));
+    }
+    if(o.getString("time_out")!=null){
+      exitTime=p.split(o.getString("time_out"));
+    }
+    if(getObjWithUsername("web_finance",o.getString("username"))!=null)
+    {
+      balance= getObjWithUsername("web_finance",o.getString("username")).getJSONObject("info").getInt("balance");
+    }
+    infoTextarea.setText("Vehicle details (hover over to see)\n\n"
+                    +"Entrance #:                  "+o.getString("")+"\n"
+                    +"ID                                  "+o.getString("vehicle_id")+"\n"
+                    +"Entry date:                   "+entryTime[2]+"\\"+entryTime[1]+"\\"+entryTime[0]+"\n"
+                    +"Entry time:                   "+entryTime[3]+":"+entryTime[4]+":"+entryTime[5]+"\n"
+                    +"Exit date:                      "+((o.getString("time_out")!=null)?(exitTime[2]+"\\"+exitTime[1]+"\\"+exitTime[0]):"")+"\n"
+                    +"Exit time:                      "+((o.getString("time_out")!=null)?(exitTime[3]+"\\"+exitTime[4]+"\\"+exitTime[5]):"")+"\n"
+                    +"Account owner:            "+o.getString("username")+"\n"
+                    +"Car:                               "+o.getString("vehicle_id")+"\n"
+                    +"Account balance:         £"+balance+"\n"
+                    +"Annual membership: "+"\n"                   
+                    );
+    
+  }
 
 //color switch function        
 void Settings(int theValue) {
