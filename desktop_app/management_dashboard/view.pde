@@ -362,6 +362,9 @@ public class Dashboard_view {
   }
   
   void buildDetailList(){
+    int cnt=0;
+    String username=null;
+    newCarsComingArray=getDetailListFromDb();
     detailList=cp5.addScrollableList("detailList")
                            .setPosition(150,211)
                            .setSize(450, 500)
@@ -371,7 +374,18 @@ public class Dashboard_view {
                            .show()
                            .bringToFront()
                            .unregisterTooltip();
-    
+    if(newCarsComingArray.size()>0){
+       for(int i=0;i<newCarsComingArray.size();i++){
+         JSONArray o=newCarsComingArray.getJSONObject(i).getJSONObject("info").getJSONArray("vehicle_list");
+         username=newCarsComingArray.getJSONObject(i).getJSONObject("info").getString("username");
+         for(int j=0;j<o.size();i++){
+           detailList.addItem((cnt+1)+((i>9)?" ":"")
+         +"                     |"+username
+         +"               |"+o.getJSONObject(j).getString("vehicle_id"),cnt);
+         cnt++;
+         }     
+       }
+     }
   }
   
 }
@@ -408,6 +422,37 @@ void newRecord(int theValue){
               //<>//
 }
   
+  void detailList(int theValue){
+    JSONObject o=newCarsComingArray.getJSONObject(theValue).getJSONObject("info");
+    Pattern p=Pattern.compile("-");
+    String[] entryTime=null;
+    String[] exitTime=null;
+    int balance=0;
+    
+    if(o.getString("time_in")!=null){
+      entryTime=p.split(o.getString("time_in"));
+    }
+    if(o.getString("time_out")!=null){
+      exitTime=p.split(o.getString("time_out"));
+    }
+    if(getObjWithUsername("web_finance",o.getString("username"))!=null)
+    {
+      balance= getObjWithUsername("web_finance",o.getString("username")).getJSONObject("info").getInt("balance");
+    }
+    infoTextarea.setText("Vehicle details (hover over to see)\n\n"
+                    +"Entrance #:                  "+o.getString("")+"\n"
+                    +"ID                                  "+o.getString("vehicle_id")+"\n"
+                    +"Entry date:                   "+entryTime[2]+"\\"+entryTime[1]+"\\"+entryTime[0]+"\n"
+                    +"Entry time:                   "+entryTime[3]+":"+entryTime[4]+":"+entryTime[5]+"\n"
+                    +"Exit date:                      "+((o.getString("time_out")!=null)?(exitTime[2]+"\\"+exitTime[1]+"\\"+exitTime[0]):"")+"\n"
+                    +"Exit time:                      "+((o.getString("time_out")!=null)?(exitTime[3]+"\\"+exitTime[4]+"\\"+exitTime[5]):"")+"\n"
+                    +"Account owner:            "+o.getString("username")+"\n"
+                    +"Car:                               "+o.getString("vehicle_id")+"\n"
+                    +"Account balance:         £"+balance+"\n"
+                    +"Annual membership: "+"\n"                   
+                    );
+    
+  }
 
 //color switch function        
 void Settings(int theValue) {

@@ -102,6 +102,21 @@ JSONArray getNewCarsComingListFromDb() {
   return array;
 }
 
+JSONArray getDetailListFromDb() {
+  JSONArray array = new JSONArray();
+  int count = 0;
+  for (JSONObject message : db.messages)
+  {
+    if (message!=null)
+    {
+      if (message.getString("data_type").equals("web_vehicle_query")) {
+        array.setJSONObject(count, message);
+        count++;
+      }
+    }
+  }
+  return array;
+}
 JSONArray getRechargeListFromDb() {
   JSONArray array = new JSONArray();
   int count = 0;
