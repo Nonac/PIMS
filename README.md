@@ -10,12 +10,12 @@
 * Hongjie Yuan\
   ii19142@bristol.ac.uk
 * Zhen Zhang\
-  @bristol.ac.uk
+  ad19014@bristol.ac.uk
 * Shuang (Lea) Tong\
   nj19182@bristol.ac.uk
 
 # 1. System Design
-[Click here](Protfolio/System_design.md) to see the document for:\
+[Click here](Protfolio/System_design/README.md) to see the document for:\
 a. Architecture of the entire system\
 b. Object-Oriented design of key sub-systems\
 c. Requirements of key sub-systems\
@@ -25,13 +25,13 @@ f. Details of the data persistence mechanisms in use\
 g. Details of web technologies in use
 
 # 2. System implementation
-[Click here](Protfolio/System_implementation.md) to see the document for:\
+[Click here](Protfolio/System_implementation/README.md) to see the document for:\
 a. Breakdown of project into sprints\
 b. Details of how we evaluated our designs\
 c. Discussion of Social and Ethical implications of the work
 
 # 3. Project Evaluation
-[Click here](Protfolio/Project_evaluation.md) to see the document for:\
+[Click here](Protfolio/Project_evaluation/README.md) to see the document for:\
 a. Reflective discussion of the success of the project\
 b. Discussion of future work\
 c. Reflection on the working practices of our group\
