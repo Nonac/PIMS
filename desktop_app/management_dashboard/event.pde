@@ -1,4 +1,4 @@
-String MQTT_topic="PIMS/test";
+String MQTT_topic="PIMS";
 
 void clientConnected() {
   println("client connected");
