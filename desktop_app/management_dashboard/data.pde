@@ -357,12 +357,9 @@ public class MessageData {
         count++;
       }
     }
-    if (count==0) {
-      infoFromWeb.setInt("status", 0);
-    } else {
-      infoFromWeb.setJSONArray("vehicle_list", values);
-      infoFromWeb.setInt("status", 1);
-    }
+    infoFromWeb.setJSONArray("vehicle_list", values);
+    infoFromWeb.setInt("status", 1);
+    
     return queryMessage;
   }
 
@@ -434,9 +431,9 @@ public class MessageData {
       }
     }
 
-    if (flag==0) {
-      infoFromWeb.setInt("status", 0);
-    } else {
+    //if (flag==0) {
+      //infoFromWeb.setInt("status", 0);
+    //} else {
       infoFromWeb.setInt("status", 1);
       infoFromWeb.setInt("0", amount0);
       infoFromWeb.setInt("1", amount1);
@@ -445,7 +442,7 @@ public class MessageData {
       infoFromWeb.setInt("4", amount4);
       infoFromWeb.setInt("5", amount5);
       infoFromWeb.setInt("6", amount6);
-    }
+    //}
     return historyMessage;
   }
 

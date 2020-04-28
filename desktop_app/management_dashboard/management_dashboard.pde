@@ -18,7 +18,7 @@ void setup() {
   // connect to the broker
   client = new MQTTClient(this);
   // connect to the broker and use a random string for clientid
-  //client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop111");
+  client.connect("mqtt://try:try@broker.hivemq.com", "processing_desktop111");
   delay(100);
   refreshData();
   // refresh the dashboard with the information
