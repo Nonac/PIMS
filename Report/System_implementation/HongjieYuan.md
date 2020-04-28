@@ -50,19 +50,20 @@ based on the username, and calculates the current charge based on the difference
 between the time the car exits and enters, and updates the finance status.
 ```
 {
-			"data_type":"parking",   //parking info
-			"info": {
-				"barrier_type": "out",
-				"time_in": "2020-3-20-15-4-21",
-				"time_out": "2020-3-20-18-4-21",
-				"username": "lea",
-				"barrier_id": 12345,
-				"vehicle_id": "acdjcidjd",
-				"vehicle_type":"car"
+"data_type":"parking",   //parking info
+"info": {
+    "barrier_type": "out",
+    "time_in": "2020-3-20-15-4-21",
+    "time_out": "2020-3-20-18-4-21",
+		"username": "lea",
+		"barrier_id": 12345,
+		"vehicle_id": "acdjcidjd",
+		"vehicle_type":"car"
 				}
 }
 ```
 ```
+{
 "data_type": "web_finance",  // check the balance
 "info": {
     "username":"lea_tong",
