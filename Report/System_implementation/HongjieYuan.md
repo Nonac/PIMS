@@ -13,7 +13,7 @@ many cars near the barrier. Therefore, we should sort the Bluetooth addresses
 and select the one with the strongest signal that has been registered. Even if
 some Bluetooth signals are very strong, it is invalid if they are not registered
 in the website.
-
+```
 {
 	"data_type": "m5_transmit",
 	"barrier_info": {
@@ -34,7 +34,7 @@ in the website.
 		},
 	]
 }
-
+```
 ## Calculate parking charges
 After finding the registered car in the database, the controller must first
 determine whether the car is already in the garage. If the car is already in the
