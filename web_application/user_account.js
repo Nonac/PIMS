@@ -4,6 +4,7 @@ if (!getCookie('username')) {
 }
 
 let username = getCookie('username');
+console.log(username);
 let nameElement = document.getElementById('username');
 nameElement.innerHTML = username;
 
@@ -32,19 +33,21 @@ client.connect({onSuccess: function () {
 client.onMessageArrived = function (message) {
     console.log("onMessageArrived:"+message.payloadString);
     let respondObj = JSON.parse(message.payloadString);
-    if (respondObj.info.username === username && respondObj.info.status === 1) {
-        let message_type = respondObj.data_type;
-        switch (message_type) {
-            case 'web_finance': renderUserBalance(respondObj); break;
-            case 'web_recharge': renderRecharge(respondObj); break;
-            case 'web_vehicle_query': renderVehicleList(respondObj); break;
-            case 'web_vehicle_register': renderVehicleRegister(); break;
-            case 'web_vehicle_history': renderChart(respondObj); break;
-            default: return;
+    if (respondObj.data_type.startsWith('web')) {
+        if (respondObj.info.username === username && respondObj.info.status === 1) {
+            let message_type = respondObj.data_type;
+            switch (message_type) {
+                case 'web_finance': renderUserBalance(respondObj); break;
+                case 'web_recharge': renderRecharge(respondObj); break;
+                case 'web_vehicle_query': renderVehicleList(respondObj); break;
+                case 'web_vehicle_register': renderVehicleRegister(); break;
+                case 'web_vehicle_history': renderChart(respondObj); break;
+                default: return;
+            }
         }
-    }
-    if (respondObj.info.username === username && respondObj.info.status === 0) {
-        alert('Back-end rejected your request.');
+        if (respondObj.info.username === username && respondObj.info.status === 0) {
+            alert('Back-end rejected your request.');
+        }
     }
 };
 
@@ -129,7 +132,7 @@ function registerVehicle() {
     let vehicleId = document.getElementById('vehicle_id').value;
     let vehicleType = document.getElementById('vehicle_type').value;
     let blueTooth = document.getElementById('blue_tooth').value;
-    if (vehicleId && vehicleType) {
+    if (vehicleId && vehicleType && blueTooth) {
         let messageBody = {
             username: username,
             vehicle_id: vehicleId,
