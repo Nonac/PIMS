@@ -1,7 +1,13 @@
-##This section contains raw input from group members, not yet merged together.
+## Please Note: this section contains raw input from group members, not yet merged together.
 
-##From Tao Xu
+* [IOT Devices](#_iot) by Tao Xu
+* [Desktop Application](#_desktop) by Hongjie Yuan
+* [Web Application](#_web) by Fuzhou Wang
+
+<a name="_iot">
+
 # IOT Devices
+
 ##  [1. Barriers](#B)
 ![barriers](IoTDevices/barriers.jpg) <br>
 An M5Stack and an Arduino MKR WIFI 1010 board constitute the controller of a barrier.
@@ -51,25 +57,25 @@ NOTE: Do not forget to change the MQTT_MAX_PACKET_SIZE to something like 1024 or
 Once turned on, an M5Stack scans all the Bluetooth devices that are advertising in its vicinity every 5 seconds (can be configured to any value). The Bluetooth address and the Received Signal Strength Indicator (RSSI) are recorded for each device that was present during the latest scan. The Bluetooth addresses, the RSSIs along with other necessary information is packaged into a JSON object with the following format:
 
     {
-		"data_type": "m5_transmit",
-		"barrier_info": {
-			"barrier_id": 12345
-		},
-		"bluetooth_devices": [
-			{
-				"bluetooth_address": "07:9c:99:32:75:ab",
-				"RSSI": -91
-			},
-			{
-				"bluetooth_address": "15:e4:ac:a9:36:a2",
-				"RSSI": -52
-			},
-			{
-				"bluetooth_address": "4f:fc:d0:83:19:f0",
-				"RSSI": -79
-			},
-		]
-	}
+    	"data_type": "m5_transmit",
+    	"barrier_info": {
+    		"barrier_id": 12345
+    	},
+    	"bluetooth_devices": [
+    		{
+    			"bluetooth_address": "07:9c:99:32:75:ab",
+    			"RSSI": -91
+    		},
+    		{
+    			"bluetooth_address": "15:e4:ac:a9:36:a2",
+    			"RSSI": -52
+    		},
+    		{
+    			"bluetooth_address": "4f:fc:d0:83:19:f0",
+    			"RSSI": -79
+    		},
+    	]
+    }
 Where,
 
 **"data_type"**: what type of data are stored in this JSON object. <br>
@@ -93,10 +99,10 @@ When the m5Stack senses a JSON string is coming from its Serial port, it tries t
 
 
     {
-		"data_type": "m5_receive",
-		"barrier_id": 12345,
-		"op_code": "B"
-	}
+    	"data_type": "m5_receive",
+    	"barrier_id": 12345,
+    	"op_code": "B"
+    }
 
 Where,
 
@@ -126,10 +132,10 @@ After the user passes the barrier, they can switch off the M5StickC to save ener
 
 Currently, our barriers(M5Stacks) treat our keys (M5StickCs) equally as other Bluetooth devices. The only difference between our keys and other devices are the Bluetooth addresses of our keys are registered on our server. Therefore, our actual keys are Bluetooth addresses.
 
-
-## From Hongjie Yuan
+<a name="_desktop"></a>
 
 # Desktop_app
+
 This part is about communication between desktop app and m5stack. The aim is to
 receive message from M5 Stack and send message to M5 Stack. All data is stored
 in Json objects using by using different data types.
@@ -220,7 +226,7 @@ to deal with some special situations.
 }
 ```
 
-## From Fuzhou Wang
+<a name="_web"></a>
 
 # Web Application
 
