@@ -13,7 +13,6 @@ void messageReceived(String topic, byte[] payload) {
   {
 
     String datatype=json.getString("data_type");
-
     if (datatype.equals(MessageType.USER_REGISTER)&&json.getJSONObject("info").getInt("status")==2)
     {
       JSONObject res = api.receiveRegisterFromWeb(json);
@@ -35,7 +34,7 @@ void messageReceived(String topic, byte[] payload) {
       client.publish(MQTT_topic, tmp.toString());
     } else if (datatype.equals(MessageType.VEHICLE_REGISTER)&&json.getJSONObject("info").getInt("status")==2)
     {
-
+      println(1);
       JSONObject tmp=api.receiveVehicleRegisterFromWeb(json);
 
       client.publish(MQTT_topic, tmp.toString());
