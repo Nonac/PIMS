@@ -22,7 +22,7 @@
 
 ## [User Account](#_account)
 
-![account](D:\codes\HomeDriver\Report\System_implementation\web\account.png)
+![account](./web/account.png)
 
 ## [Login state retention and domain name filter](#_retention)
 
