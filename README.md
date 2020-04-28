@@ -8,7 +8,7 @@
 * Tao Xu\
   si19010@bristol.ac.uk
 * Hongjie Yuan\
-  @bristol.ac.uk
+  ii19142@bristol.ac.uk
 * Zhen Zhang\
   @bristol.ac.uk
 * Shuang (Lea) Tong\
@@ -36,4 +36,3 @@ a. Reflective discussion of the success of the project\
 b. Discussion of future work\
 c. Reflection on the working practices of our group\
 d. How coronavirus has affected our project
-
