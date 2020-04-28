@@ -134,7 +134,7 @@ function registerVehicle() {
             username: username,
             vehicle_id: vehicleId,
             vehicle_type: vehicleType,
-            blueTooth: blueTooth,
+            bluetooth_address: blueTooth,
             status: 2
         }
         sendQuery('web_vehicle_register', messageBody);
