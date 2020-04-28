@@ -1,9 +1,9 @@
-#Desktop_app
+# Desktop_app
 This part is about communication between desktop app and m5stack. The aim is to
 receive message from M5 Stack and send message to M5 Stack. All data is stored
 in Json objects using by using different data types.
 
-##Receiving message from M5Stack
+## Receiving message from M5Stack
 The m5_stack will send “m5_transmit” Json object to the desktop_app when there
 are cars near the barrier. There may be a lot of Bluetooth signals near the
 barrier, such as the owner's mobile phone, headphones, etc., so we have to
@@ -35,7 +35,7 @@ in the website.
 	]
 }
 
-##Calculate parking charges
+## Calculate parking charges
 After finding the registered car in the database, the controller must first
 determine whether the car is already in the garage. If the car is already in the
 garage, it means that it is out of the garage this time, otherwise it is
@@ -48,7 +48,7 @@ create a data with barrier_type “out” and generate the time of “time_in”
 the car leaves the garage, it looks up the finance status in the database
 based on the username, and calculates the current charge based on the difference
 between the time the car exits and enters, and updates the finance status.
-
+```
 {
 			"data_type":"parking",   //parking info
 			"info": {
@@ -61,7 +61,8 @@ between the time the car exits and enters, and updates the finance status.
 				"vehicle_type":"car"
 				}
 }
-
+```
+```
 "data_type": "web_finance",  // check the balance
 "info": {
     "username":"lea_tong",
@@ -70,12 +71,12 @@ between the time the car exits and enters, and updates the finance status.
     "status": 2
   }
 }
-
-##Send message to M5Stack
+```
+## Send message to M5Stack
 The last part is to send a json object of type "m5_receive" from the desktop app
 , which allows the desktop to actively control the switch of a certain barrier
 to deal with some special situations.
-
+```
 {
 "data_type": "web_finance",  // check the balance
 "info": {
@@ -85,3 +86,4 @@ to deal with some special situations.
     "status": 2
   }
 }
+```
