@@ -24,7 +24,6 @@ void setup() {
   // refresh the dashboard with the information
   view.build();
   updateDashboardData(); 
-  
 }
 
 // we don't really use the draw function as controlP5 does the work

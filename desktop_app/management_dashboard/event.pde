@@ -58,8 +58,8 @@ void connectionLost() {
   println("connection lost");
 }
 
-//Close the barrier
-void barrierClose(int barrierId)
+//Open the barrier
+void barrierOpen(int barrierId)
 {
   JSONObject json=new JSONObject();
   json.setString("data_type", "m5_receive");
@@ -68,8 +68,8 @@ void barrierClose(int barrierId)
   client.publish(MQTT_topic, json.toString());
 }
 
-//Open the barrier
-void barrierOpen(int barrierId)
+//Close the barrier
+void barrierClose(int barrierId)
 {
   JSONObject json=new JSONObject();
   json.setString("data_type", "m5_receive");

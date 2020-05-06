@@ -45,7 +45,7 @@ void updateDashboardData() {
   view.bulidNewCarsComingList();
   view.buildDetailList();
   firstBoot=false;
-  view.buildCharts();
+  //view.buildCharts();
 
 }
 
@@ -63,6 +63,7 @@ public class Dashboard_view {
     view.buildButton();
     view.buildLabelText();
     view.buildTimer();
+    view.buildCharts();
   }
 
   void buildBackground() { 
