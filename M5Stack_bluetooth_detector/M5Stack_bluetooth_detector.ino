@@ -14,7 +14,7 @@ BarrierSimulator *pCurrentBarrier = &inBarrier;
 
 
 /* BLE config */
-#define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
+#define BLE_SCAN_DURATION 2 // duration in seconds for which a secion of scan lasts
 BLEScan *pBLEScan;
 
 /* serial communication config */
