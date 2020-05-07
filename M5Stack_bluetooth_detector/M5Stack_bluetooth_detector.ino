@@ -4,11 +4,14 @@
 
 /* simple barrier simulator for m5Stack */
 #include "Barrier_simulator.h"
-BarrierSimulator& barrierSimulator = BarrierSimulator::getBarrierSimulator();
+// simulating two types of barrier: in/out
+static BarrierSimulator inBarrier = BarrierSimulator({12345, BarrierType::IN});
+static BarrierSimulator outBarrier = BarrierSimulator({54321, BarrierType::OUT});
+BarrierSimulator *pCurrentBarrier = &inBarrier;
 
 /* device specific identifications */
 #define BLE_DEVICE_NAME "barrier001" // BLE name of this device
-const unsigned long barrierId {12345}; // id of this barrier
+
 
 /* BLE config */
 #define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
@@ -165,7 +168,7 @@ int checkBarrierId(const JsonDocument& jDoc){
   if(value.isNull()){return 1;}
 
   unsigned long receivedId = value.as<unsigned long>();
-  return receivedId == barrierId ? 0 : 1;
+  return pCurrentBarrier->checkBarrierId(receivedId) ? 0 : 1;
 }
 
 // handles error occurred during deserialisation of incoming json string
@@ -198,7 +201,7 @@ const char* getOpCode(const JsonDocument& jDoc){
 // process the opCode and then pass it to BarrierSimulator class
 // although there is nothing being done here right now
 inline void handleOpCode(const char* opCode){
-  barrierSimulator.handleOpCode(opCode);
+  pCurrentBarrier->handleOpCode(opCode);
 }
 
 
@@ -213,10 +216,10 @@ void handleScanResult(BLEScanResults results){
 
   // RECALCULATE if the format of json file changes
   const int jsonCapacity =  JSON_OBJECT_SIZE(3)   // root
-                          + JSON_OBJECT_SIZE(1)   // barrier_info
+                          + JSON_OBJECT_SIZE(2)   // barrier_info
                           + JSON_ARRAY_SIZE(deviceCount) + (deviceCount) * JSON_OBJECT_SIZE(2) // bluetooth_decives
-                          + deviceCount * 55      // duplication of strings of keys
-                          + 128;                  // fixed string duplication
+                          + deviceCount * 41      // duplication of strings of keys
+                          + 81;                  // fixed string duplication
   DynamicJsonDocument jDoc(jsonCapacity);
   
   char **addresses = buildOutgoingJDoc(jDoc, results, deviceCount);
@@ -233,7 +236,8 @@ char **buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int device
   jDoc["data_type"] = "m5_transmit";
   
   JsonObject barrierInfo = jDoc.createNestedObject("barrier_info");
-  barrierInfo["barrier_id"] = barrierId;
+  barrierInfo["barrier_id"] = pCurrentBarrier->getBarrierId();
+  barrierInfo["barrier_type"] = pCurrentBarrier->getBarrierType();
   
   JsonArray bthDevices = jDoc.createNestedArray("bluetooth_devices");
   // Stores references to dynamically allocated c-style strings in the following loop
@@ -295,26 +299,35 @@ void handleButtonInterruptDebug(){
     M5.powerOFF();
   }else if(M5.BtnA.isPressed()){
     m5State = M5State::BARRIER; // switch to barrier simulator mode
-    barrierSimulator.setDisplay(true);
+    pCurrentBarrier->setDisplay(true);
   }
 }
 
+// toogle the simulator between the two barriers of type in and out, respectively.
+void toogleBarrier(){
+  if(pCurrentBarrier == &inBarrier){
+    pCurrentBarrier = &outBarrier;
+  }else{
+    pCurrentBarrier = &inBarrier;
+  }
+  pCurrentBarrier->showBarrierType();
+}
+
+
 // interrupt handler on barrier simulation mode
 // Actions:
-// press BtnA: open barrier
-// press BtnB: close barrier
+// press BtnA: toogle between open/closed state
+// press BtnB: toogle between in/out barriers
 // press BtnC: switch to debug mode
 void handleButtonInterruptBarrier(){
   M5.update();
   if(M5.BtnA.isPressed()){
-    const char opCode[2] {BARRIER_ACTION_OPEN, '\0'};
-    handleOpCode((const char*)opCode);
+    pCurrentBarrier->toogleBarrierState();
   }else if(M5.BtnB.isPressed()){
-    const char opCode[2] {BARRIER_ACTION_CLOSE, '\0'};
-    handleOpCode((const char*)opCode);
+    toogleBarrier();
   }else if(M5.BtnC.isPressed()){
     m5State = M5State::DEBUG;  // switch back to debug mode
-    barrierSimulator.setDisplay(false);
+    pCurrentBarrier->setDisplay(false);
     M5.Lcd.setTextSize(1);
     M5.Lcd.setTextColor(WHITE, BLACK);
     M5.Lcd.clear(BLACK);
