@@ -524,7 +524,7 @@ public class MessageData {
             parkingCharge(info.getString("time_in"), date, targetUser);
             barrierOpen(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
             //to allow cars move
-            delay(10000);
+            delay(3000);
             barrierClose(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
             return;
           }
@@ -547,7 +547,7 @@ public class MessageData {
       saveJSONObject(json, "data/"+json.getString("data_type") + "_"+ json.getJSONObject("info").getString("username") +"_"+ json.getJSONObject("info").getString("time_in")+".json");
        barrierOpen(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
        //to allow cars in
-      delay(10000);
+      delay(3000);
       barrierClose(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
       refreshData();
       }
