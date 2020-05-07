@@ -504,12 +504,13 @@ public class MessageData {
 
     if (flag==1)
     {
+       String barrier_type=transmitMessage.getJSONObject("barrier_info").getString("barrier_type");
       for (JSONObject message : db.messages)
       {
         if (message!=null&&message.getString("data_type").equals(MessageType.PARKING))
         {
           JSONObject info = message.getJSONObject("info");
-          if (info.getString("username").equals(targetUser)&&info.getString("barrier_type").equals("in"))
+          if (info.getString("username").equals(targetUser)&&info.getString("barrier_type").equals("in")&&barrier_type.equals("out"))
           {
 
             String path = dataPath("")+"\\"+MessageType.PARKING+"_"+message.getJSONObject("info").getString("username")+"_"+message.getJSONObject("info").getString("time_in")+".json";
@@ -521,10 +522,16 @@ public class MessageData {
             saveJSONObject(message, "data/"+message.getString("data_type") + "_"+ message.getJSONObject("info").getString("username") +"_"+ message.getJSONObject("info").getString("time_in")+".json");
             refreshData();
             parkingCharge(info.getString("time_in"), date, targetUser);
+            barrierOpen(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
+            //to allow cars move
+            delay(10000);
+            barrierClose(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
             return;
           }
         }
       }
+      if(barrier_type.equals("in"))
+      {
       JSONObject json=new JSONObject();
       JSONObject newInfo=new JSONObject();
       json.setString("data_type", MessageType.PARKING);
@@ -538,7 +545,12 @@ public class MessageData {
       newInfo.setString("barrier_type", "in");
       json.setJSONObject("info", newInfo);
       saveJSONObject(json, "data/"+json.getString("data_type") + "_"+ json.getJSONObject("info").getString("username") +"_"+ json.getJSONObject("info").getString("time_in")+".json");
+       barrierOpen(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
+       //to allow cars in
+      delay(10000);
+      barrierClose(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
       refreshData();
+      }
       return;
     }
   }
