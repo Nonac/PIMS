@@ -17,7 +17,8 @@ in the website.
 {
 	"data_type": "m5_transmit",
 	"barrier_info": {
-		"barrier_id": 12345
+		"barrier_id": 12345,
+		"barrier_type":"in"
 	},
 	"bluetooth_devices": [
 		{
@@ -47,7 +48,8 @@ it exists, it means that the car is in the garage, and controller should change
 create a data with barrier_type “out” and generate the time of “time_in”. When
 the car leaves the garage, it looks up the finance status in the database
 based on the username, and calculates the current charge based on the difference
-between the time the car exits and enters, and updates the finance status.
+between the time the car exits and enters, and updates the finance status.We calculate the parking fee at a price of one pound per second, this does not
+represent the real situation, just for the convenience of demonstration
 ```
 {
 "data_type":"parking",   //parking info
@@ -76,7 +78,11 @@ between the time the car exits and enters, and updates the finance status.
 ## Send message to M5Stack
 The last part is to send a json object of type "m5_receive" from the desktop app
 , which allows the desktop to actively control the switch of a certain barrier
-to deal with some special situations.
+to deal with some special situations.In addition, when a car enters or exits, it
+ also sends a signal to control the entry and exit of the lever. The first is to
+send the open bar information, after a delay of 10 seconds, send the closed
+bar information. The 10-second delay is a simulation of the time it takes for
+the car to enter and exit.
 ```
 {
 "data_type": "web_finance",  // check the balance
