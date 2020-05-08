@@ -109,7 +109,7 @@ JSONArray getDetailListFromDb() {
   {
     if (message!=null)
     {
-      if (message.getString("data_type").equals("web_vehicle_query")) {
+      if (message.getString("data_type").equals("web_vehicle_register")) {
         array.setJSONObject(count, message);
         count++;
       }

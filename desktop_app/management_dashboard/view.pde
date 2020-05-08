@@ -24,6 +24,7 @@ Textlabel timer, accountLabel, title, subtitle, detailLabel, newCarsComingInLabe
 ,detailFirstLine;
 Button accountIcon,settingsIcon,liftControl,closeControl,customerAccountButton;
 Textarea infoTextarea;
+JSONArray newArray;
 
 final int barrierId=12345;
 
@@ -57,6 +58,7 @@ public class Dashboard_view {
     PFont p = createFont("Berlin Sans FB", 20); 
     ControlFont font = new ControlFont(p);
     cp5.setFont(font);
+    newArray=new JSONArray();
 
     view.buildTitle();
     view.buildSettingSwitch();
@@ -136,7 +138,7 @@ public class Dashboard_view {
     }
   }
   
-
+  
   //Timer on the middle head
   void buildTimer() {   
     timer= cp5.addTextlabel("timer")
@@ -398,9 +400,52 @@ public class Dashboard_view {
      }
      
   }*/
-  
+   //<>//
   void bulidNewCarsComingList(){
     newCarsComingArray=getNewCarsComingListFromDb();
+    JSONArray array = new JSONArray();
+    String[] temp;
+    String[] max=new String[6];
+    JSONObject buff=new JSONObject();
+    int size=newCarsComingArray.size();
+    int maxIndex; //<>//
+    if(newCarsComingArray.size()>0){
+      while(array.size()<size){
+        max=new String[6];
+        maxIndex=0;
+        for(int i=0;i<newCarsComingArray.size();i++){
+          temp=new String[6];
+          JSONObject o=newCarsComingArray.getJSONObject(i).getJSONObject("info");
+          if(o.getString("barrier_type").equals("in")){
+              temp=o.getString("time_in").split("\\-");
+          }else{
+              temp=o.getString("time_out").split("\\-");
+          }     
+          if(max[0]==null){
+            max=temp;
+            buff=o;
+            maxIndex=i;
+            continue;
+          }
+          for(int j=0;j<temp.length;j++){
+              if(Float.parseFloat(max[j])>Float.parseFloat(temp[j])){
+                 break;
+              }
+              if(Float.parseFloat(max[j])<Float.parseFloat(temp[j])){
+                max=temp;
+                buff=o;
+                maxIndex=i;
+                break;
+              }
+            
+          }
+        }
+        array.append(buff);
+        newCarsComingArray.remove(maxIndex);
+      }
+    }
+    newArray=array;
+    newCarsComingArray=array;
     newCarsComingList=cp5.addScrollableList("newRecord")
                          .setPosition(1250,211)
                          .setSize(450, 500)
@@ -411,11 +456,11 @@ public class Dashboard_view {
                          .bringToFront()
                          .unregisterTooltip();
                                 
-     if(newCarsComingArray.size()>0){
-       for(int i=0;i<newCarsComingArray.size();i++){
-         JSONObject o=newCarsComingArray.getJSONObject(i).getJSONObject("info");
-         newCarsComingList.addItem(o.getString("barrier_type")+((o.getString("barrier_type").equals("in"))?"    ":"")
-         +"                         |"+o.getString("time_in"),i);
+     if(newCarsComingArray.size()>0){ //<>//
+       for(int i=0;i<array.size();i++){ //<>//
+         JSONObject p=array.getJSONObject(i); //<>//
+         newCarsComingList.addItem(p.getString("barrier_type")+((p.getString("barrier_type").equals("in"))?"    " //<>//
+         +"                         |"+p.getString("time_in"):""+"                         |"+p.getString("time_out")),i); //<>//
        }
      }
   }
@@ -423,7 +468,7 @@ public class Dashboard_view {
   void buildDetailList(){
     int cnt=0;
     String username=null;
-    newCarsComingArray=getDetailListFromDb();
+    JSONArray detailListArray=getDetailListFromDb();
     detailList=cp5.addScrollableList("detailList")
                            .setPosition(150,211)
                            .setSize(450, 500)
@@ -433,28 +478,25 @@ public class Dashboard_view {
                            .show()
                            .bringToFront()
                            .unregisterTooltip();
-    if(newCarsComingArray.size()>0){
-       for(int i=0;i<newCarsComingArray.size();i++){
-         JSONArray o=newCarsComingArray.getJSONObject(i).getJSONObject("info").getJSONArray("vehicle_list");
-         username=newCarsComingArray.getJSONObject(i).getJSONObject("info").getString("username");
-         for(int j=0;j<o.size();i++){
-           detailList.addItem((cnt+1)+((i>9)?" ":"")
-         +"                     |"+username
-         +"               |"+o.getJSONObject(j).getString("vehicle_id"),cnt);
-         cnt++;
-         }     
+    if(detailListArray.size()>0){
+       for(int i=0;i<detailListArray.size();i++){
+         JSONObject o=detailListArray.getJSONObject(i).getJSONObject("info");
+         username=detailListArray.getJSONObject(i).getJSONObject("info").getString("username");      
+           detailList.addItem((i+1)+((i>9)?"":"")
+         +"                     | "+username
+         +"                    |"+o.getString("vehicle_id"),cnt);   
        }
      }
   }
-  
 }
 
+
 void newRecord(int theValue){
-    JSONObject o=newCarsComingArray.getJSONObject(theValue).getJSONObject("info");
-    Pattern p=Pattern.compile("-");
-    String[] entryTime=null;
-    String[] exitTime=null;
-    int balance=0;
+    JSONObject o=newArray.getJSONObject(theValue); //<>//
+    Pattern p=Pattern.compile("-"); //<>//
+    String[] entryTime=null; //<>//
+    String[] exitTime=null; //<>//
+    int balance=0; //<>//
     
     if(o.getString("time_in")!=null){
       entryTime=p.split(o.getString("time_in"));
