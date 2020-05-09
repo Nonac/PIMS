@@ -24,7 +24,7 @@ Textlabel timer, accountLabel, title, subtitle, detailLabel, newCarsComingInLabe
 ,detailFirstLine;
 Button accountIcon,settingsIcon,liftControl,closeControl,customerAccountButton;
 Textarea infoTextarea;
-JSONArray newArray;
+JSONArray newArray, inCarArray;
 
 final int barrierId=12345;
 
@@ -35,6 +35,8 @@ JSONArray newCarsComingArray;
 
 void refreshDashboardData() {
   // We just rebuild the view rather than updating existing
+  cp5.remove("newRecord");
+  cp5.remove("detailList");
   updateDashboardData();
 }
 
@@ -127,6 +129,7 @@ public class Dashboard_view {
       list.setColorLabel(lightModeFontColor).setColorValue(lightModeFontColor);
     }
   }
+  
   void changeColorSettingSwitch(){
     list.setColorForeground((colorModeSwitch)?darkModeBackground:lightModeBackground)
         .setColorBackground((colorModeSwitch)?darkModeBackground:lightModeBackground);
@@ -151,6 +154,7 @@ public class Dashboard_view {
       timer.setColorValue(lightModeFontColor);
     }
   }
+  
   void changeColorTimer(){
     if (colorModeSwitch) {
       timer.setColorValue(darkModeFontColor);
@@ -468,7 +472,9 @@ public class Dashboard_view {
   void buildDetailList(){
     int cnt=0;
     String username=null;
-    JSONArray detailListArray=getDetailListFromDb();
+    JSONArray detailListArray=getNewCarsComingListFromDb();
+    String space;
+    inCarArray=new JSONArray();
     detailList=cp5.addScrollableList("detailList")
                            .setPosition(150,211)
                            .setSize(450, 500)
@@ -480,11 +486,20 @@ public class Dashboard_view {
                            .unregisterTooltip();
     if(detailListArray.size()>0){
        for(int i=0;i<detailListArray.size();i++){
+         space=new String();
          JSONObject o=detailListArray.getJSONObject(i).getJSONObject("info");
-         username=detailListArray.getJSONObject(i).getJSONObject("info").getString("username");      
-           detailList.addItem((i+1)+((i>9)?"":"")
-         +"                     | "+username
-         +"                    |"+o.getString("vehicle_id"),cnt);   
+         if(o.getString("barrier_type").equals("in")){
+           
+           username=detailListArray.getJSONObject(i).getJSONObject("info").getString("username");   
+           for(int j=0;j<(30-username.length());j++){
+             space=space+" ";
+           }
+             detailList.addItem((cnt+1)+((cnt>9)?"":" ")
+           +"                     | "+username
+           +space+"|"+o.getString("vehicle_id"),cnt);  
+           cnt++;
+           inCarArray.append(o);
+         }
        }
      }
   }
@@ -524,7 +539,7 @@ void newRecord(int theValue){
 }
   
   void detailList(int theValue){
-    JSONObject o=newCarsComingArray.getJSONObject(theValue).getJSONObject("info");
+    JSONObject o=inCarArray.getJSONObject(theValue);
     Pattern p=Pattern.compile("-");
     String[] entryTime=null;
     String[] exitTime=null;
