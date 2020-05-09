@@ -548,11 +548,12 @@ public class MessageData {
       newInfo.setString("barrier_type", "in");
       json.setJSONObject("info", newInfo);
       saveJSONObject(json, "data/"+json.getString("data_type") + "_"+ json.getJSONObject("info").getString("username") +"_"+ json.getJSONObject("info").getString("time_in")+".json");
+      refreshData();
        barrierOpen(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
        //to allow cars in
       delay(10000);
       barrierClose(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
-      refreshData();
+      
       }
       return;
     }
