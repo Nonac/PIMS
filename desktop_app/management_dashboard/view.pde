@@ -1,8 +1,3 @@
-//Todo:
-//1. bulid two tableView class.
-//2. bulid a dinamic reflesh tableView for last ten records I/O
-//3. bulid a class for data visualization.
-
 //color mode
 final int darkModeBackground=color(41, 75, 140);
 final int lightModeBackground=color(213, 223, 241);
