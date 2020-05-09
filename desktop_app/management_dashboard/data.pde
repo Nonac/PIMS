@@ -527,6 +527,9 @@ public class MessageData {
             delay(10000);
             barrierClose(transmitMessage.getJSONObject("barrier_info").getInt("barrier_id"));
             return;
+          }else if(info.getString("username").equals(targetUser)&&info.getString("barrier_type").equals("in")&&barrier_type.equals("in"))
+          {
+             return;
           }
         }
       }
