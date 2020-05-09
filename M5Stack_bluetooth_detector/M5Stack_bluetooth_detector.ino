@@ -57,7 +57,7 @@ void startInputHandler(){
 void listenToSerial(void *pvParameters){
   for(;;){
     handleSerialInput();
-    delay(SERIAL_TIMEOUT);
+    //delay(SERIAL_TIMEOUT);
   }
 }
 
