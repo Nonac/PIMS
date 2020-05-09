@@ -10,13 +10,13 @@
 			"bluetooth_address": "47:a9:af:d2:63:cd",
 	//Received signal strength indication. The closer the value is to 0, the stronger the received signal has been.
 			"RSSI": -80
-		},...,{...}]
+		}]
 }
 
 {
 	"data_type": "m5_receive",   //sending to m5
 	"barrier_id": 12345,
-	"op_code": "A" // defined in Barrier_orders.h. "A" means closed, "B" means open.
+	"op_code": "A" // defined in Barrier_orders.h. "A" means to open, "B" means to close.
 }
 
 {
