@@ -5,9 +5,11 @@
 /* simple barrier simulator for m5Stack */
 #include "Barrier_simulator.h"
 // simulating two types of barrier: in/out
-static BarrierSimulator inBarrier = BarrierSimulator({12345, BarrierType::IN});
-static BarrierSimulator outBarrier = BarrierSimulator({54321, BarrierType::OUT});
+BarrierSimulator inBarrier = BarrierSimulator({12345, BarrierType::IN});
+BarrierSimulator outBarrier = BarrierSimulator({54321, BarrierType::OUT});
 BarrierSimulator *pCurrentBarrier = &inBarrier;
+// if the barrier is switched during scanning, the latest result should be abandoned
+volatile bool g_isResultValid {true};
 
 /* device specific identifications */
 #define BLE_DEVICE_NAME "barrier001" // BLE name of this device
@@ -223,7 +225,11 @@ void handleScanResult(BLEScanResults results){
   DynamicJsonDocument jDoc(jsonCapacity);
   
   char **addresses = buildOutgoingJDoc(jDoc, results, deviceCount);
-  printJDocToSerial(jDoc);
+  if(g_isResultValid){
+    printJDocToSerial(jDoc); 
+  }else{
+    Serial.print("#Result abandoned.#");
+  }
   deleteAddresses(addresses, deviceCount);
 }
 
@@ -310,6 +316,7 @@ void toogleBarrier(){
   }else{
     pCurrentBarrier = &inBarrier;
   }
+  g_isResultValid = false;
   pCurrentBarrier->showBarrierType();
 }
 
@@ -363,5 +370,6 @@ void loop() {
   if(m5State == M5State::DEBUG){
     clearScreen();
   }
+  g_isResultValid = true;
   handleScanResult(pBLEScan->start(BLE_SCAN_DURATION));
 } 
