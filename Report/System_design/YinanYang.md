@@ -1,11 +1,11 @@
-#  The evolution of UI wireframes for key sub-systems
+# The evolution of UI wireframes for key sub-systems
 This section provides an introduction to UI design for desktop apps. The principals of this section are Yinan Yang and Shuang Tong. Yinan Yang is responsible for the architecture of the basic UI, the design of the refresh mechanism and the implementation of the data table presentation. The part that Shuang Tong accomplished was the UI interface design and the implementation of data visualization charts. Below is the overall visual of the desktop software.
 
 ![Visual_Impressiong](./destop_view/Visual_Impression.png)
 
 We go through the features of the desktop program part by part, in the order from top to bottom, left to right.
 
-##Clocks
+## Clocks
 
 The top middle position is a text clock that calls the system time. Since this system is a parking management system, there is a strong dependency on time, so a clock in seconds is designed to be displayed at the top of the centre. The refresh mechanism of this clock is to refresh automatically by changing the text content in the DRAW() function of PROCESSING.
 
@@ -16,7 +16,7 @@ int h = hour();    // Values from 0 - 23
 timer.setText(""+h+":"+m+":"+s);
 ```
 
-##Colour Mode Switch
+## Colour Mode Switch
 
 A visual button, Setting, is designed on the top right to change the colour mode. The default mode is dark and can be changed to light after adjusting it in the Setting drop-down menu. Below is a visual of the light-coloured mode.
 
@@ -59,13 +59,13 @@ void Settings(int theValue) {
   }
 }
 ```
-##Details of cars in the parking lot
+## Details of cars in the parking lot
 
 The table on the far left shows necessary information about the vehicles that have remained in the parking lot so far. We can see that in the test data, eight cars stayed in this parking lot. If one of the vehicles is selected, the information about the vehicle shown in this entry, including the owner's user name, the time of entry into the parking lot, account balance, and the location of the entrance, will be displayed in the middle exchange box. The specific functions are shown in the figure below.
 
 ![Car_In_Lot](./destop_view/Car_In_Lot.png)
 
-##New cars coming in
+## New cars coming in
 
 The table on the right represents the entry and exit records for all vehicles. Each record is arranged backwards in time; in other words, the first one shows the most recent entry and exit of a vehicle. The original purpose of this design was to display the barrier's pass log better. Go to the picture below, and the drop-down menu shows the barrier type and time for each bar. Administrators can easily retrieve any time to access vehicle traffic records. Similar to the list of present vehicle information on the left, once we select an entry in the drop-down menu, the details of that entry are displayed in the middle information display window.
 
@@ -82,7 +82,7 @@ void refreshDashboardData() {
 }
 
 ```
-##Barrier Control
+## Barrier Control
 
 In the bottom right, we implement the part where the application interacts with the barrier on the desktop side.
 
@@ -120,15 +120,15 @@ void barrierClose(int barrierId)
 }
 ```
 
-##Pie Chart
+## Pie Chart
 
 ![Pie_chart](./destop_view/Pie_chart.png)
 
-##Line Chart
+## Line Chart
 
 ![Line_chart](./destop_view/Line_chart.png)
 
-##Deficiencies and enhancements
+## Deficiencies and enhancements
 
 Unfortunately, due to the limitations of the CP5, many features could not be implemented as we originally designed.
 
