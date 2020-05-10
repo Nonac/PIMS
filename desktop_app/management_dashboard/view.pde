@@ -23,7 +23,7 @@ JSONArray newArray, inCarArray;
 
 final int barrierId=12345;
 
-final int totalSpaces = 50; // The total parking spaces in the parking lot
+final int totalSpaces = 10; // The total parking spaces in the parking lot
 int accuProfit = 0; // Accumulated profit of the day
 int prevProfit = 0;
 JSONArray newCarsComingArray;
