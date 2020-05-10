@@ -1,9 +1,9 @@
 {
   "data_type": "web_vehicle_register",
   "info": {
-    "bluetooth_address": "11:5d:99:bb:ee:6e",
+    "bluetooth_address": "d8:a0:1d:51:00:ea",
     "vehicle_type": "car",
-    "vehicle_id": "009",
+    "vehicle_id": "demo_Car",
     "username": "demo",
     "status": 2
   }

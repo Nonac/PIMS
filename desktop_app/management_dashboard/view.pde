@@ -23,7 +23,7 @@ JSONArray newArray, inCarArray;
 
 final int barrierId=12345;
 
-final int totalSpaces = 50; // The total parking spaces in the parking lot
+final int totalSpaces = 10; // The total parking spaces in the parking lot
 int accuProfit = 0; // Accumulated profit of the day
 int prevProfit = 0;
 JSONArray newCarsComingArray;
@@ -32,6 +32,7 @@ void refreshDashboardData() {
   // We just rebuild the view rather than updating existing
   cp5.remove("newRecord");
   cp5.remove("detailList");
+  cp5.remove("Occupancy");
   updateDashboardData();
 }
 
@@ -43,7 +44,7 @@ void updateDashboardData() {
   view.bulidNewCarsComingList();
   view.buildDetailList();
   firstBoot=false;
-  //view.buildCharts();
+  view.buildPieChart();
 
 }
 
@@ -62,7 +63,7 @@ public class Dashboard_view {
     view.buildButton();
     view.buildLabelText();
     view.buildTimer();
-    view.buildCharts();
+    view.buildLineChart();
   }
 
   void buildBackground() { 

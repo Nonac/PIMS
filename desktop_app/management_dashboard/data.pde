@@ -401,8 +401,13 @@ public class MessageData {
           continue;
         }
         int amount = currentDay-Integer.valueOf(in_array[2]);
-        int seconds=int((float(out_array[0])-float(in_array[0]))*365*24*3600+(float(out_array[1])-float(in_array[1]))*30*24*3600+(float(out_array[2])-float(in_array[2]))*24*3600+
-          (float(out_array[3])-float(in_array[3]))*3600+(float(out_array[4])-float(in_array[4]))*60+(float(out_array[5])-float(in_array[5])));
+        int seconds=int((float(out_array[0])-float(in_array[0]))*365*24*3600
+        +(float(out_array[1])-float(in_array[1]))*30*24*3600
+        +(float(out_array[2])-float(in_array[2]))*24*3600
+        +(float(out_array[3])-float(in_array[3]))*3600
+        +(float(out_array[4])-float(in_array[4]))*60
+        +(float(out_array[5])-float(in_array[5])));
+        println(""+seconds);
         switch(amount) {
         case 0:
           amount0 = amount0 + seconds;
