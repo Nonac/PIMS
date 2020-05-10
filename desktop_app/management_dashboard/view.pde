@@ -32,6 +32,7 @@ void refreshDashboardData() {
   // We just rebuild the view rather than updating existing
   cp5.remove("newRecord");
   cp5.remove("detailList");
+  cp5.remove("Occupancy");
   updateDashboardData();
 }
 
@@ -43,7 +44,7 @@ void updateDashboardData() {
   view.bulidNewCarsComingList();
   view.buildDetailList();
   firstBoot=false;
-  //view.buildCharts();
+  view.buildPieChart();
 
 }
 
@@ -62,7 +63,7 @@ public class Dashboard_view {
     view.buildButton();
     view.buildLabelText();
     view.buildTimer();
-    view.buildCharts();
+    view.buildLineChart();
   }
 
   void buildBackground() { 
