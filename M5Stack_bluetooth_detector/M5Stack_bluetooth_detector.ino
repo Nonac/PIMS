@@ -7,7 +7,7 @@
 // simulating two types of barrier: in/out
 BarrierSimulator inBarrier = BarrierSimulator({12345, BarrierType::IN});
 BarrierSimulator outBarrier = BarrierSimulator({54321, BarrierType::OUT});
-BarrierSimulator *pCurrentBarrier = &inBarrier;
+BarrierSimulator * volatile pCurrentBarrier = &inBarrier;
 // if the barrier is switched during scanning, the latest result should be abandoned
 volatile bool g_isResultValid {true};
 
@@ -57,7 +57,7 @@ void startInputHandler(){
 void listenToSerial(void *pvParameters){
   for(;;){
     handleSerialInput();
-    //delay(SERIAL_TIMEOUT);
+    delay(20);
   }
 }
 
@@ -227,8 +227,6 @@ void handleScanResult(BLEScanResults results){
   char **addresses = buildOutgoingJDoc(jDoc, results, deviceCount);
   if(g_isResultValid){
     printJDocToSerial(jDoc); 
-  }else{
-    Serial.print("#Result abandoned.#");
   }
   deleteAddresses(addresses, deviceCount);
 }
