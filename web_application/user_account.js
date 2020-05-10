@@ -66,7 +66,7 @@ function renderChart(respondObj) {
         },
         tooltip: {},
         legend: {
-            data: ['hrs'],
+            data: ['sec'],
             top: 25,
             right: 0,
             textStyle: {
@@ -75,7 +75,7 @@ function renderChart(respondObj) {
         },
         xAxis: {data:[]},
         yAxis: {},
-        series: [{name: 'hrs', type: 'line', data: []}],
+        series: [{name: 'sec', type: 'line', data: []}],
         textStyle: {
             color: 'white'
         }
