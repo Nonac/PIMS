@@ -182,7 +182,7 @@ function setClick(list) {
 function sendHistoryQuery(vehicleId) {
     let messageBody = {
         username: username,
-        vehicleId: vehicleId,
+        vehicle_id: vehicleId,
         status: 2
     };
     sendQuery('web_vehicle_history', messageBody);
