@@ -15,7 +15,7 @@ Receiver: __the Desktop App__ (currently acts as a server)
     "data_type": "m5_transmit",
     "barrier_info":{
         "barrier_id": 12345,
-        "barrier_type":"out"
+        "barrier_type": "in"
     },
     "bluetooth_devices":
         [{
