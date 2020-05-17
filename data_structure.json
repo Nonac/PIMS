@@ -3,7 +3,7 @@
 	"data_type": "m5_transmit",   //sent from m5
 	"barrier_info":{
 		"barrier_id": 12345,
-		"barrier_type":"out"
+		"barrier_type": "in"
 	},
 	"bluetooth_devices":
 		[{
