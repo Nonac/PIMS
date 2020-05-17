@@ -1,6 +1,6 @@
 ## Requirements of key sub-systems
 ### Barriers
-An M5Stack and an Arduino MKR WiFi 1010 make up a barrier at a car park. Each barrier has a unique id and a type (either 'in' or 'out'). Barriers of type 'IN' are those which are located at the entrances of car parks, while 'OUT' typed barriers are situated at the exits of parking yards.
+An M5Stack and an Arduino MKR WiFi 1010 make up a barrier at a car park. Each barrier has a unique id and a type (either 'in' or 'out'). Barriers of type 'in' are those which are located at the entrances of car parks, while 'in' typed barriers are situated at the exits of parking yards.
 Each barrier scans the Bluetooth (BT) devices in its vicinity every five seconds and reports their BT addresses and their Received Signal Strength Indicators (RSSIs) to our server. 
 Meanwhile, the barrier continuously listens to commands sent from our server and hardware interrupts (button presses) triggered on the barrier itself to execute corresponding operations such as lifting and dropping.
 
