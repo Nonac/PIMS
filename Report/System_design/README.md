@@ -1,6 +1,7 @@
 # System Design
 
 ## a. Architecture of the entire system
+![architecture](architecture.png)
 
 There is three-aspect development for a parking management system
 
