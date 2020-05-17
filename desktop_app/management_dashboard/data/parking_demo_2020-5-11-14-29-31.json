@@ -2,11 +2,11 @@
   "data_type": "parking",
   "info": {
     "barrier_type": "out",
-    "time_in": "2020-5-10-22-54-41",
+    "time_in": "2020-5-11-14-29-31",
     "vehicle_type": "car",
     "barrier_id": 12345,
-    "vehicle_id": "demo_Car",
+    "vehicle_id": "demo_car",
     "username": "demo",
-    "time_out": "2020-5-10-22-56-7"
+    "time_out": "2020-5-11-14-30-32"
   }
 }

@@ -1,14 +1,12 @@
-## Raw input from Zhen Zhang
-
-# 1. System Design
+# System Design
 
 ## a. Architecture of the entire system
 
 There is three-aspect development for a parking management system
 
-+ Web development for vehicle owner (by bootstrap)
-+ Desktop development for management system (by processing)
-+ Hardware development for M5Stack
++ Web page development (for customers) by bootstrap
++ Desktop application development (for managers) by processing
++ Hardware development: M5Stack (for barrier control) and M5Stick (key) 
 
 Context of use:
 
