@@ -82,6 +82,8 @@ M5Stack(gate)
 
 ### Web application
 
+<font color=red>关于这部分，请参阅1c_web.md 来自王抚洲的论述进行整合。--杨一楠</font>
+
 + Web application need to subscribe the HiveMQTT topic,"PIMS" to build up communication with server.
 + Web application need to provide a nice-looking interface to users.
 + Web application need to enable users to register accounts and register for cars.
