@@ -22,6 +22,11 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\DELL\PIMS\PIMS" />
+    </key>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -33,7 +38,8 @@
       <option name="presentableId" value="Default" />
       <updated>1589730243536</updated>
       <workItem from="1589730244895" duration="15075000" />
-      <workItem from="1589791973037" duration="13260000" />
+      <workItem from="1589791973037" duration="15015000" />
+      <workItem from="1589830048001" duration="800000" />
     </task>
     <servers />
   </component>

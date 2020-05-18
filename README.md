@@ -1,30 +1,14 @@
 # PIMS - Parking Iot Management System
 
+![Hi](Hi.png)
+
 ## Contents
-* [Group memebr list](#_group)
 * [Introduction](#_intro)
-* [Portfolio](#_portfolio)
+* [Report](#_portfolio)
     - [System Design](#_design)
     - [System Implementation](#_implementation)
     - [Project Evaluation](#_evaluation)
 * [Pitch (Video demonstration)](#_video)
-
-<a name="_group"></a>
-
-## Group members
-* __Fuzhou Wang__ (Web)\
-  cy19158@bristol.ac.uk
-* __ao Xu__ (M5Stack & M5Stick)\
-  si19010@bristol.ac.uk
-* __Hongjie Yuan__ (Desktop back end)\
-  ii19142@bristol.ac.uk
-* __Zhen Zhang__ (Desktop back end)\
-  ad19014@bristol.ac.uk
-* __Yinan Yang__ (Desktop front end)\
-  ff19085@bristol.ac.uk
-* __Shuang (Lea) Tong__ (Desktop front end)\
-  nj19182@bristol.ac.uk
-
 <a name="_intro"></a>
 
 ## Introduction
@@ -48,36 +32,19 @@ the lot during a busy day.
 
 <a name="_portfolio"></a>
 
-## Portoflio
+## Report
 
 <a name="_design"></a>
 
-### 1. System Design
-[Click here](Report/System_design/README.md) to see the document for:\
-a. Architecture of the entire system\
-b. Object-Oriented design of key sub-systems\
-c. Requirements of key sub-systems\
-d. The evolution of UI wireframes for key sub-systems\
-e. Details of the communication protocols in use\
-f. Details of the data persistence mechanisms in use\
-g. Details of web technologies in use
+### [1. System Design](Report/System_design/README.md)
 
 <a name="_implementation"></a>
 
-### 2. System implementation
-[Click here](Report/System_implementation/README.md) to see the document for:\
-a. Breakdown of project into sprints\
-b. Details of how we evaluated our designs\
-c. Discussion of Social and Ethical implications of the work
+### [2. System implementation](Report/System_implementation/README.md)
 
 <a name="_evaluation"></a>
 
-### 3. Project Evaluation
-[Click here](Report/Project_evaluation/README.md) to see the document for:\
-a. Reflective discussion of the success of the project\
-b. Discussion of future work\
-c. Reflection on the working practices of our group\
-d. How Coronavirus has affected our project
+### [3. Project Evaluation](Report/Project_evaluation/README.md)
 
 <a name="_video"></a>
 
@@ -86,4 +53,4 @@ Here is the video of us demonstrating how the M5Stack (barrier)
 , M5Stick (key), desktop application (for managers) and webpage (for customers) 
 work together via the communication on MQTT.
 
-[![Video thumbnail](Report/Video%20thumbnail.png)](https://youtu.be/KG43DJtVy-I "PIMS")
+[![Video thumbnail](Report/Video%20thumbnail.png)](https://youtu.be/kaCjAmnIsRY "PIMS")
