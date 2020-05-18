@@ -5,10 +5,8 @@
 ## Contents
 * [Introduction](#_intro)
 * [Report](#_portfolio)
-    - [System Design](#_design)
-    - [System Implementation](#_implementation)
-    - [Project Evaluation](#_evaluation)
 * [Pitch (Video demonstration)](#_video)
+
 <a name="_intro"></a>
 
 ## Introduction
@@ -34,16 +32,8 @@ the lot during a busy day.
 
 ## Report
 
-<a name="_design"></a>
-
 ### [1. System Design](Report/System_design/README.md)
-
-<a name="_implementation"></a>
-
 ### [2. System implementation](Report/System_implementation/README.md)
-
-<a name="_evaluation"></a>
-
 ### [3. Project Evaluation](Report/Project_evaluation/README.md)
 
 <a name="_video"></a>

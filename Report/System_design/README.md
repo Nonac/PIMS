@@ -8,10 +8,11 @@
 * [Object-Oriented design of key sub-systems](#_c)
 * [The evolution of UI wireframes for key sub-systems](#_d)
 * [Details of the communication protocols in use](#_e)
+* [Details of web technologies in use](#_f)
 
-<a name="a"></a>
+<a name="_a"></a>
 ## Architecture of the entire system
-<a name="diagram"></a>
+<a name="_diagram"></a>
 ### Schemetic diagram
 ![architecture](architecture.png)
 
@@ -25,7 +26,7 @@ There are 6 elements in this design:
     * Hardware - M5Stick
     * Local database
 
-<a name="roles"></a>
+<a name="_roles"></a>
 ### Individual roles
 #### MQTT
 HiveMQ MQTT is the mandatory broker given by the lecturers to connect the online elements, which are publishers
@@ -69,15 +70,14 @@ through MQTT and saved on the local hard disk in the manager's desktop. Each
 parking lot should have at one manager that keeps the application open all
 the time, so the customers' data can be saved on the hard disk.  
 
-<a name="b"></a>
+<a name="_b"></a>
 ## Requirements of key sub-systems
 ### M5Stack (Barriers)
 An M5Stack and an Arduino MKR WiFi 1010 make up a barrier at a car park.
 Each barrier has a unique id and a type (either 'in' or 'out'). Barriers of
 type 'in' are those which are located at the entrances of car parks, while
 'out' typed barriers are situated at the exits of parking lots.
-Each barrier scans the Bluetooth (BT) devices in its vicinity every **five
-seconds解释原因** and reports their BT addresses, and their Received Signal Strength
+Each barrier scans the Bluetooth (BT) devices in its vicinity every and reports their BT addresses, and their Received Signal Strength
 Indicators (RSSIs) to our server. Meanwhile, the barrier continuously listens
 to commands sent from our server and hardware interrupts (button presses)
 triggered on the barrier itself to execute corresponding operations such as
@@ -223,7 +223,7 @@ communication, verification process, or special occasions that the manager
 has to lift up or lower the barrier themselves.
 
 
-<a name="c"></a>
+<a name="_c"></a>
 ## Object-Oriented design of key sub-systems
 ### Desktop app
 ![desktopAppUML](desktopApp_UML.png)
@@ -241,11 +241,50 @@ The basic object-oriented model for this project is shown in the figure. The
   communication.
 
 ### Web app
+等待更新
 
-
-<a name="d"></a>
+<a name="_d"></a>
 ## The evolution of UI wireframes for key sub-systems
-这里是要写我们一开始的设计然后在develop过程中怎么改进和演变到现在的design的。
+### Desktop front end
+#### Version 1.0 - Hand drawing in MVB lab
+The initial design of the desktop app was drawn as below. 
+![ppt1](destop_view/drawing.JPG)
+
+
+#### Version 2.0 - PowerPoint sketch
+Before building on Processing, we used PowerPoint to draw out the electronic
+design to have an idea of the screen size and colour scheme, so that when coding in
+ Processing we will have something to follow. In the PowerPoint,
+we have designed two colour mode - light and dark:
+![light_mode](destop_view/ppt2.png)
+
+![dark_mode](destop_view/ppt3.png)
+
+More than that, we also designed another page in the desktop app corresponding
+to the bottom right button "Customer account":
+![customer_account](destop_view/ppt4.png)
+
+
+#### Version 3.0 - Processing
+In the end, we amended the design to the below. The differences are:
+* Top left chart is changed from two-column to one-column, because two-column
+can be confusing at times and if we use a scrollable chart we will be able to show
+just as much information as having a two-column chart.
+* Bottom middle chart is changed from a combined chart (bar and line) to just
+a line chart, because in the testing period, we only have 1 MStick (key) thus
+1 car to enter/exit. This means the revenue will not change as frequently as in 
+reality. The bars that were supposed to indicate the revenue made per hour will
+be 0 at most times;
+* In the line chart, we changed the x-axis unit to second from hour. This is because
+when we test it, we cannot afford to continue the activity for days to see the line chart
+re-rendering every hour. Thus, in order to see the result instantly, the x-axis
+represents second and the chart re-renders every second.
+* We completely eliminated the "Customer account" page in the end because it is not
+necessary and can be moved to "future work" section.
+
+![visual_impression](destop_view/Visual_Impression.png) 
+
+### Desktop back end - JSON file format
 The format of the json file has changed many times throughout the design process.
 According to the different requirements of the system and the different design of
 the system, the format of json should also be constantly designed.
@@ -265,22 +304,28 @@ the beginning. However, it is found that under the mechanism of MQTT, after a
 client sends a message, because it subscribes to this topic itself, it will also
 receive the message just sent, so we need to increase the status field to judge
  whether this message was sent by itself or from other clients.
-<a name="e"></a>
+ 
+ 
+<a name="_e"></a>
 ## Details of the communication protocols in use
-__(placeholder for bragging about the MQTT)__ <br>
-__(placeholder for bragging about JSON)__
-看这里！！
-1. Rules for communication
-   - All of message communicated must go through Broker.
-   - Three-aspect application must connect to and subscribe the same topic on Broker ("PIMS").
-   - Each session connected must be duplex. In other words, when sender send a message to receiver, it also expects to receive an validation message from receiver to tell it such request is valid or not.
-   - In the connection between web and server, because of the feature of broker, (which is when one application subscribe a topic, it will receive all messages in this topic including message sending by itself),  using status to identify where message is from. status=2 means it is from web side and the server side will control status =1 and status =0 to show whether web request is valid. And status=1 means the request is valid and status=2 means request is failed.'
-
+### Rules for communication
+   - All message must go through MQTT.
+   - The 3 online application must subscribe the same topic "PIMS" on MQTT.
+   - Each session connected must be a "round-trip". In other words, when 
+   sender sends a message via MQTT to receiver, it also expects to receive 
+   a receipt (in the form of a MQTT message, too) from the receiver whether the
+   request is valid.
+   - MQTT messages (in the form of JSON objects) must contain a "status" flag
+   that indicates its origin and validation status. I.e. "status=2" means the
+   message is from web end to desktop end (acting as a server). 
+   Then in the receipt, "status=1" means the request is successfully verified 
+   by the server, whereas "status=0" means the request has failed.
 
 Since different parts of our system send information asynchronously, we
 decided to let them publish different JSON objects to the MQTT topic 'PIMS'
 but all with an attribute named 'data_type' to signal the receivers to pick
 up the right messages. <br>
+
 We could have packaged them into a single JSON array and designated an index
  of that array for each recipient. However, that would have introduced another
   level of complexity for the JSON objects and reduced their overall
@@ -596,10 +641,28 @@ Send the query to broker so that the controller can receive this message to rech
 
 
 
+<a name="_e"></a>
+## Details of the data persistence mechanisms in use
 
-## f. Details of the data persistence mechanisms in use
+1. There are 10 types of data structure in total but not all of them need to
+ be stored on local hard disk.
+2. Only 4 data types, "parking", "web_register", "web_vehicle_register" and 
+"web_finance" are stored on local hard disk. Others can be extracted or
+ derived from these 4 data types.
+3. For these 4 data types, the files are named as "datatype+userId.json" or 
+"datatype+vehicleId.json". Each of them is relatively independent.
+4. Every time we create a new file or update an existing file, we need to 
+refresh database file system to make data persistent.
 
-1. there are 10 types of data structure  totally but not all of them need to be stored in filesystem
-2. only parking, web_register, web_vehicle_register and web_finance, 4 data types,  are stored in file system. all others can be got from or change content in  origin 4 data types.
-3. for these 4 data type, its file is named as datatype+useid.json or datatype+vehicleid.json. And each of them is relatively independent
-4. So, every time when we need to create a new one or update a existed one, we need to fresh database file system to make data persistent.
+
+<a name="_f"></a>
+## Details of web technologies in use
+HTML5, CSS3 and JavaScript are the main technologies that we use in the web application. Here are the core components that are used in the web application:
+
+* [Bootstrap4](https://getbootstrap.com/docs/4.0/getting-started/introduction/) - *A free and open-source CSS framework directed at responsive, mobile-first front-end web development.* We use the toolkit of Bootstrap4 including CSS and JavaScript components as the front-end template.
+* [Echarts](https://echarts.apache.org/en/index.html) - *A powerful charting and visualization library offering an easy way of adding intuitive, interactive, and highly customizable charts.* This library is used in the [user_account.js](../../web_application/user_account.js) to render the chart of statistical data of parking time.
+
+* [jQuery](https://jquery.com/) - *Simplify HTML DOM tree traversal and manipulation, as well as event handling, CSS animation.* We use this to manipulate DOM elements and get the element's width and height dynamicaly for rendering Echarts.
+
+* [Paho JavaScript Client](https://www.eclipse.org/paho/clients/js/) - *MQTT browser-based client library written in Javascript that uses WebSockets to connect to an MQTT Broker.* Establish connection with broker by this library.
+
