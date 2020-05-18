@@ -1,6 +1,6 @@
 # System Design
 
-##Contents
+## Contents
 * [Architecture of the entire system](#_a)
     * [Schemetic diagram](#_diagram)
     * [Individual roles](#_roles)

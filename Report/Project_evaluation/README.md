@@ -1,5 +1,5 @@
 # Project Evaluation
-###Contents
+##Contents
 * [Success of the project](#_sucess)
 * [Future work](#_future)
 * [Working practices of the group](#_practice)
@@ -7,28 +7,31 @@
 
 <a name="success"></a>
 
-### Success of the project
+## Success of the project
 在这里写主要的成就和**学到了什么（这一点非常重要！）**
-#### Iot
-#### Web
-#### Desktop
+### Iot
+### Web
+### Desktop
 * Front end
 
 * Back end
 
 <a name="future"></a>
 
-### Future work
+## Future work
 在这里写如果这个产品日后用于商业用途，还有什么功能可以加。
 
 There are many features to be added in order for this product to launch
-for public use. 
+for public use.
+
+### Short-term goals
 
 #### Iot
 比如车辆进入到stack蓝牙可以detect的区域时，stick屏幕提示“检测到杆”这样。
 如何让stack控制杆
 #### Web
-比如可以在网站上实时附近（支持这个系统的）停车场有多少空位。database可以转移到网上。
+比如可以在网站上实时附近（支持这个系统的）停车场有多少空位。database可以转移到网上,这样
+可以保护data privacy， 因为目前所有的user data都不保密，manager全都可以看到。
 购买stick的页面。注销账户选项。
 #### Desktop
 * Admin account page\
@@ -49,6 +52,8 @@ cannot create account, cannot add vehicles etc. Under these circumustances,
 the admin/manager can access their account to complete those tasks for them,
 or create an account for them. After completing those tasks, there should
 be a record of it showing in the admin's account as their accomplishments. 
+
+### Long-term goals
 
 Ultimately and ideally, the M5Stick can be purchased along with the
 car, so all new-generation cars can start using this system immediately.
