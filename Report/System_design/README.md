@@ -24,7 +24,7 @@ There are 6 elements in this design:
 * 2 offline elements
     * Hardware - M5Stick
     * Local database
-    
+
 <a name="roles"></a>
 ### Individual roles
 #### MQTT
@@ -42,13 +42,13 @@ vehicles on the website. The website also provides records of their usage histor
 
 ##### Desktop application
 The desktop application is developed by Processing. It is designed for managers
-at the parking lots to monitor and manage the parking lot. It visualises the 
+at the parking lots to monitor and manage the parking lot. It visualises the
 occupany of the parking lot and monitors the vehicles using this parking lot.
 
 ##### M5Stack
 The M5Stack is a small IoT (Internet of things) device compatible with Arduino and
-has built-in sensors (e.g. accelerometer, gyroscope), WIFI, bluetooth, 
-colorful screen and buttons. In our design, it acts as the parking lot 
+has built-in sensors (e.g. accelerometer, gyroscope), WIFI, bluetooth,
+colorful screen and buttons. In our design, it acts as the parking lot
 entrance/exit barrier. It is mounted at the parking lot entrance/exit.
 The screen will display the barrier's status (open or close).
 
@@ -64,22 +64,22 @@ when the M5Stick and M5Stack (barrier) are in the vicinity.
 
 ##### Local database
 There is a simple data storage system in this design since it is not the
-focus of the project. The data of the customers' from out website are passed 
-through MQTT and saved on the local hard disk in the manager's desktop. Each 
-parking lot should have at one manager that keeps the application open all 
+focus of the project. The data of the customers' from out website are passed
+through MQTT and saved on the local hard disk in the manager's desktop. Each
+parking lot should have at one manager that keeps the application open all
 the time, so the customers' data can be saved on the hard disk.  
 
 <a name="b"></a>
 ## Requirements of key sub-systems
 ### M5Stack (Barriers)
-An M5Stack and an Arduino MKR WiFi 1010 make up a barrier at a car park. 
-Each barrier has a unique id and a type (either 'in' or 'out'). Barriers of 
-type 'in' are those which are located at the entrances of car parks, while 
+An M5Stack and an Arduino MKR WiFi 1010 make up a barrier at a car park.
+Each barrier has a unique id and a type (either 'in' or 'out'). Barriers of
+type 'in' are those which are located at the entrances of car parks, while
 'out' typed barriers are situated at the exits of parking lots.
-Each barrier scans the Bluetooth (BT) devices in its vicinity every **five 
-seconds解释原因** and reports their BT addresses, and their Received Signal Strength 
+Each barrier scans the Bluetooth (BT) devices in its vicinity every **five
+seconds解释原因** and reports their BT addresses, and their Received Signal Strength
 Indicators (RSSIs) to our server. Meanwhile, the barrier continuously listens
-to commands sent from our server and hardware interrupts (button presses) 
+to commands sent from our server and hardware interrupts (button presses)
 triggered on the barrier itself to execute corresponding operations such as
 lifting and descending.
 
@@ -97,15 +97,15 @@ A barrier must meet the following requirements:
 7. Allowing manual control by responding to hardware interrupts.
 
 ### M5Stick (Keys)
-Each M5Stick-C is a key that is recognizable by any barrier in our system. 
-These keys are used to identify registered users. 
+Each M5Stick-C is a key that is recognizable by any barrier in our system.
+These keys are used to identify registered users.
 Since our barriers seek BT devices, the keys are in essence BT advertising devices.
 
 Following requirements must be satisfied for the keys:
 1. Has a unique id.
 2. Powered by rechargeable batteries so users can use them outside freely.
 3. Can advertise itself as a BT device
-4. The BT advertising state can be switched on and off for using and saving 
+4. The BT advertising state can be switched on and off for using and saving
 energy, respectively.
 
 ### Web application
@@ -123,21 +123,21 @@ Users use the web application to sign up/log in an account, register their infor
 
 ### Desktop application
 
-Since this project is a parking management software prototype, we designed 
-the requirements of the desktop client system with full consideration of 
-different client usage situations. Due to the limitation of this project, 
+Since this project is a parking management software prototype, we designed
+the requirements of the desktop client system with full consideration of
+different client usage situations. Due to the limitation of this project,
 we can only store the customer's data on local hard disk on the manager's desktop.
 This makes the desktop app a bridge between the web app (customer end) and
-the hardware side (the barriers). 
+the hardware side (the barriers).
 
-To elaborate, customers' registration data from the website must be sent through the 
+To elaborate, customers' registration data from the website must be sent through the
 broker to desktop app for storage and customers' enter request must also
 be sent by the barrier (M5Stack) through the broker to the desktop app for
 verification.
 
 The above communication happens automatically at the back end, whereas the front
 end is only for data visualisation so parking lot managers can closely monitor
-the parking lot. 
+the parking lot.
 
 #### Back end requirement
 
@@ -147,71 +147,71 @@ and the barriers, so the following points are required in the design.
 * Subscribe and retrieve users' and their vehicles' registration information
  from MQTT (published by web app).
 * Parse the messages from MQTT, separate them into specific topics (e.g.
-user registration, vehicle registration, user account top up etc) and store 
-them on the local hard drive as JSON files. 
+user registration, vehicle registration, user account top up etc) and store
+them on the local hard drive as JSON files.
 * Pack up the locally stored data and publish onto MQTT per web app's request.
 * Subscribe and retrieve users' enter/exit request at the parking lot
    from MQTT (published by M5Stack).
 * Parse the messages from MQTT, separate them into specific topics, namely the
-  entrance request and exit request, and store 
+  entrance request and exit request, and store
   them on the local hard drive as JSON files. Note that when the car enters
   the parking lot, the type "in" JSON file is generated, but it will be replaced
   by type "out" JSON file once the car leaves, for the "out" JSON file
    covers more abundant information (the time on exit).
 * Send receipt to web app or M5Stack via MQTT after receiving their messages.
-* After receiving the entrance request, the desktop app determines whether 
-the bluetooth address with the highest signal strength corresponds to the 
-registered car. If not, it continues to search for a bluetooth address with a 
+* After receiving the entrance request, the desktop app determines whether
+the bluetooth address with the highest signal strength corresponds to the
+registered car. If not, it continues to search for a bluetooth address with a
 slightly weaker signal strength until it find the registered car. According
- to the parking information of the car in the database to determine the 
- current parking status of the car, so as to determine whether the barrier can 
+ to the parking information of the car in the database to determine the
+ current parking status of the car, so as to determine whether the barrier can
  be opened this time according to the comprehensive situation of the bar and
   the car. If the car is already in the garage, even if the car's entrance
 signal is received, it will not repeatedly open the entry rod.
-* The entrance and exit requests and the user's essemtial information are 
-logically processed and used to modify and save the new user's information 
+* The entrance and exit requests and the user's essemtial information are
+logically processed and used to modify and save the new user's information
 required to achieve a dynamic refresh. In this project, we need to use access
  times and user account balances for calculations so that the parking lot can
-  be profitable. And this underlying methodological logic should be 
+  be profitable. And this underlying methodological logic should be
   implemented along with the data stored.
-* Send control commands to the barrier. Into the desktop app display 
-requirements above says that when using the remote barrier switch function, 
-the post-desktop API should provide the interface to send data request 
+* Send control commands to the barrier. Into the desktop app display
+requirements above says that when using the remote barrier switch function,
+the post-desktop API should provide the interface to send data request
 packets for the switching barrier to the barrier via MQTT. When the car enters
- or exits the parking lot, the desktop must send a message to the M5Stack to 
- control the barrier's behaviour. After the barrier opens, a 5-second pause 
- is required to give the car a time to pass the barrier, and a 
+ or exits the parking lot, the desktop must send a message to the M5Stack to
+ control the barrier's behaviour. After the barrier opens, a 5-second pause
+ is required to give the car a time to pass the barrier, and a
   message to close the barrier is sent after 5 seconds.
 * To provide all the data to be fetched and thus make a software back-end API.
  It is also the underlying arithmetic that the software should implement at
   the desktop app runtime. Various interfaces are provided for other functions.
 
 #### Front end requirement
-In the regular usage of the desktop app, the parking lot manager sits in the central 
-control room of the parking lot and uses a desktop computer for the desktop app. 
+In the regular usage of the desktop app, the parking lot manager sits in the central
+control room of the parking lot and uses a desktop computer for the desktop app.
 So at the operational and display level, the desktop app should meet
  at least a few requirements.
 
-* Real-time display of information on different vehicles passing through 
+* Real-time display of information on different vehicles passing through
 various barriers, with dynamic refreshing. This will be an essential feature
  of this software. As a management need, managers have the right and duty to
   know exactly who is driving what car and at what time to enter or leave that
    parking lot. This record should be kept locally for managers to view in
     real-time.
 * Real-time display of the vehicles remain in the parking lot, along with
- necessary information about those vehicles. This is the second function 
+ necessary information about those vehicles. This is the second function
  derived from the first one above. As a management system, it is, of course,
-  essential to have a thorough understanding of the details of the vehicles 
+  essential to have a thorough understanding of the details of the vehicles
   to be checked in the management area. For example, check the entry time of
-   a vehicle in the parking lot, and if the parking time is too long and the 
+   a vehicle in the parking lot, and if the parking time is too long and the
    account balance is insufficient, then managers should be prepared to handle
     the vehicle when it is ready to leave the lot.
-* Real-time display of used spaces in the parking lot as a percentage of all 
+* Real-time display of used spaces in the parking lot as a percentage of all
 spaces in the form of a pie chart. This feature is designed on the fact that
  when the parking lot is busy during rush
- hour, there will be long lines of entering vehicles waiting to enter the lot. 
+ hour, there will be long lines of entering vehicles waiting to enter the lot.
  If the managers are alerted before the parking lot is about to be filled, there
-  will be plenty of time to clear the entrance without a large number of 
+  will be plenty of time to clear the entrance without a large number of
   vehicles clogging the parking lanes and causing potential traffic hazards.
 * Real-time display of parking revenue. This feature is essential to
  the management system because parking lots operate based on
@@ -220,7 +220,7 @@ spaces in the form of a pie chart. This feature is designed on the fact that
    company bank account.
 * The ability to manipulate the barrier. There are likely technical issues of broker
 communication, verification process, or special occasions that the manager
-has to lift up or lower the barrier themselves. 
+has to lift up or lower the barrier themselves.
 
 
 <a name="c"></a>
@@ -229,24 +229,42 @@ has to lift up or lower the barrier themselves.
 ![desktopAppUML](desktopApp_UML.png)
 
 The basic object-oriented model for this project is shown in the figure. The
- DashboardView part of the picture is the view part of the MVM model. This 
+ DashboardView part of the picture is the view part of the MVM model. This
  section is dominated by the build program view section, so it is mainly for
-  the construction of the program's graphical interface, with buildUI 
-  functions dominating. The Database section shows the Model section. The 
-  GETS and RECEIVES functions are the main ones. where MessageType is the 
-  important message storage abstract class that defines all data types. 
-  Event is the main controller part. Mainly for the interaction of the 
-  desktop app with the barrier and the interaction of the desktop app with 
-  the web client. mqtt is also mainly applied in this part as a means of 
+  the construction of the program's graphical interface, with buildUI
+  functions dominating. The Database section shows the Model section. The
+  GETS and RECEIVES functions are the main ones. where MessageType is the
+  important message storage abstract class that defines all data types.
+  Event is the main controller part. Mainly for the interaction of the
+  desktop app with the barrier and the interaction of the desktop app with
+  the web client. mqtt is also mainly applied in this part as a means of
   communication.
-  
+
 ### Web app
 
 
 <a name="d"></a>
 ## The evolution of UI wireframes for key sub-systems
 这里是要写我们一开始的设计然后在develop过程中怎么改进和演变到现在的design的。
+The format of the json file has changed many times throughout the design process.
+According to the different requirements of the system and the different design of
+the system, the format of json should also be constantly designed.
 
+In the "data_type": "m5_transmit" json file, according to the initial assumption,
+we only have "barrier_id" in "barrier_info" to indicate which pole. The previous
+idea was to control the entry and exit of the car with a single rod, which is the
+same rod. But it was found that if the entry and exit are controlled by a lever,
+then when the car enters the parking lot, if the car is very close to the parking
+lot, the lever will be opened again. So we added "barrier_type" data to indicate
+whether this is a bar that controls whether the car enters or exits. If the car
+is outside the parking lot, only the entry lever will open. If the car is in the
+parking lot, only the outgoing pole will open. This solves the initial problem
+well.
+In the "data_type": "web_register" json file, we didn't have the status field at
+the beginning. However, it is found that under the mechanism of MQTT, after a
+client sends a message, because it subscribes to this topic itself, it will also
+receive the message just sent, so we need to increase the status field to judge
+ whether this message was sent by itself or from other clients.
 <a name="e"></a>
 ## Details of the communication protocols in use
 __(placeholder for bragging about the MQTT)__ <br>
@@ -259,14 +277,14 @@ __(placeholder for bragging about JSON)__
    - In the connection between web and server, because of the feature of broker, (which is when one application subscribe a topic, it will receive all messages in this topic including message sending by itself),  using status to identify where message is from. status=2 means it is from web side and the server side will control status =1 and status =0 to show whether web request is valid. And status=1 means the request is valid and status=2 means request is failed.'
 
 
-Since different parts of our system send information asynchronously, we 
-decided to let them publish different JSON objects to the MQTT topic 'PIMS' 
-but all with an attribute named 'data_type' to signal the receivers to pick 
+Since different parts of our system send information asynchronously, we
+decided to let them publish different JSON objects to the MQTT topic 'PIMS'
+but all with an attribute named 'data_type' to signal the receivers to pick
 up the right messages. <br>
 We could have packaged them into a single JSON array and designated an index
  of that array for each recipient. However, that would have introduced another
-  level of complexity for the JSON objects and reduced their overall 
-  readability. After careful consideration, we abandoned this approach. 
+  level of complexity for the JSON objects and reduced their overall
+  readability. After careful consideration, we abandoned this approach.
 
 ### Iot
 #### "m5_transmit"
@@ -294,13 +312,13 @@ One thing worth mentioning is that each cell in the "bluetooth_devices" array co
 
 #### "m5_receive"
 Sender: __the Desktop App__ <br>
-Receiver: __Barriers__ 
+Receiver: __Barriers__
 
 ```
 {
-	"data_type": "m5_receive", 
+	"data_type": "m5_receive",
 	"barrier_id": 12345,
-	"op_code": "A" 
+	"op_code": "A"
 }
 ```
 
@@ -318,7 +336,7 @@ If the query result is fail (e.g. the username the user intended to register alr
 
 ```
 {
-	"data_type": "example", 
+	"data_type": "example",
 	"info": {
 			"username": "lea_tong",
 		    "status": 0
@@ -349,7 +367,7 @@ All messages received by the web application will be checked the ownership -- wh
 
 ```json
 {
-	"data_type": "web_login", 
+	"data_type": "web_login",
 	"info": {
 			"username": "lea_tong",
 		    "status": 1
@@ -361,7 +379,7 @@ All messages received by the web application will be checked the ownership -- wh
 
 ```json
 {
-	"data_type": "web_login", 
+	"data_type": "web_login",
 	"info": {
 			"username": "lea_tong",
 		    "status": 0
@@ -406,7 +424,7 @@ Send this query to the broker to register a new account. The desktop application
 
 ```json
 {
-	"data_type": "web_vehicle_register", 
+	"data_type": "web_vehicle_register",
 	"info": {
 			"username":"lea_tong",
 			"vehicle_id": "acdjcidjd",
@@ -517,7 +535,7 @@ Send this query to fetch a list of statistical data of one specific vehicle's hi
 ```
 {
 
-	"data_type": "web_finance", 
+	"data_type": "web_finance",
 	"info": {
 			"username":"lea_tong",
 			"status": 2
@@ -549,7 +567,7 @@ To get the current user's balance in their account.
 ```
 {
 
-	"data_type": "web_recharge", 
+	"data_type": "web_recharge",
 	"info": {
 			"username":"lea_tong",
 			"card_number":"326173173718",
