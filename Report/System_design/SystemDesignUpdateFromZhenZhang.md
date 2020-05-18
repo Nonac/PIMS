@@ -52,7 +52,11 @@ The web application provides a nice-looking interface for users to access. User 
 
 M5Stick(car)
 
-<font color=red>关于这部分，请参阅1c_IoT.md 来自徐涛的论述进行修改。--杨一楠</font>
+```diff
+! 关于这部分，请参阅1c_IoT.md 来自徐涛的论述进行修改。--杨一楠
+```
+
+
 
 + When M5Stick get close to M5Stack (gate), they must automatically build up real-time communication by blue-tooth. **详细说明在Part2 system implement？爽姐，是每部分的详细说明在system implement中的b. Details of how we evaluated our designs吧？**
 + M5Stick must let M5Stack know whether it wants to move in or move out the parking.
@@ -69,7 +73,9 @@ M5Stack(gate)
 
 ### Desktop Application
 
-<font color=red>关于这部分，请参阅1c_desktopAPP.md 来自杨一楠的论述进行整合。--杨一楠</font>
+```diff
+! 关于这部分，请参阅1c_desktopAPP.md 来自杨一楠的论述进行整合。--杨一楠
+```
 
 + Server need to subscribe the HiveMQTT topic,"PIMS" to build up communication with web side and IoT side.
 + Server's model need to build up database for the whole system, including 10 types of json data structure.
@@ -82,7 +88,9 @@ M5Stack(gate)
 
 ### Web application
 
-<font color=red>关于这部分，请参阅1c_web.md 来自王抚洲的论述进行整合。--杨一楠</font>
+```diff
+! 关于这部分，请参阅1c_web.md 来自王抚洲的论述进行整合。--杨一楠
+```
 
 + Web application need to subscribe the HiveMQTT topic,"PIMS" to build up communication with server.
 + Web application need to provide a nice-looking interface to users.
@@ -97,7 +105,9 @@ M5Stack(gate)
 
 ## e. Details of the communication protocols in use
 
-<font color=red>关于这部分，请参阅1e_IoT.md 来自杨一楠的论述进行整合。--杨一楠</font>
+```diff
+! 关于这部分，请参阅1e_IoT.md 来自徐涛的论述进行整合。--杨一楠
+```
 
 #### 1. General rules
 
