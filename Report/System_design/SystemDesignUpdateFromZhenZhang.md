@@ -28,6 +28,8 @@ IoT development includes two parts, M5Stick and M5Stack. M5Stick will be put int
 
 ### Desktop Application
 
+<font color=red>关于这部分，请参阅1b_desktopApp.md 来自杨一楠的论述进行整合。--杨一楠</font>
+
 The desktop application is developed by the thought of MVC (model, view and controller).  Model is used to handle our databases, which includes several types of json data structure. Controller is used to handle the message received from web and IoT device, update the changes to model and sent response message back to web or IoT.  For view, it filters the data from database  and build up a read-friendly interface  for mangers to monitor the status on parkings and data analysis.   
 
 
@@ -42,13 +44,15 @@ The web application provides a nice-looking interface for users to access. User 
 
 
 
-## Requirements of Key Subsystems
+## c.Requirements of Key Subsystems
 
 
 
 ### IoT
 
 M5Stick(car)
+
+<font color=red>关于这部分，请参阅1c_IoT.md 来自徐涛的论述进行修改。--杨一楠</font>
 
 + When M5Stick get close to M5Stack (gate), they must automatically build up real-time communication by blue-tooth. **详细说明在Part2 system implement？爽姐，是每部分的详细说明在system implement中的b. Details of how we evaluated our designs吧？**
 + M5Stick must let M5Stack know whether it wants to move in or move out the parking.
@@ -65,7 +69,7 @@ M5Stack(gate)
 
 ### Desktop Application
 
-
+<font color=red>关于这部分，请参阅1c_desktopAPP.md 来自杨一楠的论述进行整合。--杨一楠</font>
 
 + Server need to subscribe the HiveMQTT topic,"PIMS" to build up communication with web side and IoT side. 
 + Server's model need to build up database for the whole system, including 10 types of json data structure. 
@@ -90,6 +94,8 @@ M5Stack(gate)
 
 
 ## e. Details of the communication protocols in use
+
+<font color=red>关于这部分，请参阅1e_IoT.md 来自杨一楠的论述进行整合。--杨一楠</font>
 
 #### 1. General rules
 
