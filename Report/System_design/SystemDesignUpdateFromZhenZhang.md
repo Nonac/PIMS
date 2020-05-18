@@ -28,7 +28,9 @@ IoT development includes two parts, M5Stick and M5Stack. M5Stick will be put int
 
 ### Desktop Application
 
-<font color=red>关于这部分，请参阅1b_desktopApp.md 来自杨一楠的论述进行整合。--杨一楠</font>
+```diff
+! 关于这部分，请参阅1b_desktopApp.md 来自杨一楠的论述进行整合。--杨一楠
+```
 
 The desktop application is developed by the thought of MVC (model, view and controller).  Model is used to handle our databases, which includes several types of json data structure. Controller is used to handle the message received from web and IoT device, update the changes to model and sent response message back to web or IoT.  For view, it filters the data from database  and build up a read-friendly interface  for mangers to monitor the status on parkings and data analysis.   
 
