@@ -1,3 +1,5 @@
+# 这部分比张震写的晚提交，所以就作为BCEparts.md的补充
+
 # Requirements of key subsystems
 
 ## Web Application
