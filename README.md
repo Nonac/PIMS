@@ -34,7 +34,7 @@ or ETC in China, but used on parking lots.
 Each driver wishing to use this system needs to obtain a
 key (M5Stick) and register their personal and vehicle information on
 the PIMS website. With a key in hand, the driver can park in any
-supporting parking lot. All they need to do is to press the key (Stick)
+participating parking lot. All they need to do is to press the key (Stick)
 to enter, and press to exit. The barrier, controlled by M5 Stack, receives
 the request from the Stick together with the Stick's bluetooth address, and 
 verifies the user's account via the broker

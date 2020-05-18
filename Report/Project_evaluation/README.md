@@ -26,8 +26,10 @@ for public use.
 
 #### Iot
 比如车辆进入到stack蓝牙可以detect的区域时，stick屏幕提示“检测到杆”这样。
+如何让stack控制杆
 #### Web
 比如可以在网站上实时附近（支持这个系统的）停车场有多少空位。database可以转移到网上。
+购买stick的页面。注销账户选项。
 #### Desktop
 * Admin account page\
 In the top left corner we have included a button for the access to
@@ -38,7 +40,7 @@ In the manager/admin's account page there will be information such as
 their work phone number, how many hours have they worked/used this 
 application, and a link to submit tickets should there be any technical
 issues, the records of the customer issues they have helped to solve, etc.
-
+不同的停车场需要有不同的total space count
 * Customer account page\
 Admins should have the rights to access any customer's account, with 
 confidential information hidden, of course. This is useful when customers

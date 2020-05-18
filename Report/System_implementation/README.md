@@ -1,3 +1,41 @@
+# 2. System implementation
+
+## a. Breakdown of project into sprints
+
++ Tao is responsible for M5Stack development.
++ Fuzhou is responsible for web development
++ Shuang, Yinan, Hongjie and Zhen is for desktop development
+  +  Shuang and Yinan work on view development.
+  + Hongjie and Zhen work on model and controller.
++ how to show our team work and pair programming~
+
+## b. Details of how we evaluated our designs
+
+1. Data structure
+
++ each jsonobject has two attribute "data_type" and "info". data_type refers to the aim of this message and is used by all of applications to check whether they need to pick up this package. info refers to a sub jsonobject which include the information that applications need to handle.
+
+2. Details in session between web and desktop controller.
+   + Again. In the connection between web and server, because of the feature of broker, (which is when one application subscribe a topic, it will receive all messages in this topic including message sending by itself),  using status to identify where message is from. status=2 means it is from web side and the server side will control status =1 and status =0 to show whether web request is valid. And status=1 means the request is valid and status=2 means request is failed.'
+   + functionality finished
+     + web_register
+       + web side send message with "data_type" = "web_register", username, password and status=2
+       + server side compares the coming message with database to check whether this username does not exist and send message back with status=0 or status=1;
+     + web_login
+       + web side send message with "data_type" = "web_login", username, password and status=2
+       + server side compares the coming message with database to check whether this username does exist and password is correct  and send message back with status=0 or status=1;
+     + web_vehicle_register and web_vehicle_query
+       + after users registers account and then they need to register his vehicle in web
+       + it is similar to web_register and web_login. But the different is that one user can register for one or many vehicles. web_vehicle query will return an embedded sub-jsonarray.
+     + web_finance and web_recharge
+       + web_finance is used to check user's balance
+       + web_recharge is used to top up
+     + web_vehicle_history
+       + users can specify one of their car and check the last 7 days parking history, how much parking costs.
+---------------------------- From Design
+
+
+
 ## Please Note: this section contains raw input from group members, not yet merged together.
 
 * [IOT Devices](#_iot) by Tao Xu
