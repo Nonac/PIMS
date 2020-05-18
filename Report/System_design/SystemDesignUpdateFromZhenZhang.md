@@ -73,7 +73,9 @@ M5Stack(gate)
 
 ### Desktop Application
 
-<font color=red>关于这部分，请参阅1c_desktopAPP.md 来自杨一楠的论述进行整合。--杨一楠</font>
+```diff
+! 关于这部分，请参阅1c_desktopAPP.md 来自杨一楠的论述进行整合。--杨一楠
+```
 
 + Server need to subscribe the HiveMQTT topic,"PIMS" to build up communication with web side and IoT side. 
 + Server's model need to build up database for the whole system, including 10 types of json data structure. 
@@ -86,7 +88,9 @@ M5Stack(gate)
 
 ### Web application
 
-<font color=red>关于这部分，请参阅1c_web.md 来自王抚洲的论述进行整合。--杨一楠</font>
+```diff
+! 关于这部分，请参阅1c_web.md 来自王抚洲的论述进行整合。--杨一楠
+```
 
 + Web application need to subscribe the HiveMQTT topic,"PIMS" to build up communication with server.
 + Web application need to provide a nice-looking interface to users.
@@ -101,7 +105,9 @@ M5Stack(gate)
 
 ## e. Details of the communication protocols in use
 
-<font color=red>关于这部分，请参阅1e_IoT.md 来自徐涛的论述进行整合。--杨一楠</font>
+```diff
+! 关于这部分，请参阅1e_IoT.md 来自徐涛的论述进行整合。--杨一楠
+```
 
 #### 1. General rules
 
