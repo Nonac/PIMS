@@ -52,7 +52,11 @@ The web application provides a nice-looking interface for users to access. User 
 
 M5Stick(car)
 
-<font color=red>关于这部分，请参阅1c_IoT.md 来自徐涛的论述进行修改。--杨一楠</font>
+```diff
+! 关于这部分，请参阅1c_IoT.md 来自徐涛的论述进行修改。--杨一楠
+```
+
+
 
 + When M5Stick get close to M5Stack (gate), they must automatically build up real-time communication by blue-tooth. **详细说明在Part2 system implement？爽姐，是每部分的详细说明在system implement中的b. Details of how we evaluated our designs吧？**
 + M5Stick must let M5Stack know whether it wants to move in or move out the parking.
