@@ -5,7 +5,7 @@
 * [Working practices of the group](#_practice)
 * [Coronavirus impact](#_coronavirus)
 
-<a name="success"></a>
+<a name="_success"></a>
 
 ## Success of the project
 在这里写主要的成就和**学到了什么（这一点非常重要！）**
@@ -16,7 +16,7 @@
 
 * Back end
 
-<a name="future"></a>
+<a name="_future"></a>
 
 ## Future work
 在这里写如果这个产品日后用于商业用途，还有什么功能可以加。
@@ -68,7 +68,7 @@ drive-thru service), Stack at the restaurant detects the bluetooth and sends
 the user information and payment amount to the broker, then desktop and web ends
 can, respectively, charge the payment and records the user's activity.   
 
-<a name="practice"></a>
+<a name="_practice"></a>
 
 ### Working practices of the group
 
