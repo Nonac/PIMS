@@ -63,7 +63,7 @@ M5Stack(gate)
 + M5Stack need to subscribe the HiveMQTT topic,"PIMS" to build up real-time communication.
 + M5Stack need to send messages to  and receive messages from server by "PIMS" topic.
 + M5Stack need to capture the communication request from M5Stick and send message to server to obtain gate instruction (open or close, or do nothing).
-+ M5Stack need to listen the message from server to allow gate forcedly opens or closes 
++ M5Stack need to listen the message from server to allow gate forcedly opens or closes
 
 
 
@@ -71,8 +71,8 @@ M5Stack(gate)
 
 <font color=red>关于这部分，请参阅1c_desktopAPP.md 来自杨一楠的论述进行整合。--杨一楠</font>
 
-+ Server need to subscribe the HiveMQTT topic,"PIMS" to build up communication with web side and IoT side. 
-+ Server's model need to build up database for the whole system, including 10 types of json data structure. 
++ Server need to subscribe the HiveMQTT topic,"PIMS" to build up communication with web side and IoT side.
++ Server's model need to build up database for the whole system, including 10 types of json data structure.
 + Server's controller need to handle all the communication with web and IoT.
 + Server's controller need to update database when a new user account or a new car registered or a user top up parking credit or a parking fee is charged and send receipt message back to web or IoT. **也就是， 当新用户注册，用户注册新小车，用户充值，停车费用扣除时，需要更新数据库，并发送回执单给web或者iot端**
 + Server's controller need to search database when M5Stack (gate) queries for gate instruction or a user wants to login in or a user want to check account balance or query how many cars binded with this account or query for parking history. **也就是， 当用户登录，用户查询余额，用户查询自己绑定了多少车，以及某一辆车的停车记录时，需要遍历数据库，并发送回执单给web或者iot端。**
@@ -89,7 +89,7 @@ M5Stack(gate)
 + Web application need to enable users to register accounts and register for cars.
 + Web application need to enable users to login with username and password and maintain the login status by setting cookies.
 + Web application need to enable users to check account balance and top up.
-+ Web application need to enable users to query the information of binded car and parking history for each car. 
++ Web application need to enable users to query the information of binded car and parking history for each car.
 
 
 
@@ -104,17 +104,17 @@ M5Stack(gate)
 + communication between M5Stick (car) and M5Stack (gate) goes through blue-tooth, and all of other communication goes through Broker.
 + Three-aspect applications must connect to and subscribe the same HiveMQTT topic,"PIMS".
 + There are 10 different type of json data structure used for different purposes. The data types of them are "m5_transmit", "m5_receive", "parking", "web_register",  "web_login", "web_vehicle_register",  "web_vehicle_query", "web_vehicle_history", "web_finance" and "web_recharge". The details of their purposes and usages are present in System Implementation. **是这部分吗? 加一个链接**
-+ Applications use data type and status (some of them have) to identify the message needed them to deal with. 
++ Applications use data type and status (some of them have) to identify the message needed them to deal with.
 + Each session connected must be duplex. In other words, when sender send a message to receiver, it also expects to receive an callback message from receiver.
 
 #### 2. JSON data format
 
-+ **m5_transmit**  is sent from M5Stack to Server and "RSSI" is received signal strength indication. The closer the value is to 0, the stronger the received signal has been.
++ **m5_transmit**  is sent from M5Stack to Server and "RSSI" is received signal strength indication. The closer the value is to 0, the stronger the received signal has been.There are two types of barriers, corresponding to the entry and exit types of parking lots in the real world. "In" means that this is a entrance type, and only a car parked outside the garage can open the pole. "Out" means that this is a shot-out type, only cars parked in the car park can open the shot.
 
 ```json
 {
 
-	"data_type": "m5_transmit", 
+	"data_type": "m5_transmit",
 	"barrier_info":{
 		"barrier_id": 12345,
 		"barrier_type": "in"
@@ -133,11 +133,12 @@ M5Stack(gate)
 {
 	"data_type": "m5_receive",   
 	"barrier_id": 12345,
-	"op_code": "A" 
+	"op_code": "A"
 }
 ```
 
-+ **parking** stores detailed information for a parking record.
++ **parking** stores detailed information for a parking record. "barrier_type" has two types of "in" and "out", which correspond to the car in the parking lot and outside. Also recorded the parking time, car number, rod number and other
+information.
 
 ```json
 {
@@ -154,15 +155,15 @@ M5Stack(gate)
 }
 ```
 
-+ **web_register** is used to register for a new account. and status here is used as a flag. 
-  + status = 2 means this message is sent from web to server, 
++ **web_register** is used to register for a new account. and status here is used as a flag.
+  + status = 2 means this message is sent from web to server,
   + status = 1 means this message is from server to web and last query from web side is valid.
   + status = 1 means this message is from server to web and last query from web side is invalid.
-  + this rule of status is universally valid for all json object used "status" key. 
+  + this rule of status is universally valid for all json object used "status" key.
 
 ```json
 {
-	"data_type": "web_register", 
+	"data_type": "web_register",
 	"info": {
 			"username": "lea_tong",
 			"password": "*******",
@@ -259,7 +260,7 @@ M5Stack(gate)
 
 ```json
 {
-    "data_type": "web_recharge", 
+    "data_type": "web_recharge",
     "info": {
         "username":"lea_tong",
         "balance": 21331,
@@ -293,14 +294,14 @@ M5Stack(gate)
 
 ## b. Details of how we evaluated our designs
 
-1. Data structure 
+1. Data structure
 
 + each jsonobject has two attribute "data_type" and "info". data_type refers to the aim of this message and is used by all of applications to check whether they need to pick up this package. info refers to a sub jsonobject which include the information that applications need to handle.
 
 2. Details in session between web and desktop controller.
    + Again. In the connection between web and server, because of the feature of broker, (which is when one application subscribe a topic, it will receive all messages in this topic including message sending by itself),  using status to identify where message is from. status=2 means it is from web side and the server side will control status =1 and status =0 to show whether web request is valid. And status=1 means the request is valid and status=2 means request is failed.'
    + functionality finished
-     + web_register 
+     + web_register
        + web side send message with "data_type" = "web_register", username, password and status=2
        + server side compares the coming message with database to check whether this username does not exist and send message back with status=0 or status=1;
      + web_login
@@ -311,13 +312,6 @@ M5Stack(gate)
        + it is similar to web_register and web_login. But the different is that one user can register for one or many vehicles. web_vehicle query will return an embedded sub-jsonarray.
      + web_finance and web_recharge
        + web_finance is used to check user's balance
-       + web_recharge is used to top up 
+       + web_recharge is used to top up
      + web_vehicle_history
-       + users can specify one of their car and check the last 7 days parking history, how much parking costs. 
-
-
-
-
-
-
-
+       + users can specify one of their car and check the last 7 days parking history, how much parking costs.
