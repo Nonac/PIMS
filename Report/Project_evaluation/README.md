@@ -28,7 +28,7 @@ for public use.
 
 #### Iot
 比如车辆进入到stack蓝牙可以detect的区域时，stick屏幕提示“检测到杆”这样。
-如何让stack控制杆
+如何让stack控制杆。Stick是不死要安装在车里的，丢了怎么补，数据怎么保护
 #### Web
 比如可以在网站上实时附近（支持这个系统的）停车场有多少空位。database可以转移到网上,这样
 可以保护data privacy， 因为目前所有的user data都不保密，manager全都可以看到。
