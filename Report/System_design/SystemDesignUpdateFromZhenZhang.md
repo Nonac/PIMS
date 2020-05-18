@@ -97,7 +97,7 @@ M5Stack(gate)
 
 ## e. Details of the communication protocols in use
 
-<font color=red>关于这部分，请参阅1e_IoT.md 来自杨一楠的论述进行整合。--杨一楠</font>
+<font color=red>关于这部分，请参阅1e_IoT.md 来自徐涛的论述进行整合。--杨一楠</font>
 
 #### 1. General rules
 
