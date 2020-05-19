@@ -8,7 +8,8 @@
 * [Object-Oriented design of key sub-systems](#_c)
 * [The evolution of UI wireframes for key sub-systems](#_d)
 * [Details of the communication protocols in use](#_e)
-* [Details of web technologies in use](#_f)
+* [Details of the data persistence mechanisms in use](_#f)
+* [Details of web technologies in use](#_g)
 
 <a name="_a"></a>
 ## Architecture of the entire system
@@ -709,7 +710,7 @@ Send the query to broker so that the controller can receive this message to rech
 
 
 
-<a name="_e"></a>
+<a name="_f"></a>
 ## Details of the data persistence mechanisms in use
 
 1. There are 10 types of data structure in total but not all of them need to
@@ -723,7 +724,7 @@ Send the query to broker so that the controller can receive this message to rech
 refresh database file system to make data persistent.
 
 
-<a name="_f"></a>
+<a name="_g"></a>
 ## Details of web technologies in use
 HTML5, CSS3 and JavaScript are the main technologies that we use in the web application. Here are the core components that are used in the web application:
 
