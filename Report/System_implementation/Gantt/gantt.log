@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  19 MAY 2020 15:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  19 MAY 2020 18:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -512,7 +512,7 @@ Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 
-Overfull \hbox (125.3749pt too wide) in paragraph at lines 64--65
+Overfull \hbox (123.66673pt too wide) in paragraph at lines 66--67
  [] 
  []
 
@@ -523,7 +523,7 @@ Overfull \hbox (125.3749pt too wide) in paragraph at lines 64--65
 Here is how much of TeX's memory you used:
  12771 strings out of 492616
  266165 string characters out of 6129482
- 354701 words of memory out of 5000000
+ 357760 words of memory out of 5000000
  16449 multiletter control sequences out of 15000+600000
  4247 words of font info for 16 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -531,7 +531,7 @@ Here is how much of TeX's memory you used:
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmbx9.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmr9.pfb>
-Output written on gantt.pdf (1 page, 37780 bytes).
+Output written on gantt.pdf (1 page, 38277 bytes).
 PDF statistics:
  20 PDF objects out of 1000 (max. 8388607)
  13 compressed objects within 1 object stream

@@ -1,4 +1,4 @@
-# System Implementation
+œ# System Implementation
 ## Breakdown fo project into sprints
 
 This project began in February and officially ended at the end of May. We have set relatively reasonable work assignments and milestones for this purpose. We created the GitHub repository for this project on February 6 and spent a few days after that getting the team familiar with the GitHub operating model. We then comb through the timeline of the different components, reviewing the development of each Sprint.
