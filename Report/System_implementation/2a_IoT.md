@@ -1,5 +1,5 @@
 # IOT Devices
-<a name = "2aIoTSprintTable"> </a>
+<a name = "2aIoTST"> </a>
 Sprint No.| Brief Description| Implementation
 ------------ | ------------- | -------------
 1 | [Bluetooth Detector](#2aIoTSprint1) | [See here](#2aIoTSprint1Imp) 
@@ -62,8 +62,7 @@ int rssi = BLEad.getRSSI(); // get the RSSI
 *Q. Why did you set the BLE scan duration to 5 seconds, not 20s or 2s ?* <br>
 A. The duration for each scan to last could be configured to any value. The shorter the duration, the quicker the barriers detect ambient changes, and therefore the more responsive our system will be, which means better user experience. However, shorter refresh cycles put more burden on our system. Since we were using MQTT for communication and moreover a single topic for all devices, it was not sensible to make the barriers publishing messages too quickly because every message on the topic would be picked up by the barriers including those sent by themselves, which would exhaust the limited processing power of them. Therefore, the scan duration was set to 5 seconds, which we thought was a reasonable value.
 <br><br>
-
-[Go back to the sprint table](#2aIoTSprintTable) 
+[Go back to the sprint table](#2aIoTST) 
 <br><br><br>
 <a name = "2aIoTSprint2"> </a>
 ## MQTT Publisher/Listener
@@ -257,7 +256,7 @@ Then, connect the two M5Stacks Serial to Serial. And you should be good to go.
 NOTE: Do not forget to change the MQTT_MAX_PACKET_SIZE to something like 1024 or larger for the PubSubClient external library since the default value would be too small.
 <br><br>
 
-[Go back to the sprint table](#2aIoTSprintTable) 
+[Go back to the sprint table](#2aIoTST) 
 
 <br><br><br>
 <a name = "2aIoTSprint3"> </a>
@@ -282,8 +281,41 @@ BarrierSimulator outBarrier = BarrierSimulator({54321, BarrierType::OUT});
 BarrierSimulator * volatile pCurrentBarrier = &inBarrier;
 ```
 <br> The inBarrier and the outBarrier was assigned the id 12345 and 54321, respectively.
-<br> "pCurrentBarrier" pointed to the barrier that the M5Stack was simulating at that time. Toggling of the barriers was assigned to the BtnB on M5Stack. For the same reason as the Serial input handler, the hardware interrupt handler was running in another thread, different from that of the Serial input hander and the main thread. Therefore, the "pCurrentBarrier" should be qualified "volatile". Otherwise, it might have been cached in some functions, which would have caused some problems like failing barrier id checks or sending the wrong barrier information to our server.
+<br> "pCurrentBarrier" pointed to the barrier that the M5Stack was simulating at that time. Toggling of the barriers was assigned to the BtnB on M5Stack. For the same reason as the Serial input handler, the hardware interrupt handler was running in another thread, different from that of the Serial input hander and the main thread. Therefore, the "pCurrentBarrier" should be qualified "volatile". Otherwise, it might have been cached in some functions, which would have caused some problems like failing barrier id checks or sending the wrong barrier information to our server.<br>
+
+To be consitent, remote control from our server and manual control via the buttons to the barriers were both achieved by sending an operation code to the barrier:
+```c++
+void BarrierSimulator::handleOpCode(const char* opCode);
+```
+<br> Only the first character of the opCode string was considered since hardly a barrier could perform 257 manoeuvres.<br>
+In fact, we only considered two operations, to open (lift) and to close (descend), which we thought was enough for demonstration: [Barrier_orders.h](/M5Stack_bluetooth_detector/Barrier_orders.h).
+
+Commands from our server to barriers were packed with barrier ids indicating the recipients of those commands. Only the barrier whose id matched that in a command message should execute that command. Hence id checks were performed before any opCode from our server were fed  to the BarrierSimulator::handleOpCode methods of the barriers. This could be achieved by calling the BarrierSimulator::checkBarrierId method on the barriers.
+```c++
+bool BarrierSimulator::checkBarrierId(unsigned long idToCompare) const{
+// returns true if and only if idToCompare equals the id of this barrier
+  return m_barrierInfo.id == idToCompare;
+}
+```
+
+<br><br><br>
+<a name = "2aIoTSprint4"> </a>
+## Message Packer/Unpacker
 
 
-[Go back to the sprint table](#2aIoTSprintTable) 
+
+<br><br>
+<a name = "2aIoTSprint4Imp"> </a>
+### :white_circle:Implementation
+
+<br><br><br>
+<a name = "2aIoTSprint5"> </a>
+## Keys
+
+
+<br><br>
+<a name = "2aIoTSprint5Imp"> </a>
+### :white_circle:Implementation
+
+[Go back to the sprint table](#2aIoTST) 
 <br>__Under construction...__

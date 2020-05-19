@@ -1,5 +1,11 @@
-# PIMS - Parking Iot Management System
-
+[![codebeat badge](https://codebeat.co/badges/3307228a-f684-4d27-9665-0ccef96cbdef)](https://codebeat.co/projects/github-com-nonac-pims-master)
+![](https://img.shields.io/badge/language-JavaScript-blue.svg)
+![](https://img.shields.io/badge/language-HTML-blue.svg)
+![](https://img.shields.io/badge/language-C++-blue.svg)
+![](https://img.shields.io/badge/language-Processing-blue.svg)
+![](https://img.shields.io/badge/platform-M5Stack|PC|Web-lightgrey.svg)
+![](https://img.shields.io/cocoapods/l/Alamofire.svg?style=flat)
+![Logo](Report/logo.png)
 ![Hi](Hi.png)
 
 ## Contents
