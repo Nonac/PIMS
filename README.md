@@ -10,25 +10,19 @@
 
 <a name="_advert"></a>
 
-<p style="text-align: center; font-style: italic">
-Are you tired of queuing at the payment machine in the parking lot?<br>
-Are you annoyed some payment machines only take cash?<br>
-Are you frustrated that you left the ticket in the car and have to walk all that distance twice?<br>
-Are you annoyed someone exiting the parking lot lost their ticket so the lane is clogged?<br>
-Do you sometimes go on the kerb accidentally just because you want to stop closer to the barrier ticket machine?<br>
-Are you unhappy that the automatic number-plate recognition doesn't always work?<br>
-Do you have too many parking membership cards for different parking lots?<br>
-Have you ever actually found or received a refund on a lost parking membership card?<br>
-    <strong>PIMS, solves it all!</strong>
+<p>
+    <i><center>Are you tired of queuing at the payment machine in the parking lot?</center></i>
+    <i><center>Are you annoyed some payment machines only take cash?</center></i>
+    <i><center>Are you frustrated that you left the ticket in the car and have to walk all that distance twice?</center></i>
+    <i><center>Are you annoyed someone exiting the parking lot lost their ticket so the lane is clogged?</center></i>
+    <i><center>Do you sometimes go on the kerb accidentally just because you want to stop closer to the barrier ticket machine?</center></i>
+    <i><center>Are you unhappy that the automatic number-plate recognition doesn't always work?</center></i>
+    <i><center>Do you have too many parking membership cards for different parking lots?</center></i>
+    <i><center>Have you ever actually found or received a refund on a lost parking membership card?</center></i>
+    <i><center><strong>PIMS, solves it all!</strong></center></i>
 </p>
 
-<p style="text-align:justify">
-    <a style="display:inline-block" href="#_intro">Introduction</a> 
-    <a style="display:inline-block" href="#_stakeholders">Stakeholders</a> 
-    <a style="display:inline-block" href="#_portfolio">Product report</a> 
-    <a style="display:inline-block" href="#_video">Pitch video</a>
-    <a style="display:inline-block; position:relative; width:100%"></a>
-</p>
+<center><a href="#_intro">Introduction</a>|<a href="#_stakeholders">Stakeholders</a>|<a href="#_portfolio">Product report</a>|<a href="#_video">Pitch video</a></center>
 
 <a name="_intro"></a>
 
