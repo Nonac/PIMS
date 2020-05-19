@@ -116,7 +116,7 @@ Initial version of the web data types
 	"login_info": {
 			"username": "lea_tong",
 			"password": "*******",
-            "access":0;
+            "access":0
 		}
 }
 
@@ -124,8 +124,8 @@ Initial version of the web data types
 
 	"data_type": "web_vehicle",   
 	"vehicle_info": {
-            "user_id":"aaaaa"
-			"vehicle_id": "acdjcidjd"
+            "user_id":"aaaaa",
+			"vehicle_id": "acdjcidjd",
 			"vehicle_type":"car"
 		}
 }
@@ -133,7 +133,7 @@ Initial version of the web data types
 
 	"data_type": "web_finance",  
 	"finance_info": {
-            "user_id":"aaaaa"
+            "user_id":"aaaaa",
 			"balance": 21331,
 			"currency":"GBP"
 		}
@@ -143,7 +143,7 @@ Initial version of the web data types
 
 	"data_type": "web_recharge",  
 	"recharge_info": {
-            "user_id":"aaaaa"
+            "user_id":"aaaaa",
 			"balance": 21331,
 			"currency":"GBP",
             "card_number":"326173173718",
