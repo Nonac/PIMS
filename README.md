@@ -46,20 +46,20 @@ the lot during a busy day.
 Our product is designed for 3 different end users: customers, drivers, and parking lot managers.
 To make the picture clear, we will introduce 3 typical user stories.
 ### Customers
-Leo is sick and tired of the situations mentioned [above](#_advert), he saw 
-the advertisement of PIMS and decides to make his life easier by starting using it.
+Leo is sick and tired of the situations mentioned [above](#_advert). He sees 
+the advertisement of PIMS and decides to make his life easier by using it.
 He goes onto PIMS website and orders a key (M5Stick). After the key arrives,
 he opens an account with PIMS. He finds its bluetooth sequence in the 
 instruction booklet and enters it along with his car's vehicle identification
-number. Ta-da! account created, now whoever drives his car can use PIMS service
+number. Ta-da! Account created. Now whoever drives his car can use PIMS service
 for participating parking lots. He can also review how many hours and where he
 has parked for the past 7 days.
 
 ### Drivers
-Cathy is a University of Bristol employee. The university has a business membership with
+Professor Smith works at University of Bristol. The university has a business membership with
 PIMS, which means all the cars registered under the university's account has
 a M5Stick and the expense will be taken from the university's business account.
-Today Professor Smith and her research group need to attend a conference in Bath, representing
+Today Prof. Smith and her research group need to attend a conference in Bath, representing
 the School of Engineering. The meeting takes place in a conference center with
 a public parking lot. They are given a university owned minivan to for the trip.
 
@@ -67,7 +67,7 @@ When approaching the entrance, she presses the parking lot key (M5Stick) that
 was already mounted in the car. Even without stopping, the barrier opens
 to welcome them in.
 
-After the 5 hours conference, Prof Smith annd her group are really tired
+After the 5-hour-long conference, Prof Smith and her group are really exhausted
 and don't want to queue up
 at the payment machine - the queue looks really long, it's a busy parking lot after all.
 Luckily, they don't need to! They go straight back to the minivan and start driving back to Bristol.
@@ -76,12 +76,12 @@ Prof Smith simply presses the key (M5Stick) and the barrier lifts up to let them
 
 ### Parking lot managers
 Rachel works for Cabot Circus shopping mall. Her office pretty close to the parking
-lot so she can report any abnormal activies via the app. She also works from home from time to time.
+lot, so she can report any abnormal activities via the app. She also works from home from time to time.
 Wherever she is, she can open the desktop application to see how many cars 
 are currently in the parking lot and how much revenue they are currently making.
 
-Her boss has asked her to plan for a 2-hour car wash product promotion in
-the parking lot's designated area next 
+Her boss has asked her to plan for a 2-hour car wash product promotion at the
+designated area inside the parking lot next 
 Saturday, so she needs to choose a time when the number of targeted customers
 are at its peak.
 She opens the desktop app and pulls up the hourly record of the number of cars
