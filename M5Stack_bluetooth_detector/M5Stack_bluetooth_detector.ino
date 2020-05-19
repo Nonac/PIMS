@@ -16,7 +16,7 @@ volatile bool g_isResultValid {true};
 
 
 /* BLE config */
-#define BLE_SCAN_DURATION 5 // duration in seconds for which a secion of scan lasts
+#define BLE_SCAN_DURATION 5 // duration in seconds for which a session of scan lasts
 BLEScan *pBLEScan;
 
 /* serial communication config */
@@ -124,7 +124,7 @@ void handleJsonSerialInput(){
   // cast to const char* so the Json deserialiser copies the contents of the string
   const char* inCStr = (const char *) inStr.c_str();
 
-  DynamicJsonDocument jDoc(receivedJDocCapacity);
+  StaticJsonDocument<receivedJDocCapacity> jDoc;
   // return if building fails
   if(buildIncomingJdoc(jDoc, inCStr) != 0) {return;}
 
