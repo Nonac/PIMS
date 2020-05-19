@@ -71,7 +71,28 @@ can, respectively, charge the payment and records the user's activity.
 <a name="_practice"></a>
 
 ### Working practices of the group
+#### Agile development
 
+#### Daily communication
+We mainly used Wechat, a Chinese main stream online chatting platform, to 
+communicate on a daily basis. Everyone has been very friendly and respective
+ to others and reachable. Wechat supports unlimited free group video and voice calls,
+and offers stable internet connection in the UK and China. Thus, whenever we
+needed clarifications that were harder to explain over messaging, we arrange
+Wechat voice calls, which saves the tariff that would have occurred on international phone calls.
+During the first few project testing periods, we also used Wechat video/voice
+ calls.
+ 
+#### GitHub
+We used GitHub for all the code development and file sharing, except for video recordings we
+chose Google Drive because of their large sizes. We have 2 remote branches on
+the repository: master and dev. Everyone developed their codes locally and
+pushed them to dev branch. One group member was in charge of merging dev into 
+master whenever our codes were sophiscated enough to be a release version.
+That group member was also mainly in charge of creating issues and allocating
+specific tasks on group members. Then the issues got closed when they were solved.
+
+ 
 
 <a name="_coronavirus"></a>
 
@@ -79,16 +100,16 @@ can, respectively, charge the payment and records the user's activity.
 This work has been impacted by the global pandemic COVID-19, as 3 out of 6
 group members went back to China. The time lost greatly on not only
 the long-haul flight but also: trying to constantly refresh airline pages
-to get precious tickets that were cancelled by others, keeping an eye on 
+to get precious tickets that might be cancelled by others, keeping an eye on 
 the airline announcements on 
 the flight status, queuing up for temperature tests after landing, and 
 14-day isolation (some were even longer due to close-by passengers on the
 flight tested positive) in a hotel that only offers basic facilities 
-which means not ideal internet connection nor ideal hardware.
+which means not ideal internet connection nor ideal hardware facilities.
 
 Besides that, the 7-hour time difference made communication harder in 2 ways:
-1 We can only effectively communicate when we were all awake. 2 Only
-the members remaining in the UK can participate in lecturers' video
+1 We could only effectively communicate when we were all awake. 2 Only
+the members remaining in the UK could participate in lecturers' video
 meeting because the meetings were held after midnight in China.
 
 Also, due to the censorship in mainland China, the group members have

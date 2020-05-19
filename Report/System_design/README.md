@@ -34,19 +34,19 @@ and/or subscribers. The messages published on MQTT can also be seen by going on
 to its website.
 
 #### Online elements
-##### Web
+* Web\
 The website is developed by Bootstrap and is designed for customers to access
 their personal account. Once the customer
 wishes to use this service, they should open an account with us and register their
 vehicles on the website. The website also provides records of their usage histories.
 
 
-##### Desktop application
+* Desktop application\
 The desktop application is developed by Processing. It is designed for managers
 at the parking lots to monitor and manage the parking lot. It visualises the
 occupany of the parking lot and monitors the vehicles using this parking lot.
 
-##### M5Stack
+* M5Stack\
 The M5Stack is a small IoT (Internet of things) device compatible with Arduino and
 has built-in sensors (e.g. accelerometer, gyroscope), WIFI, bluetooth,
 colorful screen and buttons. In our design, it acts as the parking lot
@@ -54,7 +54,7 @@ entrance/exit barrier. It is mounted at the parking lot entrance/exit.
 The screen will display the barrier's status (open or close).
 
 #### Offline elements
-##### M5Stick
+* M5Stick\
 M5Stick comes with M5Stack and is even smaller than M5Stack. It also has a screen,
 a button and bluetooth. In our design, the M5Stick acts as a key to open the
 parking lot barrier (M5Stack). This means that the M5Stick is kept by the driver
@@ -63,7 +63,7 @@ bluetooth address with his/her PIMS account. When the driver wishes to enter/exi
 the parking lot, he/she only needs to press the button on M5Stick
 when the M5Stick and M5Stack (barrier) are in the vicinity.
 
-##### Local database
+* Local database\
 There is a simple data storage system in this design since it is not the
 focus of the project. The data of the customers' from out website are passed
 through MQTT and saved on the local hard disk in the manager's desktop. Each
@@ -111,15 +111,15 @@ energy, respectively.
 ### Web application
 Users use the web application to sign up/log in an account, register their information, and see their account status. In order to enable users to use the web application to manage their accounts smoothly, it must fullfil the following requirements:
 #### Sign up and log in
-* Allow users to sign up a new account -> inform the desktop app that there is a new user registration.
-* Allow users to log in to have access to their own accounts -> validate username and password with desktop app and keep the logged status with cookies.
-* Prevent the illegal access to user account page -> filter access by validating cookies.
+1. Allow users to sign up a new account -> inform the desktop app that there is a new user registration.
+2. Allow users to log in to have access to their own accounts -> validate username and password with desktop app and keep the logged status with cookies.
+3. Prevent the illegal access to user account page -> filter access by validating cookies.
 #### User Information Registration
-* Users can register a new vehicle with a key delivered to them -> inform the desktop app and re-render the vehicle list.
-* Users can top up their balance -> inform the desktop app a recharge made by users and send re-render the balance value.
+1. Users can register a new vehicle with a key delivered to them -> inform the desktop app and re-render the vehicle list.
+2. Users can top up their balance -> inform the desktop app a recharge made by users and send re-render the balance value.
 #### Display user info and statistical data
-* Show the user's username, the vehicle they own, their account balance, and the vehicle they -> fetch user account info from the desktop app and render it on the account page.
-* Display the statistical data of parking time in the last 7 days, showing in chart -> fetch a list of parking time and render the chart.
+1. Show the user's username, the vehicle they own, their account balance, and the vehicle they -> fetch user account info from the desktop app and render it on the account page.
+2. Display the statistical data of parking time in the last 7 days, showing in chart -> fetch a list of parking time and render the chart.
 
 ### Desktop application
 
@@ -144,22 +144,22 @@ the parking lot.
 As mentioned above, the desktop back end acts as a bridge between web app
 and the barriers, so the following points are required in the design.
 
-* Subscribe and retrieve users' and their vehicles' registration information
+1. Subscribe and retrieve users' and their vehicles' registration information
  from MQTT (published by web app).
-* Parse the messages from MQTT, separate them into specific topics (e.g.
+2. Parse the messages from MQTT, separate them into specific topics (e.g.
 user registration, vehicle registration, user account top up etc) and store
 them on the local hard drive as JSON files.
-* Pack up the locally stored data and publish onto MQTT per web app's request.
-* Subscribe and retrieve users' enter/exit request at the parking lot
+3. Pack up the locally stored data and publish onto MQTT per web app's request.
+4. Subscribe and retrieve users' enter/exit request at the parking lot
    from MQTT (published by M5Stack).
-* Parse the messages from MQTT, separate them into specific topics, namely the
+5. Parse the messages from MQTT, separate them into specific topics, namely the
   entrance request and exit request, and store
   them on the local hard drive as JSON files. Note that when the car enters
   the parking lot, the type "in" JSON file is generated, but it will be replaced
   by type "out" JSON file once the car leaves, for the "out" JSON file
    covers more abundant information (the time on exit).
-* Send receipt to web app or M5Stack via MQTT after receiving their messages.
-* After receiving the entrance request, the desktop app determines whether
+6. Send receipt to web app or M5Stack via MQTT after receiving their messages.
+7. After receiving the entrance request, the desktop app determines whether
 the bluetooth address with the highest signal strength corresponds to the
 registered car. If not, it continues to search for a bluetooth address with a
 slightly weaker signal strength until it find the registered car. According
@@ -168,13 +168,13 @@ slightly weaker signal strength until it find the registered car. According
  be opened this time according to the comprehensive situation of the bar and
   the car. If the car is already in the garage, even if the car's entrance
 signal is received, it will not repeatedly open the entry rod.
-* The entrance and exit requests and the user's essemtial information are
+8. The entrance and exit requests and the user's essemtial information are
 logically processed and used to modify and save the new user's information
 required to achieve a dynamic refresh. In this project, we need to use access
  times and user account balances for calculations so that the parking lot can
   be profitable. And this underlying methodological logic should be
   implemented along with the data stored.
-* Send control commands to the barrier. Into the desktop app display
+9. Send control commands to the barrier. Into the desktop app display
 requirements above says that when using the remote barrier switch function,
 the post-desktop API should provide the interface to send data request
 packets for the switching barrier to the barrier via MQTT. When the car enters
@@ -182,7 +182,7 @@ packets for the switching barrier to the barrier via MQTT. When the car enters
  control the barrier's behaviour. After the barrier opens, a 5-second pause
  is required to give the car a time to pass the barrier, and a
   message to close the barrier is sent after 5 seconds.
-* To provide all the data to be fetched and thus make a software back-end API.
+10. To provide all the data to be fetched and thus make a software back-end API.
  It is also the underlying arithmetic that the software should implement at
   the desktop app runtime. Various interfaces are provided for other functions.
 
@@ -192,13 +192,13 @@ control room of the parking lot and uses a desktop computer for the desktop app.
 So at the operational and display level, the desktop app should meet
  at least a few requirements.
 
-* Real-time display of information on different vehicles passing through
+1. Real-time display of information on different vehicles passing through
 various barriers, with dynamic refreshing. This will be an essential feature
  of this software. As a management need, managers have the right and duty to
   know exactly who is driving what car and at what time to enter or leave that
    parking lot. This record should be kept locally for managers to view in
     real-time.
-* Real-time display of the vehicles remain in the parking lot, along with
+2. Real-time display of the vehicles remain in the parking lot, along with
  necessary information about those vehicles. This is the second function
  derived from the first one above. As a management system, it is, of course,
   essential to have a thorough understanding of the details of the vehicles
@@ -206,19 +206,19 @@ various barriers, with dynamic refreshing. This will be an essential feature
    a vehicle in the parking lot, and if the parking time is too long and the
    account balance is insufficient, then managers should be prepared to handle
     the vehicle when it is ready to leave the lot.
-* Real-time display of used spaces in the parking lot as a percentage of all
+3. Real-time display of used spaces in the parking lot as a percentage of all
 spaces in the form of a pie chart. This feature is designed on the fact that
  when the parking lot is busy during rush
  hour, there will be long lines of entering vehicles waiting to enter the lot.
  If the managers are alerted before the parking lot is about to be filled, there
   will be plenty of time to clear the entrance without a large number of
   vehicles clogging the parking lanes and causing potential traffic hazards.
-* Real-time display of parking revenue. This feature is essential to
+4. Real-time display of parking revenue. This feature is essential to
  the management system because parking lots operate based on
   customary charges for parking, so it is necessary for managers to understand
    how much they earn. This can be then checked against the revenue in the PIMS
    company bank account.
-* The ability to manipulate the barrier. There are likely technical issues of broker
+5. The ability to manipulate the barrier. There are likely technical issues of broker
 communication, verification process, or special occasions that the manager
 has to lift up or lower the barrier themselves.
 
@@ -267,19 +267,19 @@ to the bottom right button "Customer account":
 
 #### Version 3.0 - Processing
 In the end, we amended the design to the below. The differences are:
-* Top left chart is changed from two-column to one-column, because two-column
+1. Top left chart is changed from two-column to one-column, because two-column
 can be confusing at times and if we use a scrollable chart we will be able to show
 just as much information as having a two-column chart.
-* Bottom middle chart is changed from a combined chart (bar and line) to just
+2. Bottom middle chart is changed from a combined chart (bar and line) to just
 a line chart, because in the testing period, we only have 1 MStick (key) thus
 1 car to enter/exit. This means the revenue will not change as frequently as in
 reality. The bars that were supposed to indicate the revenue made per hour will
 be 0 at most times;
-* In the line chart, we changed the x-axis unit to second from hour. This is because
+3. In the line chart, we changed the x-axis unit to second from hour. This is because
 when we test it, we cannot afford to continue the activity for days to see the line chart
 re-rendering every hour. Thus, in order to see the result instantly, the x-axis
 represents second and the chart re-renders every second.
-* We completely eliminated the "Customer account" page in the end because it is not
+4. We completely eliminated the "Customer account" page in the end because it is not
 necessary and can be moved to "future work" section.
 
 ![visual_impression](destop_view/Visual_Impression.png)
@@ -288,11 +288,10 @@ necessary and can be moved to "future work" section.
 The format of the json file has changed many times throughout the design process.
 According to the different requirements of the system and the different design of
 the system, the format of json should also be constantly designed.
-
+#### "barrier_type"
 In the "data_type": "m5_transmit" json file, according to the initial assumption,
-we only have "barrier_id" in "barrier_info" to indicate which pole. The previous
-idea was to control the entry and exit of the car with a single rod, which is the
-same rod.
+we only have "barrier_id" in "barrier_info" to identify the barrier. The previous
+idea was to have the entrance and exit sharing the only barrier (the only M5Stack).
 
 ```
 {
@@ -307,13 +306,22 @@ same rod.
         }]
 }
 ```
-But it was found that if the entry and exit are controlled by a lever,
-then when the car enters the parking lot, if the car is very close to the parking
-lot, the lever will be opened again. So we added "barrier_type" data to indicate
-whether this is a bar that controls whether the car enters or exits. If the car
-is outside the parking lot, only the entry lever will open. If the car is in the
-parking lot, only the outgoing pole will open. This solves the initial problem
-well.
+
+However, we found that in that case, since the M5Stack scans for bluetooth
+addresses every 5 seconds and transmits the closest one to the broker,
+if the car parks close to the barrier, 
+the M5Stack will detect its bluetooth address over and over again
+ and keeps opening and closing,
+indicating the car keeps going in and going out, repeatedly, despite the car
+(M5Stcik) is staying still.
+This may be less of a problem in reality but during our tests, we only had
+one registered bluetooth address, which was the M5Stick, so it would always be
+detected. 
+
+To solve this, we added **"barrier_type"** attribute to separate the barrier
+at the entrance and the exit. If the car
+is outside the parking lot, only the entrance barrier will open. If the car is in the
+parking lot, only the exit barrier will open.
 
 ```
 {
@@ -329,8 +337,11 @@ well.
         }]
 }
 ```
-In the "data_type": "web_register" json file, we didn't have the status field at
-the beginning. We only have Boolean fields to determine if the registration is successful.
+
+#### "status"
+In the "data_type": "web_register" json file, we didn't have the **"status"** field to
+ begin with. Instead, we only had a boolean attribute "is_success"
+  to determine whether the registration is successful.
 
 ```
 {
@@ -342,10 +353,11 @@ the beginning. We only have Boolean fields to determine if the registration is s
 		}
 }
 ```
-However, it is found that under the mechanism of MQTT, after a client sends a message, because it subscribes to this topic itself, it will also
-receive the message just sent, so we need to increase the status field to judge
- whether this message was sent by itself or from other clients. It is a int field which can deal
- with many situations like whether it is successful
+However, we found that other than the 3 online elements subscribing to MQTT,
+the MQTT also subscribes itself. This means only a boolean is not enough.
+Thus, we intriduced the **"status"** field to distinguish
+ from whom this message was published. It is an integer field which can deal
+ with multiple situations, including whether a request is successful
  or where the message comes from.
  ```
 {

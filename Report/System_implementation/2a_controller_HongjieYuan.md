@@ -4,7 +4,6 @@ This part is about the backend of desktop app to deal
 with the message from M5Stack and to M5Stack.
 
 **Sprint1:Design of Json file structure**
-
 The first part is to design the Json file format according to the needs of the product. Three Json structures with data type "m5_transmit", "m5_receive", and "parking" are designed to receive data, send data, and store parking records.Because the json format is actually the most important part, we must first determine the system requirements with the M5Stack part, and then unify the format
 ```
 {
@@ -41,6 +40,7 @@ The first part is to design the Json file format according to the needs of the p
 				}
 }
 ```
+
 
 **Sprint2:Receive the message from M5Stack**
 
