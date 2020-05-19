@@ -395,9 +395,101 @@ bthDeviceInfo["bluetooth_address"] = (char *)BLEad.getAddress().toString().c_str
 ```
 <br> The BLEad.getAddress().toString() returned a std::string, which was then converted to const char * and then cast to char*. <br>
 The final cast to char* [forced a copy of the string to be stored in the JsonObject bthDeviceInfo](#2aIoT_forceCopy). The std::string type could also force the JsonObject to take a copy, so why converted to c_str() ? Well, acutally, the BLEAddress::toString method returned a std::__cxx11::basic_string<char>, which was differnt from std::string and the JsonObject::operator[] had no overloaded method that mathched that signature.
+ 
+<br> After that, the JSON document was serialised, delimetered and printed to Serial:
+```c++
+// serialise JsonDocument and print it to serial
+void printJDocToSerial(const JsonDocument& jDoc){
+  Serial.print(SERIAL_JSON_DELIMITER);
+  serializeJson(jDoc, Serial);
+  Serial.print(SERIAL_JSON_DELIMITER);
+}
+```
 <br><br><br>
 
 <br> __Parse Incoming JSON String__<br>
+An M5Stack was only concerned with one type of incoming JSON string ---- "M5_receive":
+```JSON
+{
+	"data_type": "m5_receive",
+	"barrier_id": 12345,
+	"op_code": "A"
+}
+```
+This JSON object had a fixed size and was not very large, which meant it could be allocated on the stack to boost performance.
+The ArduinoJson library provides a filtering functionality for deserialisation, which ignores irrelevant fields and therefore saves space in the JsonDocument. In our cases, however, we were only concerned with one format of JSON object and the JsonDocument was initialised with a fixed size, which meant saving space was not necessary. Despite that, we employed a filter since it might boost performance by not copying irrelevant fields.<br>
+The following function returns our filter:
+```c++
+const JsonDocument& getInputJsonDocFilter(){
+  static StaticJsonDocument<receivedJDocCapacity> filter;
+  static bool initialised = false;
+  if(!initialised){
+    filter["data_type"] = true;
+    filter["barrier_id"] = true;
+    filter["op_code"] = true;
+    initialised = true;
+  }
+  return filter;
+}
+```
+<br> The filter document was constructed by the StaticJsonDocument constructor because it had a fixed and small size and resolving its address at compile time spared a call to malloc, which was never a bad idea. The filter was qualified static since we only needed one filter and we did not want to initialise it every time we asked for it. 
+
+<br> The main JsonDocument was then initialised:
+```c++
+StaticJsonDocument<receivedJDocCapacity> jDoc;
+```
+<br>with a capacity of
+```c++
+const int receivedJDocCapacity { 
+                            JSON_OBJECT_SIZE(3) // root
+                          + 42 };     // string copy
+```
+<br> Then the JsonDocument was passed to the deserialiser with the string received from MQTT and the filter:
+```c++
+// deserialise json string into JsonDocument
+// returns 0 on success. 1 otherwise
+int buildIncomingJdoc(JsonDocument& jDoc, const char* jsonString){
+  DeserializationError dErr = 
+    deserializeJson(jDoc, jsonString, DeserializationOption::Filter(getInputJsonDocFilter()));
+  if(dErr != DeserializationError::Ok){
+    handleJsonDeserializationErr(dErr);
+    return 1;
+  }
+  return 0;
+}
+```
+<br> If the deserialisation was successful, values could be retrieved by using the operator[] with keys on the JsonDocument.
+Calling operator[] on JsonDocument& returns a JsonVariant, while on const JsonDocument& returns a JsonVariantConst. In our case, we used const reference to maintain data integrity:
+```c++
+// returns 0 if the id in json document matches that of this device.
+//         1 otherwise.
+int checkBarrierId(const JsonDocument& jDoc){
+  JsonVariantConst value = jDoc["barrier_id"];
+  if(value.isNull()){return 1;}
+
+  unsigned long receivedId = value.as<unsigned long>();
+  return pCurrentBarrier->checkBarrierId(receivedId) ? 0 : 1;
+}
+
+const char* getOpCode(const JsonDocument& jDoc){
+  // check data type
+  JsonVariantConst value = jDoc["data_type"];
+  if(value.isNull()){return NULL;}
+  String dataType = value.as<String>();
+  if(!dataType.equals("m5_receive")){return NULL;}
+  PRINTLN_WHEN_DEBUG(dataType.c_str());
+
+  // check barrier id
+  if(checkBarrierId(jDoc) != 0) {return NULL;}
+
+  // get op code
+  value = jDoc["op_code"];
+  if(value.isNull()){return NULL;}
+
+  return value.as<const char*>();
+}
+```
+<br> We checked data_type, barrier_id and co_code in order. The op_code was returned if and only if all the checks passed. Then the opcode could be safely executed by the barrier.
  
 <a name = "2aIoTSprint5"> </a>
 ## Keys
