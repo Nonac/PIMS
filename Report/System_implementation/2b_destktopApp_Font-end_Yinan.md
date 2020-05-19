@@ -18,7 +18,7 @@ The clock text variable calls the system time, and success is marked by the abil
 
 The color shift menu is also a display component that does not involve the lower-level API, so the evaluation of the color shift can be done separately when the desktop app undergoes front-end development.The colour shift menu is also a display component that does not involve the underlying API, so the evaluation of the colour shift can be done separately when the desktop app undergoes front-end development. It is easy to understand that once the colour shift menu is used, the desktop application view can be changed from the original default dark colour mode to light colour mode. Of course, we can also go from light to dark mode.
 
-This section is evaluated on the ability to successfully change the colour pattern of all components without reporting errors. Due to the peculiarities of PROCESSING, we have set the colour changing function in operation to control the successful use of this menu.
+This section is evaluated on the ability to successfully change the colour pattern of all components without reporting errors. Due to the peculiarities of PROCESSING, we have set the colour changing function in operation to control the successful use of this menu.We use a separate method to build the colour transform component. There is also no need to refresh using our own constructed refresh mechanism, but rather to refresh using the DRAW() function. The goal is to allow for faster system response and to avoid label redundancy due to duplicate component rendering.
 
 #### Evaluation and testing of components on the front end that need to call the back end API
 
@@ -28,7 +28,7 @@ All components in this section must work with the API interface provided by the 
 
 When the barrier end receives a signal from an oncoming car, and the rear end successfully receives the incoming and outgoing logs and saves them on the local hard drive, the display end calls up all JSONArray to pick, sort, reorganize and display. Its evaluation of success is based on the front-end's ability to display the record correctly once the file has been received and saved by the back-end.
 
-We require to arrange backwards, so the difficulty lies in how to sort JSONArray for specific fields. This, of course, falls under the category of algorithmic issues that are no longer discussed in this project.
+We require to arrange backwards, so the difficulty lies in how to sort JSONArray for specific fields. This, of course, falls under the category of algorithmic issues that are no longer discussed in this project.Unfortunately, due to the limitations of controlP5, it is difficult to build an excel-like table to display data details. We can only do our best to recreate the style of the table through the drop down menu. This is something we did not anticipate during the design session.
 
 ##### Details of cars in the parking lot
 
@@ -36,6 +36,9 @@ Similar to the above features, this component shows the remaining vehicles in th
 
 * Once a vehicle enters the parking lot, this component should refresh the record of that vehicle for a limited time and display it on the display end.
 * Once a vehicle leaves the parking lot, this component should refresh to delete this vehicle record for a limited time.
+
+In this component, the disadvantages of ControlP5 are even more pronounced. We had a hard time unifying the table for each menu list due to the different name lengths. To do this, we need to make a lot of less cost-effective function choices. So we didn't do that.
+
 
 ##### Pie chart
 
@@ -52,4 +55,4 @@ Similar to the above components, the line chart shows the parking lot of revenue
 
 This widget is the one that communicates directly with M5Stack, so the way he works is to call the underlying API event method to control the barrier by sending a specific data type to MQTT for M5Stack to receive.
 
-The criteria for evaluating the success of this component can be judged in this way. We open the desktop app and M5Stack at the same time, click on the button of this component on the desktop, and the screen of M5Stack shows the barrier state when the control is complete by command. If the transformation is successful, it is evaluated as successful.
+The criteria for evaluating the success of this component can be judged in this way. We open the desktop app and M5Stack at the same time, click on the button of this component on the desktop, and the screen of M5Stack shows the barrier state when the control is complete by command. If the transformation is successful, it is evaluated as successful. The way in which the button is used to implement the functionality of this component is very appropriate and meets the expectations of modern humans for manipulating electronic devices. This is the same design as our previous one.
