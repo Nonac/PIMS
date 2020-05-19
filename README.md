@@ -16,7 +16,7 @@
 *Are you annoyed some payment machines only take cash?*\
 *Are you frustrated that you left the ticket in the car and have to walk all that distance twice?*\
 *Are you annoyed someone exiting the parking lot lost their ticket so the lane is clogged?*\
-*Do you sometimes go on the curb accidentally just because you want to stop closer to the barrier ticket machine?*\
+*Do you sometimes go on the kerb accidentally just because you want to stop closer to the barrier ticket machine?*\
 *Are you unhappy that the automatic number-plate recognition doesn't always work?*\
 *Do you have too many parking membership cards for different parking lots?*\
 *Have you ever actually found or received a refund on a lost parking membership card?*
