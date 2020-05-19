@@ -241,9 +241,12 @@ The basic object-oriented model for this project is shown in the figure. The
   communication.
 
 ### Web app
-等待更新
+![web](Web_Chart.png)
+
+We mainly used functions in the scripts to implement the core functionality of the user logics, and render the pages dynamically. One thing might be confusing is that the rendering functions also call the query functions sometimes. This is because for some types of messages, only when the former messages arrive can another query be made. For example, when and only when a message of which type is `web_vehicle_query` arrives, the client will be able to send a query of `web_history_query` to fetch parking history of the first vehicle in the fetched list.
 
 <a name="_d"></a>
+
 ## The evolution of UI wireframes for key sub-systems
 ### Desktop front end
 #### Version 1.0 - Hand drawing in MVB lab
@@ -356,7 +359,7 @@ receive the message just sent, so we need to increase the status field to judge
 			"status": 2
 		}
 }
-```
+ ```
 
 
 <a name="_e"></a>
@@ -365,14 +368,14 @@ receive the message just sent, so we need to increase the status field to judge
    - All message must go through MQTT.
    - The 3 online application must subscribe the same topic "PIMS" on MQTT.
    - Each session connected must be a "round-trip". In other words, when
-   sender sends a message via MQTT to receiver, it also expects to receive
-   a receipt (in the form of a MQTT message, too) from the receiver whether the
-   request is valid.
+      sender sends a message via MQTT to receiver, it also expects to receive
+      a receipt (in the form of a MQTT message, too) from the receiver whether the
+      request is valid.
    - MQTT messages (in the form of JSON objects) must contain a "status" flag
-   that indicates its origin and validation status. I.e. "status=2" means the
-   message is from web end to desktop end (acting as a server).
-   Then in the receipt, "status=1" means the request is successfully verified
-   by the server, whereas "status=0" means the request has failed.
+      that indicates its origin and validation status. I.e. "status=2" means the
+      message is from web end to desktop end (acting as a server).
+      Then in the receipt, "status=1" means the request is successfully verified
+      by the server, whereas "status=0" means the request has failed.
 
 Since different parts of our system send information asynchronously, we
 decided to let them publish different JSON objects to the MQTT topic 'PIMS'
