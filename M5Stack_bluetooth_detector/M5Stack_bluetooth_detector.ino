@@ -232,9 +232,6 @@ void handleScanResult(BLEScanResults results){
 
 // build outgoing JsonDocument from BLEScanResults
 // deviceCount : got from results.getCount().
-// returns: pointer to char[deviceCount][?], 
-//          which stores address strings 
-// NOTE: call deleteAddresses() on this pointer with deviceCount to free memory
 void buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int deviceCount){
   jDoc["data_type"] = "m5_transmit";
   
