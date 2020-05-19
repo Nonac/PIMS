@@ -136,6 +136,7 @@ const int port = 1883;
 const char* MQTT_clientname = "barrier"; 
 const char* MQTT_sub_topic = "PIMS"; // topic to subscribe
 const char* MQTT_pub_topic = "PIMS"; // topic to publish
+void callback(char* topic, byte* payload, unsigned int length); // callback function signature
 ```
 ```c++
 /* called witnin Arduino setup() */
@@ -143,4 +144,115 @@ const char* MQTT_pub_topic = "PIMS"; // topic to publish
 ps_client.setServer(server, port);
 ps_client.setCallback(callback);
 ```
+The PubSubClient::setCallback method sets a callback function which is called when:
+* PubSubClient::loop() is called and 
+* the device is connected to the server and 
+* the subscribed topic has new message available.
 
+In order to continually receive message from the MQTT server, PubSubClient::loop should be called inside the Arduino loop():
+```c++
+/* In Arduino loop(): */
+ps_client.loop();
+```
+<br>In order to publish message to the MQTT server, PubSubClient::publish shoule be called:
+```c++
+ps_client.publish( MQTT_pub_topic, msg); // where msg is const char* for this overloaded method
+```
+<br>
+
+The purpose of the Arduino WiFi 1010 board was relaying messages for the main M5Stack, so it ought to be connected to the M5Stack.
+| ![M5StackSerialPins](IoTDevices/M5StackSerialPins.jpg) | ![1010SerialPins](IoTDevices/1010SerialPins.jpg) |
+|--|--|
+
+As the image illustrates, the two devices were connected via Serial ports. The WiFi 1010 board was powered by the M5Stack and its 14th (TX of Serial1) and 13th pins (RX of Serial1) were connected to M5Stack's R0 and T0, respectively.
+We chose 115200 as the Serial baud rate. The reason was that the higher the baud rate, the faster the data transfer speed and this value was one of the standard ones that were supported by both of the devices. Although data error is more likely in high baud rates, this is mainly affected by the capacitance of the cable. In our cases, our devices were connected by cables shorter than 20 centimetres and we had not experienced severe data loss, so we thought this baud rate was sensible in our situation:
+```c++
+/* In Arduino setup(): */
+Serial.begin(115200);
+```
+<br>Since there might be some auxiliary messages sent from WiFi 1010 board to M5Stack (such as WiFi connection status) or from M5Stack to Serial port (for debugging), we distinguished data messages from others by a delimiter: 
+```c++
+#define SERIAL_JSON_DELIMITER '#'
+```
+<br> Every message that contains data (in our case, a JSON object) was prefixed and suffixed with the above delimiter before transferring between WiFi 1010 and M5Stack. The recipient (either M5Stack or the WiFi 1010) would first peek the first character on receival of the message to recognise the type of the message (data or others):
+```c++
+/* For M5Stack: */
+// handles serial input when available
+void handleSerialInput(){
+  if(!Serial.available()){return;}
+  int8_t firstByte = Serial.peek();
+  switch(firstByte){
+    case SERIAL_JSON_DELIMITER:
+      handleJsonSerialInput();
+      break;
+    default:
+      handleNormalSerialInput();
+  }
+}
+```
+<br> For M5Stack, if the incoming message contained data, the delimiters would be discarded and the message would be sent to JSON deserialiser. On the otherhand, if the message was not data, it would be printed to the screen of the M5Stack.
+```c++
+/* For WiFi 1010: */
+void publishFromSerial1(){
+  int byteCount = Serial1.available();
+  if(byteCount <=0){return;}
+  Serial1.find(SERIAL_JSON_DELIMITER);
+  String serial1Read = Serial1.readStringUntil(SERIAL_JSON_DELIMITER);
+  
+  if(ps_client.connected()){
+    Serial.println(serial1Read); // prints the message to Serial (USB) for debugging
+    publishMessage(serial1Read); // publishes the message to the topic on the MQTT server
+  }else{
+    Serial1.println("Can't publish message: Not connected to MQTT :( "); // prints error message to M5Stack
+    Serial.println("Can't publish message: Not connected to MQTT :( "); // prints error message to Serial (USB)
+  }
+}
+```
+<br> For WiFi 1010, if the delimeters were found, they were discarded before the message was sent to the MQTT server. If the first character was not the delimeter, the whole message was ignored since the recipient of the message was the computer (if existed) that connected to the M5Stack via USB because M5Stack's USB connection also used the Serial port.
+
+<br>The WiFi 1010 kept listening to its Serial1 port and the MQTT server. If a message arrived from one end, it relayed it to the other.
+Meanwhile, the M5Stack kept listening to its Serial port. While the M5Stack would handle incoming messages from its Serial port if available, it also sent all its messages to the Serial port. This is the way the M5Stack communicated with the MQTT server.
+<br>
+Although doing similar things, the approaches were a bit different for the WiFi 1010 board and the M5Stack.<br>
+For the Wifi 1010 board, its tasks were quite simple. So we let them run on a single thread:
+```c++
+/* in Arduino loop(): */
+  ps_client.loop(); // listens to the MQTT topic
+  publishFromSerial1(); // listens to Serial1
+```
+<br>Relaying messages would not take too much time, so blocking was not severe for the WiFi 1010 board.<br>
+For the M5Stack, however, it could not have reacted to Serial inputs in time while it was performing a five-second BT scan had we only used a single thread. 
+Therefore, we employed the multi-tasking API of M5Stack:
+```c++
+void startInputHandler(){
+  xTaskCreatePinnedToCore(
+                    listenToSerial,     /* Function to implement the task */
+                    "listenToSerial",   /* Name of the task */
+                    4096,      /* Stack size in words */
+                    NULL,      /* Task input parameter */
+                    1,         /* Priority of the task. The higher the more important */
+                    NULL,      /* Task handle. */
+                    0);        /* Core where the task should run */
+}
+
+void listenToSerial(void *pvParameters){
+  for(;;){
+    handleSerialInput();
+    delay(20); // random short value, which we found was suitable
+  }
+}
+```
+<br> The BT Scan was performed in the main thread, so it would not block Serial input handler any more.
+<br><br>
+### :white_medium_square:Some questions you may ask...
+*Q. Why did you choose the Arduino MKR WIFI 1010 board?* <br>
+A. It was easy to migrate a sketch that had been written for M5Stack to the Arduino platform, and vice versa. Any Arduino board with WIFI and Serial ports should do. Or you could use another M5Stack if you wish. But I would argue that an MKR WIFI 1010 board costs less energy and (more importantly) money than an M5Stack.
+<br><br>
+*Q. My stock of M5Stacks is abundant! How can I run your code on two M5Stacks?* <br>
+A. 
+The [Arduino_HiveMQ_connector.ino](/Arduino_HiveMQ_connector/Arduino_HiveMQ_connector.ino) was written to be compatible with M5Stacks. <br>
+Simply compile and upload it to an M5Stack, and do the same things for [M5Stack_bluetooth_detector.ino](/M5Stack_bluetooth_detector/M5Stack_bluetooth_detector.ino) using another M5Stack. <br>
+Then, connect the two M5Stacks Serial to Serial. And you should be good to go.
+
+NOTE: Do not forget to change the MQTT_MAX_PACKET_SIZE to something like 1024 or larger for the PubSubClient external library since the default value would be too small.
+<br><br>
