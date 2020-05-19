@@ -1,5 +1,4 @@
-# PIMS - Parking Iot Management System
-
+![Logo](Report/logo.png)
 ![Hi](Hi.png)
 
 ## Contents
