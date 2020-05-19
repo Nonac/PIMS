@@ -1,0 +1,63 @@
+\documentclass{article}
+
+\usepackage{gantt}
+\usepackage{pdflscape}
+
+\begin{document}
+\begin{center}
+
+
+  \scalebox{0.7}{
+  \begin{gantt}[xunitlength=0.5cm,fontsize=\small,titlefontsize=\small,drawledgerline=true]{27}{30}
+    \begin{ganttitle}
+      \titleelement{2020}{30}
+    \end{ganttitle}
+    \begin{ganttitle}
+      \titleelement{6.2-27.2}{3}
+      \titleelement{27.2-5.3}{3}
+      \titleelement{5.3-19.3}{3}
+      \titleelement{19.3-2.4}{3}
+      \titleelement{2.4-9.4}{3}
+      \titleelement{9.4-16.4}{3}
+      \titleelement{16.4-30.4}{3}
+      \titleelement{30.4-7.5}{3}
+      \titleelement{7.5-13.5}{3}
+      \titleelement{13.5-22.5}{3}
+    \end{ganttitle}
+  \ganttgroup{Preparation}{0}{3}
+   \ganttbar{Learning development methods}{0}{3}
+   \ganttbar{Creating GitHub repository}{0}{3}
+   
+   \ganttgroup{Requirements}{3}{1}
+  \ganttbar{Identification of projects}{3}{1}
+  
+   \ganttgroup{Design}{4}{2}
+   \ganttbar{Complete Schematic diagram}{4}{2}
+   \ganttbarcon{Complete data structure}{4}{2}
+   \ganttbar{Complete desktop app UI design}{4}{2}
+   
+    \ganttgroup{Fight COVID-19}{6}{3}
+    
+   \ganttgroup{Development}{9}{11}
+   \ganttbar{M5Stack development}{9}{6}
+   \ganttbar{Web development}{12}{6}
+   \ganttbar{Desktop App Back-end development}{9}{9}
+   \ganttbar{Desktop App Font-end development}{15}{5}
+   
+   \ganttgroup{Testing}{20}{7}
+      \ganttbar{First system testing }{20}{1}
+      \ganttbarcon{Debug }{21}{3}
+      \ganttbarcon{Second system testing }{24}{1}
+            \ganttbarcon{Debug }{25}{1}
+      \ganttbarcon{Second system testing }{26}{1}
+      
+   \ganttgroup{Deployment}{27}{1}
+   \ganttbar{Complete system testing}{27}{1}
+   
+   \ganttgroup{Review}{28}{2}
+    \ganttbar{Completion report}{28}{2}
+   
+  \end{gantt}
+  }
+\end{center}
+\end{document}
