@@ -19,7 +19,7 @@
 *Do you sometimes go on the curb accidentally just because you want to stop closer to the barrier ticket machine?*\
 *Are you unhappy that the automatic number-plate recognition doesn't always work?*\
 *Do you have too many parking membership cards for different parking lots?*\
-*Have you ever found or get refunded on a lost parking membership card?*
+*Have you ever actually found or received a refund on a lost parking membership card?*
 
 
 ***PIMS, solves it all!***
