@@ -10,17 +10,17 @@ Sprint No.| Brief Description| Implementation
 
 <a name = "2aIoTSprint1"> </a>
 ## Bluetooth Detector
- The first thing any of our barrier needs to do is to is scanning all the Bluetooth (BT) devices in its vicinity regularly and obtaining useful information from them. This enables the barriers to record their ambient changes, which permits our system to recognise the surroundings of each barrier and thus facilitates decision making for the barriers by our server. 
+ The first thing any of our barriers needs to do is to is scanning all the Bluetooth (BT) devices in its vicinity regularly and obtaining useful information from them. This enables the barriers to record their ambient changes, which permits our system to recognise the surroundings of each barrier and thus facilitates decision making for the barriers by our server. 
 <a name = "2aIoTSprint1Imp"> </a>
 ### :white_circle:Implementation
 (__NOTE__: _code in this section is for explanation only, so it may not match that in our source code exactly._) <br><br>
-Each M5Stack came with an integrated dual mode Bluetooth, with which we could develop our BT detector. <br><br>
+Each M5Stack came with an integrated dual-mode Bluetooth, with which we could develop our BT detector. <br><br>
 We incorporated the ["BLEDevice"](https://github.com/nkolban/ESP32_BLE_Arduino) library to control the BT module on M5Stack since this library was included in the Arduino IDE and was easy to use: <br>
 ``` c++
 #include "BLEDevice.h"
 ``` 
 
-<br>Then, the singleton class "BLEDevice" was initialised with a name for the device and the BLEScan object was acuired. 
+<br>Then, the singleton class "BLEDevice" was initialised with a name for the device, and the BLEScan object was acquired. 
 ```c++
 /* Global scope: */
 #define BLE_DEVICE_NAME "barrier001" // BLE name of this device
@@ -35,7 +35,7 @@ pBLEScan = BLEDevice::getScan();
 ```c++
 BLEScanResults start(uint32_t duration, bool is_continue = false);
 ```
-We called this mehod in the Arduino loop with a predefined duration and passed the scan results to a result handler function. In this way, automated regular scan was achieved:
+We called this method in the Arduino loop with a predefined duration and passed the scan results to a result handler function. In this way, an automated regular scan was achieved:
 ```c++
 /* Global scope: */
 #define BLE_SCAN_DURATION 5 // duration in seconds for which a session of scan lasts
@@ -67,13 +67,13 @@ A. The duration for each scan to last could be configured to any value. The shor
 <br><br><br>
 <a name = "2aIoTSprint2"> </a>
 ## MQTT Publisher/Listener
- So far, our barriers had the ability to collect information from the environment, but they hadn't sent it to our server. Moreover, they must have some way to receive commands from our server, otherwise they would be nothing more than pieces of iron bars.<br>
- We had chosen MQTT as our protocal for the communication between different parts in our system, but firstly, the barriers had to connect to the Internet!
+ So far, our barriers had the ability to collect information from the environment, but they hadn't sent it to our server. Moreover, they must have some way to receive commands from our server, otherwise, they would be nothing more than pieces of iron bars.<br>
+ We had chosen MQTT as our protocol for the communication between different parts in our system, but firstly, the barriers had to connect to the Internet!
  
 <a name = "2aIoTSprint2Imp"> </a>
 ### :white_circle:Implementation
-Each M5Stack had an integrated 802.11 b/g/n HT40 Wi-Fi transceiver, with which it could surf the Internet when it felt bored.<br>
-However, the actual device that enjoyed the luxry of surfing the Internet in one of our barriers was an Arduino MKR WiFi 1010 board. The reason was that the program storage space on an M5Stack was roughly 1.3 MB, which was less than enough for our entire program. At some point in our development period, we found it impossible to cram more functionalities into an M5Stack without rewriting some libraries. So we adopted an easier approach ---- spliting tasks of an M5Stack into two parts run by two devices. The functionalities that got separated from M5Stack were WiFi connection and MQTT publication/subscription. Nevertheless, we kept this part of code compatible with M5Stacks so when we overstocked M5Stacks <del>(That's never gonna happen)</del> we could construct a barrier with two M5Stacks. <br><br>
+Each M5Stack had an integrated 802.11 b/g/n HT40 Wi-Fi transceiver, with which it could surf the Internet when it felt boring.<br>
+However, the actual device that enjoyed the luxury of surfing the Internet in one of our barriers was an Arduino MKR WiFi 1010 board. The reason was that the program storage space on an M5Stack was roughly 1.3 MB, which was less than enough for our entire program. At some point in our development period, we found it impossible to cram more functionalities into an M5Stack without rewriting some libraries. So we adopted an easier approach ---- splitting tasks of an M5Stack into two parts run by two devices. The functionalities that got separated from M5Stack were WiFi connection and MQTT publication/subscription. Nevertheless, we kept this part of code compatible with M5Stacks so when we overstocked M5Stacks <del>(That's never gonna happen)</del> we could construct a barrier with two M5Stacks. <br><br>
 
 We used the WiFi library readily available in Arduino IDE, which was:
 ```c++
@@ -110,19 +110,19 @@ void setupWifi(){
 }
 ```
 The above "setupWifi" function keeps trying to connect to the WiFi AP with the SSID and password defined. It requests to connect to the AP via calling WiFi.begin and checks the connection status every 500 mili-seconds for 10 times. If it is still not connected to the AP after (10 + 1) times, it makes a connection request again. <br>
-In the future we will add the functionality to set WiFi SSID and password via USB connection to computers since hard-coded SSDI and password are neither user-friendly nor secure.<br><br>
+In the future, we will add the functionality to set WiFi SSID and password via USB connection to computers since hard-coded SSDI and password are neither user-friendly nor secure.<br><br>
 
-After connected to WiFi, the barrier needed to connect to our chosen MQTT server and subscribe our topic. <br>
+After connected to WiFi, the barrier needed to connect to our chosen MQTT server and subscribe to our topic. <br>
 We adopted this library that was available in Arduino IDE as well to achieve these tasks:
 ```c++
 #include <PubSubClient.h>
 ```
 We will quickly cover our usage of this library. If you have any questions regarding the methods of this library, please refer to [their official document](https://pubsubclient.knolleary.net/).<br>
-One thing worth mentioning is that this library had a limit of the maximum packet size for publising messages of 128 bytes at the time we wrote this report, which was too small for our packets. To resolve this, we changed a macro in the library header file:
+One thing worth mentioning is that this library had a limit of the maximum packet size for publishing messages of 128 bytes at the time we wrote this report, which was too small for our packets. To resolve this, we changed a macro in the library header file:
 ```c++
 #define MQTT_MAX_PACKET_SIZE 8192
 ```
-8192 bytes could accomodate information of 90 BT devices for us (calculated with [ArduinoJson Assistent](https://arduinojson.org/v6/assistant/)), which we thought would be enough.
+8192 bytes could accommodate information of 90 BT devices for us (calculated with [ArduinoJson Assistent](https://arduinojson.org/v6/assistant/)), which we thought would be enough.
 
 MQTT setup:
 ```c++
@@ -242,7 +242,7 @@ void listenToSerial(void *pvParameters){
   }
 }
 ```
-<br> The BT Scan was performed in the main thread, so it would not block Serial input handler any more.
+<br> The BT Scan was performed in the main thread, so it would not block the Serial input handler anymore.
 <br><br>
 ### :white_medium_square:Some questions you may ask...
 *Q. Why did you choose the Arduino MKR WIFI 1010 board?* <br>
@@ -270,6 +270,19 @@ In fact, if we could get the barrier work in simulation, it should be quite easy
 <br><br>
 <a name = "2aIoTSprint3Imp"> </a>
 ### :white_circle:Implementation
+The barrier simulator class was declared here:
+[Barrier_simulator.h](/M5Stack_bluetooth_detector/Barrier_simulator.h)
+This class was originally written to be a singleton since each M5Stack was only in charge of one barrier.
+However, for demonstration purposes, we allowed multiple instances of this class to exist to simulate more barriers <del>because we only had one M5Stack</del>.<br>
+We instantiated two barrier simulators in the M5Stack main program, representing a barrier at the entrance of a car park (inBarrier) and one at the exit of the same car park (outBarrier):
+```c++
+#include "Barrier_simulator.h"
+BarrierSimulator inBarrier = BarrierSimulator({12345, BarrierType::IN});
+BarrierSimulator outBarrier = BarrierSimulator({54321, BarrierType::OUT});
+BarrierSimulator * volatile pCurrentBarrier = &inBarrier;
+```
+<br> The inBarrier and the outBarrier was assigned the id 12345 and 54321, respectively.
+<br> "pCurrentBarrier" pointed to the barrier that the M5Stack was simulating at that time. Toggling of the barriers was assigned to the BtnB on M5Stack. For the same reason as the Serial input handler, the hardware interrupt handler was running in another thread, different from that of the Serial input hander and the main thread. Therefore, the "pCurrentBarrier" should be qualified "volatile". Otherwise, it might have been cached in some functions, which would have caused some problems like failing barrier id checks or sending the wrong barrier information to our server.
 
 
 [Go back to the sprint table](#2aIoTSprintTable) 
