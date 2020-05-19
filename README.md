@@ -10,18 +10,28 @@
 
 <a name="_advert"></a>
 
-*Are you tired of queuing at the payment machine in the parking lot?*\
-*Are you annoyed some payment machines only take cash?*\
-*Are you frustrated that you left the ticket in the car and have to walk all that distance twice?*\
-*Are you annoyed someone exiting the parking lot lost their ticket so the lane is clogged?*\
-*Do you sometimes go on the kerb accidentally just because you want to stop closer to the barrier ticket machine?*\
-*Are you unhappy that the automatic number-plate recognition doesn't always work?*\
-*Do you have too many parking membership cards for different parking lots?*\
-*Have you ever actually found or received a refund on a lost parking membership card?*
+<p style="text-align: center; font-style: italic">
+Are you tired of queuing at the payment machine in the parking lot?<br>
+Are you annoyed some payment machines only take cash?<br>
+Are you frustrated that you left the ticket in the car and have to walk all that distance twice?<br>
+Are you annoyed someone exiting the parking lot lost their ticket so the lane is clogged?<br>
+Do you sometimes go on the kerb accidentally just because you want to stop closer to the barrier ticket machine?<br>
+Are you unhappy that the automatic number-plate recognition doesn't always work?<br>
+Do you have too many parking membership cards for different parking lots?<br>
+Have you ever actually found or received a refund on a lost parking membership card?<br>
+    <strong>PIMS, solves it all!</strong>
+</p>
 
-***PIMS, solves it all!***
+<p style="text-align:justify">
+    <a style="display:inline-block" href="#_intro">Introduction</a> 
+    <a style="display:inline-block" href="#_stakeholders">Stakeholders</a> 
+    <a style="display:inline-block" href="#_portfolio">Product report</a> 
+    <a style="display:inline-block" href="#_video">Pitch video</a>
+    <a style="display:inline-block; position:relative; width:100%"></a>
+</p>
 
 <a name="_intro"></a>
+
 ## Introduction
 Parking Iot Management System is designed for easy access to public
 parking lots. It is like a toll-pass (FasTrak or E-ZPass) in the US 
