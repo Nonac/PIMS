@@ -247,7 +247,7 @@ The basic object-oriented model for this project is shown in the figure. The
 ## The evolution of UI wireframes for key sub-systems
 ### Desktop front end
 #### Version 1.0 - Hand drawing in MVB lab
-The initial design of the desktop app was drawn as below. 
+The initial design of the desktop app was drawn as below.
 ![ppt1](destop_view/drawing.JPG)
 
 
@@ -272,7 +272,7 @@ can be confusing at times and if we use a scrollable chart we will be able to sh
 just as much information as having a two-column chart.
 * Bottom middle chart is changed from a combined chart (bar and line) to just
 a line chart, because in the testing period, we only have 1 MStick (key) thus
-1 car to enter/exit. This means the revenue will not change as frequently as in 
+1 car to enter/exit. This means the revenue will not change as frequently as in
 reality. The bars that were supposed to indicate the revenue made per hour will
 be 0 at most times;
 * In the line chart, we changed the x-axis unit to second from hour. This is because
@@ -282,7 +282,7 @@ represents second and the chart re-renders every second.
 * We completely eliminated the "Customer account" page in the end because it is not
 necessary and can be moved to "future work" section.
 
-![visual_impression](destop_view/Visual_Impression.png) 
+![visual_impression](destop_view/Visual_Impression.png)
 
 ### Desktop back end - JSON file format
 The format of the json file has changed many times throughout the design process.
@@ -292,33 +292,86 @@ the system, the format of json should also be constantly designed.
 In the "data_type": "m5_transmit" json file, according to the initial assumption,
 we only have "barrier_id" in "barrier_info" to indicate which pole. The previous
 idea was to control the entry and exit of the car with a single rod, which is the
-same rod. But it was found that if the entry and exit are controlled by a lever,
+same rod.
+
+```
+{
+    "data_type": "m5_transmit",
+    "barrier_info":{
+        "barrier_id": 12345,
+    },
+    "bluetooth_devices":
+        [{
+            "bluetooth_address": "47:a9:af:d2:63:cd",
+            "RSSI": -80
+        }]
+}
+```
+But it was found that if the entry and exit are controlled by a lever,
 then when the car enters the parking lot, if the car is very close to the parking
 lot, the lever will be opened again. So we added "barrier_type" data to indicate
 whether this is a bar that controls whether the car enters or exits. If the car
 is outside the parking lot, only the entry lever will open. If the car is in the
 parking lot, only the outgoing pole will open. This solves the initial problem
 well.
+
+```
+{
+    "data_type": "m5_transmit",
+    "barrier_info":{
+        "barrier_id": 12345,
+        "barrier_type": "in"
+    },
+    "bluetooth_devices":
+        [{
+            "bluetooth_address": "47:a9:af:d2:63:cd",
+            "RSSI": -80
+        }]
+}
+```
 In the "data_type": "web_register" json file, we didn't have the status field at
-the beginning. However, it is found that under the mechanism of MQTT, after a
-client sends a message, because it subscribes to this topic itself, it will also
+the beginning. We only have Boolean fields to determine if the registration is successful.
+
+```
+{
+	"data_type": "web_register",  
+	"info": {
+			"username": "lea_tong",
+			"password": "password",
+			"is_success":"true"
+		}
+}
+```
+However, it is found that under the mechanism of MQTT, after a client sends a message, because it subscribes to this topic itself, it will also
 receive the message just sent, so we need to increase the status field to judge
- whether this message was sent by itself or from other clients.
- 
- 
+ whether this message was sent by itself or from other clients. It is a int field which can deal
+ with many situations like whether it is successful
+ or where the message comes from.
+ ```
+{
+	"data_type": "web_register",  
+	"info": {
+			"username": "lea_tong",
+			"password": "password",
+			"status": 2
+		}
+}
+```
+
+
 <a name="_e"></a>
 ## Details of the communication protocols in use
 ### Rules for communication
    - All message must go through MQTT.
    - The 3 online application must subscribe the same topic "PIMS" on MQTT.
-   - Each session connected must be a "round-trip". In other words, when 
-   sender sends a message via MQTT to receiver, it also expects to receive 
+   - Each session connected must be a "round-trip". In other words, when
+   sender sends a message via MQTT to receiver, it also expects to receive
    a receipt (in the form of a MQTT message, too) from the receiver whether the
    request is valid.
    - MQTT messages (in the form of JSON objects) must contain a "status" flag
    that indicates its origin and validation status. I.e. "status=2" means the
-   message is from web end to desktop end (acting as a server). 
-   Then in the receipt, "status=1" means the request is successfully verified 
+   message is from web end to desktop end (acting as a server).
+   Then in the receipt, "status=1" means the request is successfully verified
    by the server, whereas "status=0" means the request has failed.
 
 Since different parts of our system send information asynchronously, we
@@ -646,12 +699,12 @@ Send the query to broker so that the controller can receive this message to rech
 
 1. There are 10 types of data structure in total but not all of them need to
  be stored on local hard disk.
-2. Only 4 data types, "parking", "web_register", "web_vehicle_register" and 
+2. Only 4 data types, "parking", "web_register", "web_vehicle_register" and
 "web_finance" are stored on local hard disk. Others can be extracted or
  derived from these 4 data types.
-3. For these 4 data types, the files are named as "datatype+userId.json" or 
+3. For these 4 data types, the files are named as "datatype+userId.json" or
 "datatype+vehicleId.json". Each of them is relatively independent.
-4. Every time we create a new file or update an existing file, we need to 
+4. Every time we create a new file or update an existing file, we need to
 refresh database file system to make data persistent.
 
 
@@ -665,4 +718,3 @@ HTML5, CSS3 and JavaScript are the main technologies that we use in the web appl
 * [jQuery](https://jquery.com/) - *Simplify HTML DOM tree traversal and manipulation, as well as event handling, CSS animation.* We use this to manipulate DOM elements and get the element's width and height dynamicaly for rendering Echarts.
 
 * [Paho JavaScript Client](https://www.eclipse.org/paho/clients/js/) - *MQTT browser-based client library written in Javascript that uses WebSockets to connect to an MQTT Broker.* Establish connection with broker by this library.
-
