@@ -10,19 +10,24 @@
 
 <a name="_advert"></a>
 
-<p>
-    <i><center>Are you tired of queuing at the payment machine in the parking lot?</center></i>
-    <i><center>Are you annoyed some payment machines only take cash?</center></i>
-    <i><center>Are you frustrated that you left the ticket in the car and have to walk all that distance twice?</center></i>
-    <i><center>Are you annoyed someone exiting the parking lot lost their ticket so the lane is clogged?</center></i>
-    <i><center>Do you sometimes go on the kerb accidentally just because you want to stop closer to the barrier ticket machine?</center></i>
-    <i><center>Are you unhappy that the automatic number-plate recognition doesn't always work?</center></i>
-    <i><center>Do you have too many parking membership cards for different parking lots?</center></i>
-    <i><center>Have you ever actually found or received a refund on a lost parking membership card?</center></i>
-    <i><center><strong>PIMS, solves it all!</strong></center></i>
+<p align="center">
+    <i>Are you tired of queuing at the payment machine in the parking lot?</i><br>
+    <i>Are you annoyed some payment machines only take cash?</i><br>
+    <i>Are you frustrated that you left the ticket in the car and have to walk all that distance twice?</i><br>
+    <i>Are you annoyed someone exiting the parking lot lost their ticket so the lane is clogged?</i><br>
+    <i>Do you sometimes go on the kerb accidentally just because you want to stop closer to the barrier ticket machine?</i><br>
+    <i>Are you unhappy that the automatic number-plate recognition doesn't always work?</i><br>
+    <i>Do you have too many parking membership cards for different parking lots?</i><br>
+    <i>Have you ever actually found or received a refund on a lost parking membership card?</i><br>
+    <i><strong>PIMS, solves it all!</strong></i>
 </p>
 
-<center><a href="#_intro">Introduction</a>|<a href="#_stakeholders">Stakeholders</a>|<a href="#_portfolio">Product report</a>|<a href="#_video">Pitch video</a></center>
+<p align="center">
+    <a href="#_intro">Introduction</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="#_stakeholders">Stakeholders</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="#_portfolio">Product report</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="#_video">Pitch video</a>
+</p>
 
 <a name="_intro"></a>
 
