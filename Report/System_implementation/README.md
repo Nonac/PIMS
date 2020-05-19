@@ -46,14 +46,13 @@ communication rules with web side as well as the hardware, before determining
 ### Sprint 1: Initial design
 ___Objectives___
 
-1. Initial sketch of desktop app UI
-2. A rough JSON data structure satisfying all the requirements
-3. Simple web pages for running JavaScript  implemented with HTML and CSS
+* Initial sketch of desktop app UI
+* A rough JSON data structure satisfying all the requirements
+* Simple web pages for running JavaScript  implemented with HTML and CSS
 
-#### Approach & Implementation
-##### Desktop front end
+#### Desktop front end
 We completed the preliminary design of the entire system prototype between February 24 and February 28. We determined the way MQTT communicated with each component and determined the default form of the data structure within the entire system. Of course, this data form is quite different from the final data structure used, but this prototype has formalized our engineering direction. Based on determining the system prototype and data structure, we completed the front-end UI sketch design for the desktop app between February 28 and March 5.
-##### Desktop back end
+#### Desktop back end
 The first part is to design the Json file format according to the needs of the product. Three Json structures with data type "m5_transmit", "m5_receive", and "parking" are designed to receive data, send data, and store parking records.Because the json format is actually the most important part, we must first determine the system requirements with the M5Stack part, and then unify the format
 ```
 {
@@ -91,7 +90,7 @@ The first part is to design the Json file format according to the needs of the p
 }
 ```
 
-##### Web
+#### Web
 In this sprint the web developer designed the initial version of the data structure used for communication with controller, where 5 necessary data types are included. And we implemented the logics for login and register page.
 
 `web_finance`, `web_recharge`, `web_login`, and `web_register` have the 
@@ -166,8 +165,8 @@ ___Objectives___
 * Server requests for access and information about users are logically processed and used to modify and save information about new users and required to achieve dynamic refresh.
 * Server receives messages from M5Stack.
 * Server provides all the data needed to be captured, thus making a back-end API for the software.
-#### Approach & Implementation
-##### Web
+
+#### Web
 In this sprint we finally confirmed all data structure for web-controller communication, established the MQTT connection, and did module test for web front side.
 
 For data schema, The changes in [data structure](../../data_structure.json) are quite significant.
@@ -179,22 +178,41 @@ Since all of message are transmitted at one topic "PIMS", so each side needs a m
 In addition, we added a data type `web_vehicle_history` for fetching the parking history and split the type `web_vehicle` into `web_vehicle_query` and `web_vehicle_register` to fetch vehicle list of the user and to register a new vehicle for the user.
 
 The module test was carried out to see whether functions dealing with coming data can perform properly and correctly. The approach was by publishing messages in broker and observing the response on web pages. By the end of this sprint, we had tested for each data type and confirmed that can work in the stand-alone system of web application.
-##### Desktop back end
+#### Desktop back end
 We transmit messages through the MQTT protocol. Both the M5Stack part and the DeskTop part subscribe to the "PIMS" topic. The goal we need to accomplish is to receive the Json data from the M5Stack that stores the Bluetooth address and signal strength, and give feedback based on different data. First determine whether there is a registered car in Json. If there is, get the current car status from the database. Second, determine whether the car is inside or outside the parking lot. If the pole can be opened outside the parking lot, the pole can be opened inside the parking lot.According to the result of the second step, send a message to open or close the rod to M5Stack. After opening the lever, the system pauses for five seconds and then closes the pole.At the same time, the parking information of this car is generated or updated.
 
 ### Sprint 3: Development on front-end and further development on back-end 
 ___Objectives___
 * The style sheets and dynamic rendering of front-end web pages
-* Completed the functionality for in server controller side.
-* Decided which data types need  to be stored in database and which do not.
+* Complete the functionality for in server controller side, including updating
+customers' account balance.
+* Decide which data types need to be stored in database and which do not.
 * Electronic sketches for desktop app
 
-#### Approach and implementation
-##### Desktop app
+#### Web and desktop controller
+The controller logics for web was built in this sprint as the data structure for this part had already been confirmed. We also implemented the CSS style sheets for front-end web pages and tested the communication between web and the controller.
+
+Since the functionalities in web side are almost done, we 
+start controller's development. In this sprint, we finished all 
+functionalities in server's controller, except vehicle history query. 
+
+More specifically, the controller was now able to update the balance in customers'
+account. When the car enters the parking garage, record the time of entry. When the car leaves the parking garage, the time of departure needs to be recorded. According to the difference between the time of entering and leaving, the user's parking cost is calculated, and the account balance is obtained from the database and updated.
+
+
+And meanwhile we decided which of data objects need to be stored into 
+file system of database. 
+
+*Evaluation and testing*:
+
+All functionalities developed so far work correctly when connecting web with desktop.
+
+
+#### Desktop app
 
 Since the previous design was only a paper operation, the first step we should complete the paper design to electronic prototyping excess. The difficulty with this step is that some of the components conceived initially on paper are inherently tricky to electronic. In addition to this, the electronic design script adds a colour element that allows the use of the desktop app to be perceived through colour changes.
 
-###### Layout simple elements to the desktop UI
+##### Layout simple elements to the desktop UI
 
 It is extremely dangerous to fully develop the front-end UI directly before the desktop app back-end is developed. So we take the approach of first developing the UI part of the desktop app that does not involve the underlying logic API.
 
@@ -212,13 +230,62 @@ When the desktop app backend API was almost done, we started developing the disp
 * Third, we completed the presentation of the data visualization components. Taking advantage of the PROCESSING data visualization, we effectively represented the ratio of the number of vehicles present to the total number of parking spaces and the real-time revenue from the parking lot. Due to the limited time available for the presentation of this project, we have set the time limit for the refresh mechanism at 100 seconds after group discussion.
 * Finally, we have finished manually controlling the M5Stack button in the desktop app, which is done by calling the function in event. Control of the barrier is completed by packaging the JSON data to be sent.
 
-#### Sprint 4: Test in conjunction with the rest of the system and fix bugs in the desktop app
+#### Sprint 4: Review, modify and finalise
+*Objectives*
 
+* System tests in 3 stages
+* Functionality of querying parking history in the controller
 We conducted a total of three tests, a single-part effect demonstration, a joint test with the web end and a joint test with M5Stack. The performance and reliability of the system are refined with each test. Compared to the first bug-filled test, the third test was perfect, working smoothly with the other two sets of parts through the MQTT.
+* Server receives messages sent from M5Stack and debug the program.
 
-#### Development and Review
+##### Web
+In this sprint we carried out the system tests for 3 stages and fixed bugs. We did found a significant bug that could cause the system cashing in this sprint: while all three parts of our software running, the web page crashes because different types of data was wrongly accepted by web JavaScript logics in `client.onMessageArrived` in [account.js](../../web_application/user_account.js)
 
-When we have done all the testing, we branch out to integrate, release and reflect on the project. We finished building the desktop widget, which taught us a lot, including the use of development tools. However, what we learned was more about how to collaborate in teams to enable software development.
+```javascript
+    if (respondObj.info.username === username && respondObj.info.status === 1) {
+        let message_type = respondObj.data_type;
+        switch (message_type) {
+            case 'web_finance': renderUserBalance(respondObj); break;
+            case 'web_recharge': renderRecharge(respondObj); break;
+            case 'web_vehicle_query': renderVehicleList(respondObj); break;
+            case 'web_vehicle_register': renderVehicleRegister(); break;
+            case 'web_vehicle_history': renderChart(respondObj); break;
+            default: return;
+        ...
+```
+
+In the code above we did not filter the data type at the entrance of the function, which will allow other data type entering the branch logics causing an access to the field of undefined (respondObj.info is undefined)
+
+We changed the code to prevent other types entering this logic:
+
+```javascript
+    if (respondObj.data_type.startsWith('web')) {
+        if (respondObj.info.username === username && respondObj.info.status === 1) {
+            let message_type = respondObj.data_type;
+            switch (message_type) {
+                case 'web_finance': renderUserBalance(respondObj); break;
+                case 'web_recharge': renderRecharge(respondObj); break;
+                case 'web_vehicle_query': renderVehicleList(respondObj); break;
+                case 'web_vehicle_register': renderVehicleRegister(); break;
+                case 'web_vehicle_history': renderChart(respondObj); break;
+                default: return;
+            }
+        }
+        ...
+```
+
+
+
+Controller:
+
+query vehicle parking history is the most complicated parts for controller development since controller need to traverse database to find the corresponding "parking" history and add the parking fee to corresponding day. After that, controller will return this message and web will plot the result  to a  table.
+
+*test communication*:
+
+This  functionality works correctly when connecting web with desktop.
+##### Desktop app
+In this sprint we finalised the charts and plots on desktop UI to make sure
+they are both easy to read and funtioning smoothly.
 
 <a name="_b"></a>
 

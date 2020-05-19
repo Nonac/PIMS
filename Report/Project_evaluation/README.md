@@ -92,7 +92,9 @@ master whenever our codes were sophiscated enough to be a release version.
 That group member was also mainly in charge of creating issues and allocating
 specific tasks on group members. Then the issues got closed when they were solved.
 
- 
+### 大爷写的 
+When we have done all the testing, we branch out to integrate, release and reflect on the project. We finished building the desktop widget, which taught us a lot, including the use of development tools. However, what we learned was more about how to collaborate in teams to enable software development.
+
 
 <a name="_coronavirus"></a>
 
