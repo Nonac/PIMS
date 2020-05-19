@@ -17,7 +17,7 @@ Sprint No.| Brief Description| Implementation
 Each M5Stack came with an integrated dual-mode Bluetooth, with which we could develop our BT detector. <br><br>
 We incorporated the ["BLEDevice"](https://github.com/nkolban/ESP32_BLE_Arduino) library to control the BT module on M5Stack since this library was included in the Arduino IDE and was easy to use: <br>
 ``` c++
-#include "BLEDevice.h"
+#include <BLEDevice.h>
 ``` 
 
 <br>Then, the singleton class "BLEDevice" was initialised with a name for the device, and the BLEScan object was acquired. 
@@ -261,7 +261,7 @@ NOTE: Do not forget to change the MQTT_MAX_PACKET_SIZE to something like 1024 or
 <br><br><br>
 <a name = "2aIoTSprint3"> </a>
 ## Barrier Simulator
-Now that our barrier could collect ambient data and communicate with our server via MQTT, the core (or the processing) part of it was almost complete. However, it would have to reconsider its barrier life if it cannot behave barrierly such as do some lifting. <br>
+Now that our barrier could collect ambient data and communicate with our server via MQTT, the core (or the processing) part of it was almost complete. However, it would have to reconsider its barrier life if it cannot do what ordinary barriers can such as lifting or descending its bar. <br>
 We were at the prototyping phase of this project, <del> so having access to a real barrier was unimaginable! </del> so using a real barrier was unnecessary. <br>
 Instead, we wrote a simulator that displayed the status of a real barrier (open/closed) on the screen of the M5Stack and made the buttons on the M5Stack the manual controllers of a real barrier. <br>
 In fact, if we could get the barrier work in simulation, it should be quite easy to adapt the program to a real barrier using the analog input/output pins on the M5Stack.
@@ -301,14 +301,104 @@ bool BarrierSimulator::checkBarrierId(unsigned long idToCompare) const{
 <br><br><br>
 <a name = "2aIoTSprint4"> </a>
 ## Message Packer/Unpacker
-
+Human need languages to communicate with each other. Same for machines. A machine can only understand data in formats that it could interpret.<br>
+[We had chosen JSON to be the data format of communication in our system](/Report/System_design/README.md#_e), so our barriers should have the ability to construct and parse JSON strings.
 
 
 <br><br>
 <a name = "2aIoTSprint4Imp"> </a>
 ### :white_circle:Implementation
+[ArduinoJson](https://arduinojson.org/) is an powerful, well-documented, open source JSON library for embeded c++. <br>
+We used it for both constructing and parsing JSON strings.<br>
+To use the library:
+```c++
+#include <ArduinoJson.h>
+```
+<br> __Build Outgoing JSON String__<br>
+This library allows two ways of initialising a JSON document (either a JSON object or a JSON array): static allocation and dynamic allocation.<br>
+In our case, the outgoing JSON objects of an M5Stack had the following format:
+```JSON
+{
+    "data_type": "m5_transmit",
+    "barrier_info":{
+        "barrier_id": 12345,
+        "barrier_type": "in"
+    },
+    "bluetooth_devices":
+        [{
+            "bluetooth_address": "47:a9:af:d2:63:cd",
+            "RSSI": -80
+        }]
+}
+```
+<br> where "bluetooth_devices" was an array with an unfixed size. Moreover, if there were a large number of advertising BT devices near the barrier, the whole JSON object could be very large. Therefore, we allocated this type of JSON objects on the heap:
+```c++
+  const int jsonCapacity =  JSON_OBJECT_SIZE(3)   // root
+                          + JSON_OBJECT_SIZE(2)   // barrier_info
+                          + JSON_ARRAY_SIZE(deviceCount) + (deviceCount) * JSON_OBJECT_SIZE(2) // bluetooth_decives
+                          + deviceCount * 41      // duplication of strings of keys
+                          + 81;                  // fixed string duplication
+  DynamicJsonDocument jDoc(jsonCapacity);
+```
+<br><a name = "2aIoT_forceCopy"> </a> The capacity for the JSON document was calculated with [ArduinoJson Assistent](https://arduinojson.org/v6/assistant/). <br>
+It is worth noticing that the "ArduinoJson Assistent" assumes that all strings are copied to the JSON document. Acutally, [a string is copied only when it is of one of the following types: ](https://arduinojson.org/v6/api/jsonobject/subscript/#remarks)
+```c++
+char*
+String (or std::string)
+const __FlashStringHelper* (i.e. Flash string)
+```
+<br> So, the "ArduinoJson Assistent" computes the maximum rather than the real size of a JSON document. <br>
+However, we just took the result from the Arduino Assistent directly because we had not reached the phase of optimisation. Had we preferred performance and resource utilisation over readibility and simplicity, we would have made the keys in the JSON objects much shorter. <br>
 
+<br> A newly created JSON document was then populated with the BT scan result from the last scan, the information of the barrier, and other necessary information to complete a JSON object of type "m5_transmit": 
+```c++
+// build outgoing JsonDocument from BLEScanResults
+// deviceCount : got from results.getCount().
+void buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int deviceCount){
+  jDoc["data_type"] = "m5_transmit";
+  
+  JsonObject barrierInfo = jDoc.createNestedObject("barrier_info");
+  barrierInfo["barrier_id"] = pCurrentBarrier->getBarrierId();
+  barrierInfo["barrier_type"] = pCurrentBarrier->getBarrierType();
+  
+  JsonArray bthDevices = jDoc.createNestedArray("bluetooth_devices");
+  for(int i=0; i<deviceCount; i++){
+    BLEAdvertisedDevice BLEad = results.getDevice(i);
+
+    JsonObject bthDeviceInfo = bthDevices.createNestedObject();
+    if(bthDeviceInfo == NULL){
+      PRINTLN_WHEN_DEBUG("allocation of a JsonObject failed.");
+      return;
+    }
+    bthDeviceInfo["bluetooth_address"] = (char *)BLEad.getAddress().toString().c_str();
+    bthDeviceInfo["RSSI"] = BLEad.getRSSI(); // returns a int
+  }
+}
+```
+<br>The assignments of the key value paris were pretty straightfoward.
+
+Basically, use:
+```c++
+JsonDocument::createNestedArray();
+JsonDocument::createNestedObject();
+```
+to create nested array and objects,<br>
+and use :
+```c++
+JsonDocument::operator[]
+```
+to assign value to a key.
+
+Some explanation about the line:
+```c++
+bthDeviceInfo["bluetooth_address"] = (char *)BLEad.getAddress().toString().c_str();
+```
+<br> The BLEad.getAddress().toString() returned a std::string, which was then converted to const char * and then cast to char*. <br>
+The final cast to char* [forced a copy of the string to be stored in the JsonObject bthDeviceInfo](#2aIoT_forceCopy). The std::string type could also force the JsonObject to take a copy, so why converted to c_str() ? Well, acutally, the BLEAddress::toString method returned a std::__cxx11::basic_string<char>, which was differnt from std::string and the JsonObject::operator[] had no overloaded method that mathched that signature.
 <br><br><br>
+
+<br> __Parse Incoming JSON String__<br>
+ 
 <a name = "2aIoTSprint5"> </a>
 ## Keys
 
