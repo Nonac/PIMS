@@ -14,7 +14,8 @@
 
 *Are you tired of queuing at the payment machine in the parking lot?*\
 *Are you annoyed some payment machines only take cash?*\
-*Are you annoyed someone exiting the parking lot and lost their ticket so the lane is clogged?*\
+*Are you frustrated that you left the ticket in the car and have to walk all that distance twice?*\
+*Are you annoyed someone exiting the parking lot lost their ticket so the lane is clogged?*\
 *Do you sometimes go on the curb accidentally just because you want to stop closer to the barrier ticket machine?*\
 *Are you unhappy that the automatic number-plate recognition doesn't always work?*\
 *Do you have too many parking membership cards for different parking lots?*\
