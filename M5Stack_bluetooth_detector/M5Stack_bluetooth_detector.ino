@@ -224,11 +224,10 @@ void handleScanResult(BLEScanResults results){
                           + 81;                  // fixed string duplication
   DynamicJsonDocument jDoc(jsonCapacity);
   
-  char **addresses = buildOutgoingJDoc(jDoc, results, deviceCount);
+  buildOutgoingJDoc(jDoc, results, deviceCount);
   if(g_isResultValid){
     printJDocToSerial(jDoc); 
-  }
-  deleteAddresses(addresses, deviceCount);
+  } 
 }
 
 // build outgoing JsonDocument from BLEScanResults
@@ -236,7 +235,7 @@ void handleScanResult(BLEScanResults results){
 // returns: pointer to char[deviceCount][?], 
 //          which stores address strings 
 // NOTE: call deleteAddresses() on this pointer with deviceCount to free memory
-char **buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int deviceCount){
+void buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int deviceCount){
   jDoc["data_type"] = "m5_transmit";
   
   JsonObject barrierInfo = jDoc.createNestedObject("barrier_info");
@@ -244,34 +243,17 @@ char **buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int device
   barrierInfo["barrier_type"] = pCurrentBarrier->getBarrierType();
   
   JsonArray bthDevices = jDoc.createNestedArray("bluetooth_devices");
-  // Stores references to dynamically allocated c-style strings in the following loop
-  // so we can delete them later.
-  // (There is a scope issue if we don't do it like this.)
-  char **addresses {new char*[deviceCount] {}}; 
+
   for(int i=0; i<deviceCount; i++){
     BLEAdvertisedDevice BLEad = results.getDevice(i);
-    std::string addressStr = BLEad.getAddress().toString();
-    char *addressArr {new char[addressStr.size() + 1] {}};
-    addressStr.copy(addressArr, addressStr.size() + 1);
-    addresses[i] = addressArr;
 
     JsonObject bthDeviceInfo = bthDevices.createNestedObject();
     if(bthDeviceInfo == NULL){
       PRINTLN_WHEN_DEBUG("allocation of a JsonObject failed.");
     }
-    bthDeviceInfo["bluetooth_address"] = addressArr;
+    bthDeviceInfo["bluetooth_address"] = (char *)BLEad.getAddress().toString().c_str();
     bthDeviceInfo["RSSI"] = BLEad.getRSSI(); // returns a int
   }
-  return addresses;
-}
-
-// called on the pointer returned by buildOutgoingJDoc() 
-// when the jDoc outlived its usefulness
-void deleteAddresses(char **addresses, int deviceCount){
-  for(int i=0; i<deviceCount; i++){
-    delete[] addresses[i];
-  }
-  delete[] addresses;
 }
 
 // serialise JsonDocument and print it to serial
