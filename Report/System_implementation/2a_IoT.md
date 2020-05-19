@@ -73,7 +73,7 @@ A. The duration for each scan to last could be configured to any value. The shor
 <a name = "2aIoTSprint2Imp"> </a>
 ### :white_circle:Implementation
 Each M5Stack had an integrated 802.11 b/g/n HT40 Wi-Fi transceiver, with which it could surf the Internet when it felt bored.<br>
-However, the actual device that enjoyed the luxry of surfing the Internet in one of our barriers was an Arduino MKR WiFi 1010 board. The reason was that the program storage space on an M5Stack was roughly 1.3 MB, which was less than enough for our entire program. At some point in our development period, we found it impossible to cram more functionalities into an M5Stack without rewriting some libraries. So we adopted an easier approach (probably)---- spliting tasks of an M5Stack into two parts run by two devices. The functionalities that got separated from M5Stack were WiFi connection and MQTT publication/subscription. Nevertheless, we kept this part of code compatible with M5Stacks so when we overstocked M5Stacks <del>(That's never gonna happen)</del> we could construct a barrier with two M5Stacks. <br><br>
+However, the actual device that enjoyed the luxry of surfing the Internet in one of our barriers was an Arduino MKR WiFi 1010 board. The reason was that the program storage space on an M5Stack was roughly 1.3 MB, which was less than enough for our entire program. At some point in our development period, we found it impossible to cram more functionalities into an M5Stack without rewriting some libraries. So we adopted an easier approach ---- spliting tasks of an M5Stack into two parts run by two devices. The functionalities that got separated from M5Stack were WiFi connection and MQTT publication/subscription. Nevertheless, we kept this part of code compatible with M5Stacks so when we overstocked M5Stacks <del>(That's never gonna happen)</del> we could construct a barrier with two M5Stacks. <br><br>
 
 We used the WiFi library readily available in Arduino IDE, which was:
 ```c++
@@ -256,3 +256,21 @@ Then, connect the two M5Stacks Serial to Serial. And you should be good to go.
 
 NOTE: Do not forget to change the MQTT_MAX_PACKET_SIZE to something like 1024 or larger for the PubSubClient external library since the default value would be too small.
 <br><br>
+
+[Go back to the sprint table](#2aIoTSprintTable) 
+
+<br><br><br>
+<a name = "2aIoTSprint3"> </a>
+## Barrier Simulator
+Now that our barrier could collect ambient data and communicate with our server via MQTT, the core (or the processing) part of it was almost complete. However, it would have to reconsider its barrier life if it cannot behave barrierly such as do some lifting. <br>
+We were at the prototyping phase of this project, <del> so having access to a real barrier was unimaginable! </del> so using a real barrier was unnecessary. <br>
+Instead, we wrote a simulator that displayed the status of a real barrier (open/closed) on the screen of the M5Stack and made the buttons on the M5Stack the manual controllers of a real barrier. <br>
+In fact, if we could get the barrier work in simulation, it should be quite easy to adapt the program to a real barrier using the analog input/output pins on the M5Stack.
+
+<br><br>
+<a name = "2aIoTSprint3Imp"> </a>
+### :white_circle:Implementation
+
+
+[Go back to the sprint table](#2aIoTSprintTable) 
+<br>__Under construction...__
