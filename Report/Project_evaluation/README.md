@@ -75,6 +75,10 @@ Zhen - smart programmer. He and Hongjie wrote the core server controller that al
 
 Lea - 谁来帮我写一下
 
+Outstanding front-end designer and team leader. Through her communication, every part of us is brought closer together. Excellent language and video editing skills made for an impressive team presentation.--from Yinan
+
+
+
 Now it's the end of the project. Looking back on the past 3 months, not only did we gain knowledge from the lectures, workshops, and online resources, but also from each other. We talked through our own codes to each other and offered suggestions on techniques to use. We discuss frequently and figured out together how to collaborate under this disturbing situation. We have earned precious experience of group collaboration.
 
 
