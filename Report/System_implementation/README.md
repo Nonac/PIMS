@@ -5,8 +5,8 @@ In this part, we will go into details about how we implemented the design to the
 ## Contents
 
 * [Implementation timelines](#_a1)
-  * [Software timelines](#_a1)
-  * [Hardware timelines](#_hardware)
+  * [Software timeline](#_a1)
+  * [Hardware timeline](#_hardware)
 
 <a name="_a1"></a>
 
@@ -30,7 +30,7 @@ For the hardware (M5Stack and M5Stick), the communication between them and other
 
 <a name="software"></a>
 
-### Software timelines
+### Software timeline
 
 <a name="sprint1"></a>
 
@@ -288,10 +288,10 @@ In this sprint we finalised the charts and plots on desktop UI to make sure they
 
 <a name="_hardware"></a>
 
-### Hardware timelines
+### Hardware timeline
 
-# IOT Devices
-<a name = "2aIoTST"> </a>
+<a name = "2aIoTST"> </a
+
 Sprint No.| Brief Description| Implementation
 ------------ | ------------- | -------------
 1 | [Bluetooth Detector](#2aIoTSprint1) | [See here](#2aIoTSprint1Imp) 
@@ -301,16 +301,16 @@ Sprint No.| Brief Description| Implementation
 5 | [Keys](#2aIoTSprint5) | [See here](#2aIoTSprint5Imp)
 
 <a name = "2aIoTSprint1"> </a>
-## Bluetooth Detector
+#### Sprint 1: Bluetooth Detector
  The first thing any of our barriers needs to do is to is scanning all the Bluetooth (BT) devices in its vicinity regularly and obtaining useful information from them. This enables the barriers to record their ambient changes, which permits our system to recognise the surroundings of each barrier and thus facilitates decision making for the barriers by our server. 
 <a name = "2aIoTSprint1Imp"> </a>
-### :white_circle:Implementation
+##### :white_circle:Implementation
 (__NOTE__: _code in this section is for explanation only, so it may not match that in our source code exactly._) <br><br>
 Each M5Stack came with an integrated dual-mode Bluetooth, with which we could develop our BT detector. <br><br>
 We incorporated the ["BLEDevice"](https://github.com/nkolban/ESP32_BLE_Arduino) library to control the BT module on M5Stack since this library was included in the Arduino IDE and was easy to use: <br>
 ``` c++
 #include <BLEDevice.h>
-``` 
+```
 
 <br>Then, the singleton class "BLEDevice" was initialised with a name for the device, and the BLEScan object was acquired. 
 ```c++
@@ -350,19 +350,19 @@ std::string btAddress = BLEad.getAddress().toString(); // get the BT address
 int rssi = BLEad.getRSSI(); // get the RSSI
 ```
 <br>So far, we had obtained all the information we needed from the environment.<br>
-### :white_medium_square:Some questions you may ask...
+##### :white_medium_square:Some questions you may ask...
 *Q. Why did you set the BLE scan duration to 5 seconds, not 20s or 2s ?* <br>
 A. The duration for each scan to last could be configured to any value. The shorter the duration, the quicker the barriers detect ambient changes, and therefore the more responsive our system will be, which means better user experience. However, shorter refresh cycles put more burden on our system. Since we were using MQTT for communication and moreover a single topic for all devices, it was not sensible to make the barriers publishing messages too quickly because every message on the topic would be picked up by the barriers including those sent by themselves, which would exhaust the limited processing power of them. Therefore, the scan duration was set to 5 seconds, which we thought was a reasonable value.
 <br><br>
 [Go back to the sprint table](#2aIoTST) 
 <br><br><br>
 <a name = "2aIoTSprint2"> </a>
-## MQTT Publisher/Listener
+#### Sprint 2: MQTT Publisher/Listener
  So far, our barriers could collect information from the environment, but they hadn't sent it to our server. Moreover, they must have some way to receive commands from our server, otherwise, they would be nothing more than pieces of iron bars.<br>
  We had chosen MQTT as our protocol for the communication between different parts of our system, but firstly, the barriers had to connect to the Internet!
- 
+
 <a name = "2aIoTSprint2Imp"> </a>
-### :white_circle:Implementation
+##### :white_circle:Implementation
 Each M5Stack had an integrated 802.11 b/g/n HT40 Wi-Fi transceiver, with which it could surf the Internet when it felt boring.<br>
 However, the actual device that enjoyed the luxury of surfing the Internet in one of our barriers was an Arduino MKR WiFi 1010 board.<br>
 <a name = "2aIoT_m5memory"></a>
@@ -537,7 +537,7 @@ void listenToSerial(void *pvParameters){
 ```
 <br> The BT Scan was performed in the main thread, so it would not block the Serial input handler anymore.
 <br><br>
-### :white_medium_square:Some questions you may ask...
+##### :white_medium_square:Some questions you may ask...
 *Q. Why did you choose the Arduino MKR WIFI 1010 board?* <br>
 A. It was easy to migrate a sketch that had been written for M5Stack to the Arduino platform, and vice versa. Any Arduino board with WIFI and Serial ports should do. Or you could use another M5Stack if you wish. But I would argue that an MKR WIFI 1010 board costs less energy and (more importantly) money than an M5Stack.
 <br><br>
@@ -554,7 +554,8 @@ NOTE: Do not forget to change the MQTT_MAX_PACKET_SIZE to something like 1024 or
 
 <br><br><br>
 <a name = "2aIoTSprint3"> </a>
-## Barrier Simulator
+
+#### Sprint 3: Barrier Simulator
 Now that our barrier could collect ambient data and communicate with our server via MQTT, the core (or the processing) part of it was almost complete. However, it would have to reconsider its barrier life if it cannot do what ordinary barriers can such as lifting or descending its bar. <br>
 We were at the prototyping phase of this project, <del> so having access to a real barrier was unimaginable! </del> so using a real barrier was unnecessary. <br>
 Instead, we wrote a simulator that displayed the status of a real barrier (open/closed) on the screen of the M5Stack and made the buttons on the M5Stack the manual controllers of a real barrier. <br>
@@ -562,7 +563,7 @@ In fact, if we could get the barrier work in simulation, it should be quite easy
 
 <br><br>
 <a name = "2aIoTSprint3Imp"> </a>
-### :white_circle:Implementation
+##### :white_circle:Implementation
 The barrier simulator class was declared here:
 [Barrier_simulator.h](/M5Stack_bluetooth_detector/Barrier_simulator.h)
 This class was originally written to be a singleton since each M5Stack was only in charge of one barrier.
@@ -594,14 +595,14 @@ bool BarrierSimulator::checkBarrierId(unsigned long idToCompare) const{
 
 <br><br><br>
 <a name = "2aIoTSprint4"> </a>
-## Message Packer/Unpacker
+#### Sprint 4: Message Packer/Unpacker
 Human need languages to communicate with each other. Same for machines. A machine can only understand data in formats that it could interpret.<br>
 [We had chosen JSON to be the data format of communication in our system](/Report/System_design/README.md#_e), so our barriers should have the ability to construct and parse JSON strings.
 
 
 <br><br>
 <a name = "2aIoTSprint4Imp"> </a>
-### :white_circle:Implementation
+##### :white_circle:Implementation
 [ArduinoJson](https://arduinojson.org/) is an powerful, well-documented, open source JSON library for embeded c++. <br>
 We used it for both constructing and parsing JSON strings.<br>
 To use the library:
@@ -689,7 +690,7 @@ bthDeviceInfo["bluetooth_address"] = (char *)BLEad.getAddress().toString().c_str
 ```
 <br> The BLEad.getAddress().toString() returned a std::string, which was then converted to const char * and then cast to char*. <br>
 The final cast to char* [forced a copy of the string to be stored in the JsonObject bthDeviceInfo](#2aIoT_forceCopy). The std::string type could also force the JsonObject to take a copy, so why converted to c_str() ? Well, acutally, the BLEAddress::toString method returned a std::__cxx11::basic_string<char>, which was differnt from std::string and the JsonObject::operator[] had no overloaded method that mathched that signature.
- 
+
 <br> After that, the JSON document was serialised, delimetered and printed to Serial:
 ```c++
 // serialise JsonDocument and print it to serial
@@ -784,9 +785,9 @@ const char* getOpCode(const JsonDocument& jDoc){
 }
 ```
 <br> We checked data_type, barrier_id and co_code in order. The op_code was returned if and only if all the checks passed. Then the opcode could be safely executed by the barrier.
- 
+
 <a name = "2aIoTSprint5"> </a>
-## Keys
+#### Sprint 5: Keys
 Now that the barriers are complete, it is time for developing keys for the users. Keys are identifications for registered users. When a user approaches one of our barriers with a valid key, the key should be detected by that barrier and our server should be aware of the presence of the key and its position to provide the auto lifting of the barrier <del> and the auto charging from the user's balance __( ideally from their bank account )__ </del> service for that user.<br>
 <a name = "2aIoT_keysPowerLevel"></a>
 Since we are using RSSI to recognise the relative distance from the key to the barrier, we should keep the power of the BT modules of our keys on the same level. This is why we have chosen to use a dedicated device (M5Stick-C) to be the key rather than mobile phones or BT speakers since the power of the BT modules of different M5Stick-Cs varies negligibly compared to different mobile phones. <br>
@@ -795,7 +796,8 @@ Actually, users could leave their keys on all the time without any compromise on
 
 <br><br>
 <a name = "2aIoTSprint5Imp"> </a>
-### :white_circle:Implementation
+
+##### :white_circle:Implementation
 Libraries used:
 ```c++
 #include <M5StickC.h> // enables display and button control
@@ -851,54 +853,6 @@ void switchBLEAdvertisingState(){
 
 ## Technique justification and design evaluation
 In this section, we will justify in details why we chose certain techniques and their pros and cons during evaluations.
-### IoT
-<table id = "2bIoTTb">
-
-  <tr>
-    <th>Technique</th>
-    <th>pros / Resons of choice</th>
-    <th>cons / Limitations</th>
-  </tr>
-  
-  <tr>
-    <td>Making M5Stack the controller of a barrier</td>
-    <td><ul>
-    <li> M5Stacks are great, versatile prototyping tools with various built-in functionalities such as BlueTooth, WiFi, and analog/digital input/output </li>
-    <li> The processor of an M5Stack is a 240 MHz dual-core Tensilica LX6 microcontroller, which is fast enough to perform our tasks. </li>
-    <li> An M5Stack has a 320x240 Colorful TFT LCD and 3 programmable buttons, which makes it ideal for simulating a real barrier.</li>
-    </ul></td>
-    <td><ul>
-    <li><a href = "/Report/System_implementation/README.md/#2aIoT_m5memory">The memory for storing programs on an M5Stack is limited, which means a large program may have to be split into parts run by multiple devices that communicate with each other.</a></li>
-    <li>The compilation time for an M5Stack is much longer than a normal Arduino board<del>, which is very unfriendly to newbie programmers like me who will never run out of bugs to fix.</del></li>
-    </ul></td>
-  </tr>
-  
-  <tr>
-    <td>Using M5Stick-Cs as keys</td>
-    <td><ul>
-    <li><a href = "/Report/System_implementation/README.md/#2aIoT_keysPowerLevel">Determining distance via RSSI is only valid when the BT modules of all the keys are on the same level. </a></li>
-    <li>Each M5Stick-C has a display and a button just resembling hardware bank tokens.</li>
-    <li>Its size is small enough to be a key.</li>
-    </ul></td>
-    <td><ul>
-    <li>Its battery may not sustain its power consumption for a very long time.</li>
-    <li>Its manufacturing cost may be too high for mass production.</li>
-    </ul></td>
-  </tr>
-  
-  <tr>
-  <td>Using BT address as identifications</td>
-  <td><ul>
-  <li>BT addresses are designed to be unique and are a bit harder to fabricate compared to other types of ids such as MAC addresses.</li>
-  <li>Generally, BlueTooth consumes less energy than WiFi. For IoT devices, Bluetooth Low Energy (BLE) could be utilised to save more energy.</li>
-  <li>BlueTooth is designed to facilitate data transfer between devices over short distances, which suits our situation pretty well: short-range communication between keys and barriers.</li>
-  </ul></td>
-  <td>
-  <li>There are existing technologies that consume even less energy such as Radio-frequency identification (RFID). If we do not add more security measures such as making the barriers paring the keys and ask for more authentication keys thereafter, our BLE approach may not outperform RFID except that it is easier for the developer to implement<del>, which will never be the concern for project managers.</del></li>
-  </td>
-  </tr>
-</table>
-
 ### Web
 **Bootstrap4 and jQuery**
 
@@ -1347,6 +1301,56 @@ The limitation of this design is that during testing, we need to ensure the acti
 This widget is the one that communicates directly with M5Stack, so the way he works is to call the underlying API event method to control the barrier by sending a specific data type to MQTT for M5Stack to receive.
 
 The criteria for evaluating the success of this component can be judged in this way. We open the desktop app and M5Stack at the same time, click on the button of this component on the desktop, and the screen of M5Stack shows the barrier state when the control is complete by command. If the transformation is successful, it is evaluated as successful. The way in which the button is used to implement the functionality of this component is very appropriate and meets the expectations of modern humans for manipulating electronic devices. This is the same design as our previous one.
+
+### IoT
+
+<table id = "2bIoTTb">
+
+
+  <tr>
+    <th>Technique</th>
+    <th>pros / Resons of choice</th>
+    <th>cons / Limitations</th>
+  </tr>
+
+  <tr>
+    <td>Making M5Stack the controller of a barrier</td>
+    <td><ul>
+    <li> M5Stacks are great, versatile prototyping tools with various built-in functionalities such as BlueTooth, WiFi, and analog/digital input/output </li>
+    <li> The processor of an M5Stack is a 240 MHz dual-core Tensilica LX6 microcontroller, which is fast enough to perform our tasks. </li>
+    <li> An M5Stack has a 320x240 Colorful TFT LCD and 3 programmable buttons, which makes it ideal for simulating a real barrier.</li>
+    </ul></td>
+    <td><ul>
+    <li><a href = "/Report/System_implementation/README.md/#2aIoT_m5memory">The memory for storing programs on an M5Stack is limited, which means a large program may have to be split into parts run by multiple devices that communicate with each other.</a></li>
+    <li>The compilation time for an M5Stack is much longer than a normal Arduino board<del>, which is very unfriendly to newbie programmers like me who will never run out of bugs to fix.</del></li>
+    </ul></td>
+  </tr>
+
+  <tr>
+    <td>Using M5Stick-Cs as keys</td>
+    <td><ul>
+    <li><a href = "/Report/System_implementation/README.md/#2aIoT_keysPowerLevel">Determining distance via RSSI is only valid when the BT modules of all the keys are on the same level. </a></li>
+    <li>Each M5Stick-C has a display and a button just resembling hardware bank tokens.</li>
+    <li>Its size is small enough to be a key.</li>
+    </ul></td>
+    <td><ul>
+    <li>Its battery may not sustain its power consumption for a very long time.</li>
+    <li>Its manufacturing cost may be too high for mass production.</li>
+    </ul></td>
+  </tr>
+
+  <tr>
+  <td>Using BT address as identifications</td>
+  <td><ul>
+  <li>BT addresses are designed to be unique and are a bit harder to fabricate compared to other types of ids such as MAC addresses.</li>
+  <li>Generally, BlueTooth consumes less energy than WiFi. For IoT devices, Bluetooth Low Energy (BLE) could be utilised to save more energy.</li>
+  <li>BlueTooth is designed to facilitate data transfer between devices over short distances, which suits our situation pretty well: short-range communication between keys and barriers.</li>
+  </ul></td>
+  <td>
+  <li>There are existing technologies that consume even less energy such as Radio-frequency identification (RFID). If we do not add more security measures such as making the barriers paring the keys and ask for more authentication keys thereafter, our BLE approach may not outperform RFID except that it is easier for the developer to implement<del>, which will never be the concern for project managers.</del></li>
+  </td>
+  </tr>
+</table>
 
 <a name="_c"></a>
 
