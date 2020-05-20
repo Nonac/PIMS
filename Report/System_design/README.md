@@ -154,10 +154,10 @@ them on the local hard drive as JSON files.
 4. Subscribe and retrieve users' enter/exit request at the parking lot
    from MQTT (published by M5Stack).
 5. Parse the messages from MQTT, separate them into specific topics, namely the
-  entrance request and exit request, and store
-  them on the local hard drive as JSON files. Note that when the car enters
-  the parking lot, the type "in" JSON file is generated, but it will be replaced
-  by type "out" JSON file once the car leaves, for the "out" JSON file
+    entrance request and exit request, and store
+    them on the local hard drive as JSON files. Note that when the car enters
+    the parking lot, the type "in" JSON file is generated, but it will be replaced
+    by type "out" JSON file once the car leaves, for the "out" JSON file
    covers more abundant information (the time on exit).
 6. Send receipt to web app or M5Stack via MQTT after receiving their messages.
 7. After receiving the entrance request, the desktop app determines whether
@@ -167,14 +167,14 @@ slightly weaker signal strength until it find the registered car. According
  to the parking information of the car in the database to determine the
  current parking status of the car, so as to determine whether the barrier can
  be opened this time according to the comprehensive situation of the bar and
-  the car. If the car is already in the garage, even if the car's entrance
+    the car. If the car is already in the garage, even if the car's entrance
 signal is received, it will not repeatedly open the entry rod.
 8. The entrance and exit requests and the user's essemtial information are
 logically processed and used to modify and save the new user's information
 required to achieve a dynamic refresh. In this project, we need to use access
  times and user account balances for calculations so that the parking lot can
-  be profitable. And this underlying methodological logic should be
-  implemented along with the data stored.
+    be profitable. And this underlying methodological logic should be
+    implemented along with the data stored.
 9. Send control commands to the barrier. Into the desktop app display
 requirements above says that when using the remote barrier switch function,
 the post-desktop API should provide the interface to send data request
@@ -182,10 +182,10 @@ packets for the switching barrier to the barrier via MQTT. When the car enters
  or exits the parking lot, the desktop must send a message to the M5Stack to
  control the barrier's behaviour. After the barrier opens, a 5-second pause
  is required to give the car a time to pass the barrier, and a
-  message to close the barrier is sent after 5 seconds.
+    message to close the barrier is sent after 5 seconds.
 10. To provide all the data to be fetched and thus make a software back-end API.
  It is also the underlying arithmetic that the software should implement at
-  the desktop app runtime. Various interfaces are provided for other functions.
+    the desktop app runtime. Various interfaces are provided for other functions.
 
 #### Front end requirement
 In the regular usage of the desktop app, the parking lot manager sits in the central
@@ -196,14 +196,14 @@ So at the operational and display level, the desktop app should meet
 1. Real-time display of information on different vehicles passing through
 various barriers, with dynamic refreshing. This will be an essential feature
  of this software. As a management need, managers have the right and duty to
-  know exactly who is driving what car and at what time to enter or leave that
+    know exactly who is driving what car and at what time to enter or leave that
    parking lot. This record should be kept locally for managers to view in
     real-time.
 2. Real-time display of the vehicles remain in the parking lot, along with
  necessary information about those vehicles. This is the second function
  derived from the first one above. As a management system, it is, of course,
-  essential to have a thorough understanding of the details of the vehicles
-  to be checked in the management area. For example, check the entry time of
+    essential to have a thorough understanding of the details of the vehicles
+    to be checked in the management area. For example, check the entry time of
    a vehicle in the parking lot, and if the parking time is too long and the
    account balance is insufficient, then managers should be prepared to handle
     the vehicle when it is ready to leave the lot.
@@ -212,11 +212,11 @@ spaces in the form of a pie chart. This feature is designed on the fact that
  when the parking lot is busy during rush
  hour, there will be long lines of entering vehicles waiting to enter the lot.
  If the managers are alerted before the parking lot is about to be filled, there
-  will be plenty of time to clear the entrance without a large number of
-  vehicles clogging the parking lanes and causing potential traffic hazards.
+    will be plenty of time to clear the entrance without a large number of
+    vehicles clogging the parking lanes and causing potential traffic hazards.
 4. Real-time display of parking revenue. This feature is essential to
  the management system because parking lots operate based on
-  customary charges for parking, so it is necessary for managers to understand
+    customary charges for parking, so it is necessary for managers to understand
    how much they earn. This can be then checked against the revenue in the PIMS
    company bank account.
 5. The ability to manipulate the barrier. There are likely technical issues of broker
@@ -229,17 +229,9 @@ has to lift up or lower the barrier themselves.
 ### Desktop app
 ![desktopAppUML](desktopApp_UML.png)
 
-The basic object-oriented model for this project is shown in the figure. The
- DashboardView part of the picture is the view part of the MVM model. This
- section is dominated by the build program view section, so it is mainly for
-  the construction of the program's graphical interface, with buildUI
-  functions dominating. The Database section shows the Model section. The
-  GETS and RECEIVES functions are the main ones. where MessageType is the
-  important message storage abstract class that defines all data types.
-  Event is the main controller part. Mainly for the interaction of the
-  desktop app with the barrier and the interaction of the desktop app with
-  the web client. mqtt is also mainly applied in this part as a means of
-  communication.
+The basic object-oriented model for this project is shown in the figure. The DashboardView part of the picture is the view part of the MVC model. This section is dominated by the build program view section, so it is mainly for the construction of the program's graphical interface, with  UI build()  functions dominating. The Database section shows the Model section. The GETS and RECEIVES functions are the main ones. where MessageType is the important message storage abstract class that defines all data types. Event is the main controller part. Mainly for the interaction of the desktop app with the barrier and the interaction of the desktop app with the web client. MQTT is also mainly applied in this part as a means of communication.
+
+The overall architecture of the desktop side is designed in such a way that multiple people can work together on the same project using object-oriented design. The back-end engineer first builds the underlying model and data structure part as the overall framework, and the rest of the system can build the remaining components based on the framework. Because the back-end engineers need to dock both the web and M5Stack data processing needs, the two back-end engineers are working on the model and controller, respectively. As the data structure becomes more complex, the model part will be satisfied with more than simple GETS() and SET() methods, more logical calculations will be performed inside the model. And controllers are more concerned with receiving and sending data streams at MQTT, thus separating the model from the controller. So we have a relatively independent build view file in the architecture to handle the build() method of building images.
 
 ### Web app
 ![web](Web_Chart.png)
