@@ -43,8 +43,7 @@
         </ul>
     </td>
   </tr>
-  <tr>
-  </tr>
+
 </table>
 
 ### Web
