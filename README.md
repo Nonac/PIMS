@@ -4,7 +4,7 @@
 ![](https://img.shields.io/badge/language-C++-blue.svg)
 ![](https://img.shields.io/badge/language-Processing-blue.svg)
 ![](https://img.shields.io/badge/platform-M5Stack|PC|Web-lightgrey.svg)
-![](https://img.shields.io/cocoapods/l/Alamofire.svg?style=flat)
+![](https://img.shields.io/badge/license-MIT-000000.svg)
 ![Logo](Report/logo.png)
 ![Hi](Hi.png)
 
