@@ -38,7 +38,7 @@ enum M5State {DEBUG, BARRIER} m5State = DEBUG;
 // RECALCULATE if the format of json file changes.
 const int receivedJDocCapacity { 
                             JSON_OBJECT_SIZE(3) // root
-                          + 90 };     // string copy
+                          + 42 };     // string copy
 
 
 /* multi-tasking entries */
@@ -128,9 +128,6 @@ void handleJsonSerialInput(){
   // return if building fails
   if(buildIncomingJdoc(jDoc, inCStr) != 0) {return;}
 
-  // return if barrier id does not match that of this device
-  if(checkBarrierId(jDoc) != 0) {return;}
-
   const char* opCode = getOpCode(jDoc);
   if(opCode != NULL){
     handleOpCode(opCode);
@@ -163,7 +160,7 @@ const JsonDocument& getInputJsonDocFilter(){
   return filter;
 }
 
-// returns 0 if the id in json document mathes that of this device.
+// returns 0 if the id in json document matches that of this device.
 //         1 otherwise.
 int checkBarrierId(const JsonDocument& jDoc){
   JsonVariantConst value = jDoc["barrier_id"];
@@ -187,13 +184,17 @@ void handleJsonDeserializationErr(const DeserializationError& err){
 // returns: the operation code if found.
 //          NULL otherwise.
 const char* getOpCode(const JsonDocument& jDoc){
+  // checks data type
   JsonVariantConst value = jDoc["data_type"];
   if(value.isNull()){return NULL;}
-  
   String dataType = value.as<String>();
   if(!dataType.equals("m5_receive")){return NULL;}
   PRINTLN_WHEN_DEBUG(dataType.c_str());
-  
+
+  // check barrier id
+  if(checkBarrierId(jDoc) != 0) {return NULL;}
+
+  // get op code
   value = jDoc["op_code"];
   if(value.isNull()){return NULL;}
 
@@ -240,13 +241,13 @@ void buildOutgoingJDoc(JsonDocument& jDoc, BLEScanResults& results, int deviceCo
   barrierInfo["barrier_type"] = pCurrentBarrier->getBarrierType();
   
   JsonArray bthDevices = jDoc.createNestedArray("bluetooth_devices");
-
   for(int i=0; i<deviceCount; i++){
     BLEAdvertisedDevice BLEad = results.getDevice(i);
 
     JsonObject bthDeviceInfo = bthDevices.createNestedObject();
     if(bthDeviceInfo == NULL){
       PRINTLN_WHEN_DEBUG("allocation of a JsonObject failed.");
+      return;
     }
     bthDeviceInfo["bluetooth_address"] = (char *)BLEad.getAddress().toString().c_str();
     bthDeviceInfo["RSSI"] = BLEad.getRSSI(); // returns a int
