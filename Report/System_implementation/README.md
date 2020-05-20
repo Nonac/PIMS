@@ -364,7 +364,9 @@ A. The duration for each scan to last could be configured to any value. The shor
 <a name = "2aIoTSprint2Imp"> </a>
 ### :white_circle:Implementation
 Each M5Stack had an integrated 802.11 b/g/n HT40 Wi-Fi transceiver, with which it could surf the Internet when it felt boring.<br>
-However, the actual device that enjoyed the luxury of surfing the Internet in one of our barriers was an Arduino MKR WiFi 1010 board. The reason was that the program storage space on an M5Stack was roughly 1.3 MB, which was less than enough for our entire program. At some point in our development period, we found it impossible to cram more functionalities into an M5Stack without rewriting some libraries. So we adopted an easier approach ---- splitting tasks of an M5Stack into two parts run by two devices. The functionalities that got separated from M5Stack were WiFi connection and MQTT publication/subscription. Nevertheless, we kept this part of code compatible with M5Stacks so when we overstocked M5Stacks <del>(That's never gonna happen)</del> we could construct a barrier with two M5Stacks. <br><br>
+However, the actual device that enjoyed the luxury of surfing the Internet in one of our barriers was an Arduino MKR WiFi 1010 board.<br>
+<a name = "2aIoT_m5memory"></a>
+The reason was that the program storage space on an M5Stack was roughly 1.3 MB, which was less than enough for our entire program. At some point in our development period, we found it impossible to cram more functionalities into an M5Stack without rewriting some libraries. So we adopted an easier approach ---- splitting tasks of an M5Stack into two parts run by two devices. The functionalities that got separated from M5Stack were WiFi connection and MQTT publication/subscription. Nevertheless, we kept this part of code compatible with M5Stacks so when we overstocked M5Stacks <del>(That's never gonna happen)</del> we could construct a barrier with two M5Stacks. <br><br>
 
 We used the WiFi library readily available in Arduino IDE, which was:
 ```c++
@@ -786,6 +788,7 @@ const char* getOpCode(const JsonDocument& jDoc){
 <a name = "2aIoTSprint5"> </a>
 ## Keys
 Now that the barriers are complete, it is time for developing keys for the users. Keys are identifications for registered users. When a user approaches one of our barriers with a valid key, the key should be detected by that barrier and our server should be aware of the presence of the key and its position to provide the auto lifting of the barrier <del> and the auto charging from the user's balance __( ideally from their bank account )__ </del> service for that user.<br>
+<a name = "2aIoT_keysPowerLevel"></a>
 Since we are using RSSI to recognise the relative distance from the key to the barrier, we should keep the power of the BT modules of our keys on the same level. This is why we have chosen to use a dedicated device (M5Stick-C) to be the key rather than mobile phones or BT speakers since the power of the BT modules of different M5Stick-Cs varies negligibly compared to different mobile phones. <br>
 Currently, we have not introduced any security measure such as paring and asking for an authantication key, so the implementation is very simple: The button on the M5Stick-C is in charge of toggling the advertising state (ON/OFF) of its BT module. When the M5Stick-C is advertising, it is visible to our barriers. When its advertising state is switched off, it is not detectable. <br>
 Actually, users could leave their keys on all the time without any compromise on their experience since the RSSI provides enough information for our server to figure out which client should serve (the one that has the highest RSSI). The switching functionality was developed only for energy-saving purposes.
@@ -848,6 +851,54 @@ void switchBLEAdvertisingState(){
 
 ## Technique justification and design evaluation
 In this section, we will justify in details why we chose certain techniques and their pros and cons during evaluations.
+### IoT
+<table id = "2bIoTTb">
+
+  <tr>
+    <th>Technique</th>
+    <th>pros / Resons of choice</th>
+    <th>cons / Limitations</th>
+  </tr>
+  
+  <tr>
+    <td>Making M5Stack the controller of a barrier</td>
+    <td><ul>
+    <li> M5Stacks are great, versatile prototyping tools with various built-in functionalities such as BlueTooth, WiFi, and analog/digital input/output </li>
+    <li> The processor of an M5Stack is a 240 MHz dual-core Tensilica LX6 microcontroller, which is fast enough to perform our tasks. </li>
+    <li> An M5Stack has a 320x240 Colorful TFT LCD and 3 programmable buttons, which makes it ideal for simulating a real barrier.</li>
+    </ul></td>
+    <td><ul>
+    <li><a href = "/Report/System_implementation/README.md/#2aIoT_m5memory">The memory for storing programs on an M5Stack is limited, which means a large program may have to be split into parts run by multiple devices that communicate with each other.</a></li>
+    <li>The compilation time for an M5Stack is much longer than a normal Arduino board<del>, which is very unfriendly to newbie programmers like me who will never run out of bugs to fix.</del></li>
+    </ul></td>
+  </tr>
+  
+  <tr>
+    <td>Using M5Stick-Cs as keys</td>
+    <td><ul>
+    <li><a href = "/Report/System_implementation/README.md/#2aIoT_keysPowerLevel">Determining distance via RSSI is only valid when the BT modules of all the keys are on the same level. </a></li>
+    <li>Each M5Stick-C has a display and a button just resembling hardware bank tokens.</li>
+    <li>Its size is small enough to be a key.</li>
+    </ul></td>
+    <td><ul>
+    <li>Its battery may not sustain its power consumption for a very long time.</li>
+    <li>Its manufacturing cost may be too high for mass production.</li>
+    </ul></td>
+  </tr>
+  
+  <tr>
+  <td>Using BT address as identifications</td>
+  <td><ul>
+  <li>BT addresses are designed to be unique and are a bit harder to fabricate compared to other types of ids such as MAC addresses.</li>
+  <li>Generally, BlueTooth consumes less energy than WiFi. For IoT devices, Bluetooth Low Energy (BLE) could be utilised to save more energy.</li>
+  <li>BlueTooth is designed to facilitate data transfer between devices over short distances, which suits our situation pretty well: short-range communication between keys and barriers.</li>
+  </ul></td>
+  <td>
+  <li>There are existing technologies that consume even less energy such as Radio-frequency identification (RFID). If we do not add more security measures such as making the barriers paring the keys and ask for more authentication keys thereafter, our BLE approach may not outperform RFID except that it is easier for the developer to implement<del>, which will never be the concern for project managers.</del></li>
+  </td>
+  </tr>
+</table>
+
 ### Web
 **Bootstrap4 and jQuery**
 
