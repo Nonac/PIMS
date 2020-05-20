@@ -10,7 +10,43 @@
 
 ## Success of the project
 在这里写主要的成就和**学到了什么（这一点非常重要！不要怕重复前面的）**
-### Iot
+### IoT
+<table id = "3aIoTTb">
+  <tr>
+    <th>Achievement</th>
+    <th>What we have learnt from it</th>
+  </tr>
+  <tr>
+    <td>Established achievable goals.</td>
+    <td>Setting up reasonable objectives before fulfilling them will not only help you understand your tasks better but also saves your time.<br>
+      In our case, our task was to develop an IoT smart barrier. Instead of working with a real barrier, we chose to simulate it on the M5Stack. Had we purchased a real barrier, it could have cost us an iPhone 11 in 2020. Had we built a miniature barrier from small motors and plastic bars that could be found in the robotic kits that are popular among 5 years olds, our programmers could have spent twice the time they did to finish their jobs without making a real difference to our project<del>, during which time they were still getting paid</del>.<br>
+      Therefore, knowing how to utilise time and resources is of vital importance.
+    </td>
+  </tr>
+  <tr>
+  <td>Successfully made the IoT devices work</td>  
+    <td>Surprisingly, our programmers actually finished their jobs. <del>It's certainly worth every penny of the 50 pounds. </del>
+      Thanks to working for us, they have learnt:
+      <ul>
+        <li> How easy life is when exploiting existing libraries compared to reinventing the wheel.</li>
+        <li> How rules and format plays an important role if we want to make messages sent from one device to be understood by another </li>
+        <li> How important collaboration and coordination are to keep working on the right track. </li>
+        <li> And some insignificant things that no one cares about, such as:
+          <ul>
+            <li> How to program in embeded c++ and the Arduino IDE.</li>
+            <li> How BlueTooth works.</li>
+            <li> What Serial communication is and how to choose a resonable baud rate.</li>
+            <li> What JSON is and its serialisation/deserialisation.</li>
+            <li> What MQTT is and how it facilitates IoT development.</li>
+            </il>
+        </li>
+        </ul>
+    </td>
+  </tr>
+  <tr>
+  </tr>
+</table>
+
 ### Web
 ### Desktop
 * Front end
@@ -83,7 +119,7 @@ Hongjie - brilliant developer, just tell him what result we want and he will del
 
 Zhen - smart programmer. He and Hongjie wrote the core server controller that all other elements depend on.
 
-Lea - 谁来帮我写一下
+Lea - charismatic leader, who is seasoned to coordinate the work of the team. Without her, we are just a mass of sand.
 
 Outstanding front-end designer and team leader. Through her communication, every part of us is brought closer together. Excellent language and video editing skills made for an impressive team presentation.--from Yinan
 
