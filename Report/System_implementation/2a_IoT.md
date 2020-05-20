@@ -66,8 +66,8 @@ A. The duration for each scan to last could be configured to any value. The shor
 <br><br><br>
 <a name = "2aIoTSprint2"> </a>
 ## MQTT Publisher/Listener
- So far, our barriers had the ability to collect information from the environment, but they hadn't sent it to our server. Moreover, they must have some way to receive commands from our server, otherwise, they would be nothing more than pieces of iron bars.<br>
- We had chosen MQTT as our protocol for the communication between different parts in our system, but firstly, the barriers had to connect to the Internet!
+ So far, our barriers could collect information from the environment, but they hadn't sent it to our server. Moreover, they must have some way to receive commands from our server, otherwise, they would be nothing more than pieces of iron bars.<br>
+ We had chosen MQTT as our protocol for the communication between different parts of our system, but firstly, the barriers had to connect to the Internet!
  
 <a name = "2aIoTSprint2Imp"> </a>
 ### :white_circle:Implementation
@@ -108,7 +108,7 @@ void setupWifi(){
   Serial1.println("wifi connected.");
 }
 ```
-The above "setupWifi" function keeps trying to connect to the WiFi AP with the SSID and password defined. It requests to connect to the AP via calling WiFi.begin and checks the connection status every 500 mili-seconds for 10 times. If it is still not connected to the AP after (10 + 1) times, it makes a connection request again. <br>
+The above "setupWifi" function keeps trying to connect to the WiFi AP with the SSID and password defined. It requests to connect to the AP via calling WiFi.begin and checks the connection status every 500 milliseconds for 10 times. If it is still not connected to the AP after (10 + 1) times, it makes a connection request again. <br>
 In the future, we will add the functionality to set WiFi SSID and password via USB connection to computers since hard-coded SSDI and password are neither user-friendly nor secure.<br><br>
 
 After connected to WiFi, the barrier needed to connect to our chosen MQTT server and subscribe to our topic. <br>
@@ -283,14 +283,14 @@ BarrierSimulator * volatile pCurrentBarrier = &inBarrier;
 <br> The inBarrier and the outBarrier was assigned the id 12345 and 54321, respectively.
 <br> "pCurrentBarrier" pointed to the barrier that the M5Stack was simulating at that time. Toggling of the barriers was assigned to the BtnB on M5Stack. For the same reason as the Serial input handler, the hardware interrupt handler was running in another thread, different from that of the Serial input hander and the main thread. Therefore, the "pCurrentBarrier" should be qualified "volatile". Otherwise, it might have been cached in some functions, which would have caused some problems like failing barrier id checks or sending the wrong barrier information to our server.<br>
 
-To be consitent, remote control from our server and manual control via the buttons to the barriers were both achieved by sending an operation code to the barrier:
+To be consistent, remote control from our server and manual control via the buttons to the barriers were both achieved by sending an operation code to the barrier:
 ```c++
 void BarrierSimulator::handleOpCode(const char* opCode);
 ```
 <br> Only the first character of the opCode string was considered since hardly a barrier could perform 257 manoeuvres.<br>
 In fact, we only considered two operations, to open (lift) and to close (descend), which we thought was enough for demonstration: [Barrier_orders.h](/M5Stack_bluetooth_detector/Barrier_orders.h).
 
-Commands from our server to barriers were packed with barrier ids indicating the recipients of those commands. Only the barrier whose id matched that in a command message should execute that command. Hence id checks were performed before any opCode from our server were fed  to the BarrierSimulator::handleOpCode methods of the barriers. This could be achieved by calling the BarrierSimulator::checkBarrierId method on the barriers.
+Commands from our server to barriers were packed with barrier ids indicating the recipients of those commands. Only the barrier whose id matched that in a command message should execute that command. Hence id checks were performed before any opCode from our server were fed to the BarrierSimulator::handleOpCode methods of the barriers. This could be achieved by calling the BarrierSimulator::checkBarrierId method on the barriers.
 ```c++
 bool BarrierSimulator::checkBarrierId(unsigned long idToCompare) const{
 // returns true if and only if idToCompare equals the id of this barrier
@@ -411,9 +411,9 @@ void printJDocToSerial(const JsonDocument& jDoc){
 An M5Stack was only concerned with one type of incoming JSON string ---- "M5_receive":
 ```JSON
 {
-	"data_type": "m5_receive",
-	"barrier_id": 12345,
-	"op_code": "A"
+    "data_type": "m5_receive",
+    "barrier_id": 12345,
+    "op_code": "A"
 }
 ```
 This JSON object had a fixed size and was not very large, which meant it could be allocated on the stack to boost performance.
@@ -493,11 +493,60 @@ const char* getOpCode(const JsonDocument& jDoc){
  
 <a name = "2aIoTSprint5"> </a>
 ## Keys
-
+Now that the barriers are complete, it is time for developing keys for the users. Keys are identifications for registered users. When a user approaches one of our barriers with a valid key, the key should be detected by that barrier and our server should be aware of the presence of the key and its position to provide the auto lifting of the barrier <del> and the auto charging from the user's balance __( ideally from their bank account )__ </del> service for that user.<br>
+Since we are using RSSI to recognise the relative distance from the key to the barrier, we should keep the power of the BT modules of our keys on the same level. This is why we have chosen to use a dedicated device (M5Stick-C) to be the key rather than mobile phones or BT speakers since the power of the BT modules of different M5Stick-Cs varies negligibly compared to different mobile phones. <br>
+Currently, we have not introduced any security measure such as paring and asking for an authantication key, so the implementation is very simple: The button on the M5Stick-C is in charge of toggling the advertising state (ON/OFF) of its BT module. When the M5Stick-C is advertising, it is visible to our barriers. When its advertising state is switched off, it is not detectable. <br>
+Actually, users could leave their keys on all the time without any compromise on their experience since the RSSI provides enough information for our server to figure out which client should serve (the one that has the highest RSSI). The switching functionality was developed only for energy-saving purposes.
 
 <br><br>
 <a name = "2aIoTSprint5Imp"> </a>
 ### :white_circle:Implementation
+Libraries used:
+```c++
+#include <M5StickC.h> // enables display and button control
+#include "BLEDevice.h" // enables BT functionality
+```
+<br> BT init:
+```c++
+/* Global scope: */
+#define BLE_DEVICE_NAME "M5StickC"
+BLEAdvertising* pBLEAdvertising;
+```
+```c++
+/* In Arduino setup(): */
+BLEDevice::init(BLE_DEVICE_NAME);
+pBLEAdvertising = BLEDevice::getAdvertising();
+```
+<br> Button controlled toggling of the BLE advertising state was facilitated by:
+```c++
+/* Global scope: */
+enum M5BLEState {ON, OFF} m5BLEState { OFF }; // the advertising state
+
+void handleButtonInterrupt(){ // toggle the state via a button press
+  M5.update();
+  if(M5.BtnA.wasPressed()){
+    switchBLEAdvertisingState();
+  }
+}
+
+void switchBLEAdvertisingState(){
+  M5.Lcd.fillScreen(BLACK); // clears screen
+  M5.Lcd.setCursor(0, 0); // move the cursor back to origin
+  if(m5BLEState == OFF){ // if the advertising state is OFF 
+    pBLEAdvertising->start();
+    m5BLEState = ON;
+    M5.Lcd.println("ON"); // display the state to the screen
+  }else{ // if the advertising state is ON
+    pBLEAdvertising->stop();
+    m5BLEState = OFF;
+    M5.Lcd.println("OFF");
+  }
+}
+```
+<br> 
+
+
+
 
 [Go back to the sprint table](#2aIoTST) 
-<br>__Under construction...__
+<br><br>
