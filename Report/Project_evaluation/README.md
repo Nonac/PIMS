@@ -26,8 +26,18 @@ There are many features to be added in order for this product to launch for publ
 
 ### Short-term goals
 
-#### Iot
-比如车辆进入到stack蓝牙可以detect的区域时，stick屏幕提示“检测到杆”这样。如何让stack控制杆。Stick是不死要安装在车里的，丢了怎么补，数据怎么保护
+#### IoT
+* More secure identification
+
+When a barrier at the entrance of a car park (likewise for the one at the exit) sends the ambient BT information to our server with a registered key having the greatest RSSI and if the status for that key is not in the car park, our server should instruct the barrier to pair the key instead of lifting the bar directly. After pairing, the key sends an authentication key (determined when the key was manufactured and stored in our server) to the barrier. The barrier then relays the authentication key to our server. If the authentication key acquired matches that stored in our database, then the server will command the barrier to lift. Otherwise, the lifting operation is abandoned and the incident is recorded.
+
+* More compact messages to send
+
+Since only the nearest key to a barrier will be considered by our server, we could omit devices with RSSIs below a certain value. Experimental tests will be carried out to determine a sensible value.<br>
+Since the M5Stack has a TF card reader, we could also let each barrier store a blacklist for BT addresses that are not keys. The BT devices detected in a scan will first be filtered by the blacklist, only the information about our keys will be sent to our server.
+The blacklist in cleared and reconstructed every day to keep it concise and up-to-date. The blacklist will be built with the help of our server: if our server finds a device in the scan result sent from a barrier that is not a key, a command will be sent to that barrier including the BT address of this device. On receival of the command, the barrier will add the BT address to its blacklist.
+
+
 #### Web
 比如可以在网站上实时附近（支持这个系统的）停车场有多少空位。database可以转移到网上,这样可以保护data privacy， 因为目前所有的user data都不保密，manager全都可以看到。购买stick的页面。注销账户选项。
 #### Desktop
