@@ -1,59 +1,58 @@
 # System implementation
 
+In this part, we will go into details about how we implemented the design to the software and hardware.
+
 ## Contents
 
-<a name="_a"></a>
+* [Implementation timelines](#_a1)
+  * [Software timelines](#_a1)
+  * [Hardware timelines](#_hardware)
 
-## Breakdown of project into sprints
+<a name="_a1"></a>
 
-This project began in February 2020 and ended by the end of May. 
-We have set relatively reasonable work plans and sprint goals to. 
-We created the GitHub repository for this project on February 6 and 
-spent a few days after that to get the team familiar with the GitHub 
-platform by completing small practical tasks. We then allocated specific 
-time periods for the different 
-components and review the plan after each sprint.
+## Implementation timelines
+
+This project began in February 2020 and ended by the end of May. We have set relatively reasonable work plans and sprint goals to. We created the GitHub repository for this project on February 6 and spent a few days after that to get the team familiar with the GitHub platform by completing small practical tasks. We then allocated specific time periods for the different components and review the plan after each sprint.
 
 ![Gantt](Gantt.png)
 ### Things to note down first
-这一段需要重新看
+As we can see in the system design section, the desktop program not only acts as the main body of the desktop program but also a server for the web and barrier ends. So for the program development, back-end needs to be implemented simultaneously with the web app and M5Stack development. The process went relatively smoothly, as our development team was relatively well-staffed, and the back-end developers could meet the design requirements of docking in both directions simultaneously. Because the desktop app uses object-oriented programming ideas, it can be constructed separately from the development front-end. 
 
-
-As can be seen from the system design section, the desktop program not only
- acts as the main body of the desktop program but also a server
- for the web and barrier ends. So for the program development, back-end needs 
- to be implemented simultaneously with the web app and M5Stack development. The 
- process went relatively smoothly, as our development team was relatively 
- well-staffed, and the back-end developers could meet the design requirements
-  of docking in both directions simultaneously. Because the desktop app 
-  uses object-oriented programming ideas,
- it can be constructed separately from the development front-end. 
- 
-As the requirements were raised first, the data structure and the protocol 
-for web-controller communication is mainly designed by the web developer, 
-and the controller that deals with web requests is implemented according to
- the data structure. In other words, this part is directed by the data 
- structure that is designed based on the client requirements.
+As the requirements were raised first, the data structure and the protocol for web-controller communication is mainly designed by the web developer, and the controller that deals with web requests is implemented according to the data structure. In other words, this part is directed by the data structure that is designed based on the client requirements.
 
 As the data structure may change during the web development and it is absolutely important to use a confirmed and determined data structure to direct the controller's implementation, there is a chronological order in the development of this part of our software -- web development first and controller logics for web must be implemented after the web logics finished.
 
 For the web side (front-end), the process is logic-oriented. HTML pages and CSS styles are designed based on the built up JavaScript logics and communication protocol. 
 
-For the server controller,  it needs to negotiate data structure and 
-communication rules with web side as well as the hardware, before determining
- how to design its database. 
+For the server controller, it needs to negotiate data structure and communication rules with web side as well as the hardware, before determining how to design its database.
 
-### Sprint 1: Initial design
+For the hardware (M5Stack and M5Stick), the communication between them and other elements in the system is relatively simple - publishing Bluetooth addresses and receiving simple commands (open or close). Which means the hardware implementation is rather independent from the software's. It is the communication between M5Stack and M5Stick that is challenging and thus the main focus of the hardware part. Hence, we will introduce the sprints of hardware and software implementation separately.
+
+<a name="software"></a>
+
+### Software timelines
+
+<a name="sprint1"></a>
+
+#### Sprint 1: Initial design
+
 ___Objectives___
 
 * Initial sketch of desktop app UI
 * A rough JSON data structure satisfying all the requirements
 * Simple web pages for running JavaScript  implemented with HTML and CSS
 
-#### Desktop front end
+<a name="sprint1front"></a>
+
+##### Desktop front end
+
 We completed the preliminary design of the entire system prototype between February 24 and February 28. We determined the way MQTT communicated with each component and determined the default form of the data structure within the entire system. Of course, this data form is quite different from the final data structure used, but this prototype has formalized our engineering direction. Based on determining the system prototype and data structure, we completed the front-end UI sketch design for the desktop app between February 28 and March 5.
-#### Desktop back end
-The first part is to design the Json file format according to the needs of the product. Three Json structures with data type "m5_transmit", "m5_receive", and "parking" are designed to receive data, send data, and store parking records.Because the json format is actually the most important part, we must first determine the system requirements with the M5Stack part, and then unify the format
+
+<a name="sprint1back"></a>
+
+##### Desktop back end
+
+The first part is to design the JSON file format according to the needs of the product. Three Json structures with data type "m5_transmit", "m5_receive", and "parking" are designed to receive data, send data, and store parking records. Because the JSON format is actually the most important part, we must first determine the system requirements with the M5Stack part, and then unify the format
 ```
 {
     "data_type": "m5_transmit",
@@ -90,13 +89,13 @@ The first part is to design the Json file format according to the needs of the p
 }
 ```
 
-#### Web
+<a name="sprint1web"></a>
+
+##### Web
+
 In this sprint the web developer designed the initial version of the data structure used for communication with controller, where 5 necessary data types are included. And we implemented the logics for login and register page.
 
-`web_finance`, `web_recharge`, `web_login`, and `web_register` have the 
-same name as the final version, while `web_vehicle`was split into 2 parts 
-later. This first version was just for displayed because they are not well 
-organized and unified.
+`web_finance`, `web_recharge`, `web_login`, and `web_register` have the same name as the final version, while `web_vehicle`was split into 2 parts later. This first version was just for displayed because they are not well organized and unified.
 
 Initial version of the web data types
 
@@ -154,7 +153,9 @@ Initial version of the web data types
 
 In this sprint only the very simple HTML and CSS pages for login and registration were implemented, as the developer was not quite familiar with the Bootstrap and JavaScript yet.
 
-### Sprint 2: Initial back-end development   
+<a name="sprint2"></a>
+
+#### Sprint 2: Initial back-end development   
 ___Objectives___
 
 * Negotiate and confirm final data structure for web
@@ -166,22 +167,22 @@ ___Objectives___
 * Server receives messages from M5Stack.
 * Server provides all the data needed to be captured, thus making a back-end API for the software.
 
-#### Web
+##### Web
 In this sprint we finally confirmed all data structure for web-controller communication, established the MQTT connection, and did module test for web front side.
 
 For data schema, The changes in [data structure](../../data_structure.json) are quite significant.
 
 Since all of message are transmitted at one topic "PIMS", so each side needs a mechanism to grab package belongs to it. At beginning, we believe just using data type is enough to identify. However, when we test it , we find that if subscribing a topic , a sender will also receive the message sent from itself.  Since each request needs two message, one query message from sender and one confirmed message from receiver, and in communication between web and server, each request's two messages have same data type, both server side and web side grab the package that should not belong to them. So, we need another identifier, which is status to identify whether it should grab. we rule that status =2 must be the message from web to server, and status = 1 and status =0 must be message from server to web, where 1 means query succeeds and 0 means query fails.  Such mechanism successfully solved above problem.
 
-
-
 In addition, we added a data type `web_vehicle_history` for fetching the parking history and split the type `web_vehicle` into `web_vehicle_query` and `web_vehicle_register` to fetch vehicle list of the user and to register a new vehicle for the user.
 
 The module test was carried out to see whether functions dealing with coming data can perform properly and correctly. The approach was by publishing messages in broker and observing the response on web pages. By the end of this sprint, we had tested for each data type and confirmed that can work in the stand-alone system of web application.
-#### Desktop back end
-We transmit messages through the MQTT protocol. Both the M5Stack part and the DeskTop part subscribe to the "PIMS" topic. The goal we need to accomplish is to receive the Json data from the M5Stack that stores the Bluetooth address and signal strength, and give feedback based on different data. First determine whether there is a registered car in Json. If there is, get the current car status from the database. Second, determine whether the car is inside or outside the parking lot. If the pole can be opened outside the parking lot, the pole can be opened inside the parking lot.According to the result of the second step, send a message to open or close the rod to M5Stack. After opening the lever, the system pauses for five seconds and then closes the pole.At the same time, the parking information of this car is generated or updated.
+##### Desktop back end
+We transmit messages through the MQTT protocol. Both the M5Stack part and the DeskTop part subscribe to the "PIMS" topic. The goal we need to accomplish is to receive the Json data from the M5Stack that stores the Bluetooth address and signal strength, and give feedback based on different data. First determine whether there is a registered car in Json. If there is, get the current car status from the database. Second, determine whether the car is inside or outside the parking lot. If the pole can be opened outside the parking lot, the pole can be opened inside the parking lot. According to the result of the second step, send a message to open or close the rod to M5Stack. After opening the lever, the system pauses for five seconds and then closes the pole. At the same time, the parking information of this car is generated or updated.
 
-### Sprint 3: Development on front-end and further development on back-end 
+
+
+#### Sprint 3: Development on front-end and further development on back-end 
 ___Objectives___
 * The style sheets and dynamic rendering of front-end web pages
 * Complete the functionality for in server controller side, including updating
@@ -189,30 +190,26 @@ customers' account balance.
 * Decide which data types need to be stored in database and which do not.
 * Electronic sketches for desktop app
 
-#### Web and desktop controller
+##### Web and desktop controller
 The controller logics for web was built in this sprint as the data structure for this part had already been confirmed. We also implemented the CSS style sheets for front-end web pages and tested the communication between web and the controller.
 
-Since the functionalities in web side are almost done, we 
-start controller's development. In this sprint, we finished all 
-functionalities in server's controller, except vehicle history query. 
+Since the functionalities in web side are almost done, we start controller's development. In this sprint, we finished all functionalities in server's controller, except vehicle history query. 
 
-More specifically, the controller was now able to update the balance in customers'
-account. When the car enters the parking garage, record the time of entry. When the car leaves the parking garage, the time of departure needs to be recorded. According to the difference between the time of entering and leaving, the user's parking cost is calculated, and the account balance is obtained from the database and updated.
+More specifically, the controller was now able to update the balance in customers' account. When the car enters the parking garage, record the time of entry. When the car leaves the parking garage, the time of departure needs to be recorded. According to the difference between the time of entering and leaving, the user's parking cost is calculated, and the account balance is obtained from the database and updated.
 
 
-And meanwhile we decided which of data objects need to be stored into 
-file system of database. 
+And meanwhile we decided which of data objects need to be stored into file system of database. 
 
 *Evaluation and testing*:
 
 All functionalities developed so far work correctly when connecting web with desktop.
 
 
-#### Desktop app
+##### Desktop app
 
 Since the previous design was only a paper operation, the first step we should complete the paper design to electronic prototyping excess. The difficulty with this step is that some of the components conceived initially on paper are inherently tricky to electronic. In addition to this, the electronic design script adds a colour element that allows the use of the desktop app to be perceived through colour changes.
 
-##### Layout simple elements to the desktop UI
+###### Layout simple elements to the desktop UI
 
 It is extremely dangerous to fully develop the front-end UI directly before the desktop app back-end is developed. So we take the approach of first developing the UI part of the desktop app that does not involve the underlying logic API.
 
@@ -221,7 +218,7 @@ It is extremely dangerous to fully develop the front-end UI directly before the 
 * Once again, we have implemented the clock tab at the top of the page. Since this project is highly correlated with time, it was essential to design a clock at the top of the desktop app to display time. While implementing the clock tag, we completed the build of the desktop app refresh mechanism. This is a significant step for follow-up.
 * Finally, we finished building the colour pattern. Since this button is a pure display function independent of the system architecture, it is also effortless to implement.
 
-##### Building elements that interact with back-end APIs
+###### Building elements that interact with back-end APIs
 
 When the desktop app backend API was almost done, we started developing the display part that had logical interaction with the backend API. We completed the construction of the following components in order.
 
@@ -230,7 +227,10 @@ When the desktop app backend API was almost done, we started developing the disp
 * Third, we completed the presentation of the data visualization components. Taking advantage of the PROCESSING data visualization, we effectively represented the ratio of the number of vehicles present to the total number of parking spaces and the real-time revenue from the parking lot. Due to the limited time available for the presentation of this project, we have set the time limit for the refresh mechanism at 100 seconds after group discussion.
 * Finally, we have finished manually controlling the M5Stack button in the desktop app, which is done by calling the function in event. Control of the barrier is completed by packaging the JSON data to be sent.
 
+
+
 #### Sprint 4: Review, modify and finalise
+
 *Objectives*
 
 * System tests in 3 stages
@@ -274,9 +274,7 @@ We changed the code to prevent other types entering this logic:
         ...
 ```
 
-
-
-Controller:
+##### Controller:
 
 query vehicle parking history is the most complicated parts for controller development since controller need to traverse database to find the corresponding "parking" history and add the parking fee to corresponding day. After that, controller will return this message and web will plot the result  to a  table.
 
@@ -284,14 +282,20 @@ query vehicle parking history is the most complicated parts for controller devel
 
 This  functionality works correctly when connecting web with desktop.
 ##### Desktop app
-In this sprint we finalised the charts and plots on desktop UI to make sure
-they are both easy to read and funtioning smoothly.
+In this sprint we finalised the charts and plots on desktop UI to make sure they are both easy to read and functioning smoothly.
+
+
+
+<a name="_hardware"></a>
+
+### Hardware timelines
+
+徐涛看这里
 
 <a name="_b"></a>
 
 ## Technique justification and design evaluation
-In this section, we will justify in details why we chose certain techniques
-and their pros and cons during evaluations.
+In this section, we will justify in details why we chose certain techniques and their pros and cons during evaluations.
 ### Web
 **Bootstrap4 and jQuery**
 
@@ -370,7 +374,7 @@ for (JSONObject message : db.messages)
       }
 ```
 ##### 2. Generate new parking records.
- Use Processing's year (), month (), day () and other APIs to record the parking time.A delay () API is also used here, which is used to simulate the time of car storage, which is fixed for 5 seconds. Unfortunately, the dealy () function is a single-threaded function that blocks the entire program. Therefore, multi-threading will be adopted in the future. Even if a certain thread delay (), it will not affect other threads.
+ Use Processing's year (), month (), day () and other APIs to record the parking time. A delay () API is also used here, which is used to simulate the time of car storage, which is fixed for 5 seconds. Unfortunately, the dealy () function is a single-threaded function that blocks the entire program. Therefore, multi-threading will be adopted in the future. Even if a certain thread delay (), it will not affect other threads.
 ```
 if(barrier_type.equals("in"))
       {
@@ -397,14 +401,12 @@ if(barrier_type.equals("in"))
 ```
 
 ##### 3. Calculate parking fees.
-Here, we need to calculate the cost based on the parking time of the garage
-recorded in the date. Therefore, we need to use all the information such 
-as year, month, day, hour, minute and second to calculate the cost according
-to the different time of parking. Because of the need for display, we set
-the tariff to £1 per second, because the time for a testing is only in the scale
-of seconds and minutes, instead of hours and dats. 
+Here, we need to calculate the cost based on the parking time of the garage recorded in the date. Therefore, we need to use all the information such as year, month, day, hour, minute and second to calculate the cost according to the different time of parking. Because of the need for display, we set
+the tariff to £1 per second, because the time for a testing is only in the scale of seconds and minutes, instead of hours and dats. 
+
 In this way the revenue chart can more intuitively display the changes in parking 
 fees.
+
 ```
 int calcParkingFee(String time_in, String time_out)
 {
@@ -702,7 +704,7 @@ All components in this section must work with the API interface provided by the 
 
 When the barrier end receives a signal from an oncoming car, and the rear end successfully receives the incoming and outgoing logs and saves them on the local hard drive, the display end calls up all JSONArray to pick, sort, reorganize and display. Its evaluation of success is based on the front-end's ability to display the record correctly once the file has been received and saved by the back-end.
 
-We require to arrange backwards, so the difficulty lies in how to sort JSONArray for specific fields. This, of course, falls under the category of algorithmic issues that are no longer discussed in this project.Unfortunately, due to the limitations of controlP5, it is difficult to build an excel-like table to display data details. We can only do our best to recreate the style of the table through the drop down menu. This is something we did not anticipate during the design session.
+We require to arrange backwards, so the difficulty lies in how to sort JSONArray for specific fields. This, of course, falls under the category of algorithmic issues that are no longer discussed in this project. Unfortunately, due to the limitations of controlP5, it is difficult to build an excel-like table to display data details. We can only do our best to recreate the style of the table through the drop down menu. This is something we did not anticipate during the design session.
 
 *Details of cars in the parking lot*
 
@@ -716,46 +718,26 @@ In this component, the disadvantages of ControlP5 are even more pronounced. We h
 
 *Pie chart*
 
-Data visualization is an advantage of Processing, and we have developed 
-data visualization widgets using this feature. The pie chart shows the 
-real-time occupancy of the parking spaces. For the purpose of displaying the occupancy
-clearly, since we will only have 1 car in the lot at a time (because we only
-have 1 M5Stick), the total number spaces in the parking lot is set to 10. 
- 
-Similar to the two lists above, the pie chart needs to be linked to a remote 
-M5Stack. Two requirements need to be met for their successful evaluation.
+Data visualization is an advantage of Processing, and we have developed data visualization widgets using this feature. The pie chart shows the real-time occupancy of the parking spaces. For the purpose of displaying the occupancy clearly, since we will only have 1 car in the lot at a time (because we only have 1 M5Stick), the total number spaces in the parking lot is set to 10. 
 
-* When a vehicle enters at the barrier end and is successfully recorded by
- the desktop application backend, the pie chart automatically refreshes the
-  record to increase the percentage of vehicles present.
-* When a vehicle leaves the barrier end and is successfully recorded by the
- desktop application backend, the pie chart automatically refreshes the 
- record, reducing the percentage of vehicles present.
+Similar to the two lists above, the pie chart needs to be linked to a remote M5Stack. Two requirements need to be met for their successful evaluation.
+
+* When a vehicle enters at the barrier end and is successfully recorded by the desktop application backend, the pie chart automatically refreshes the record to increase the percentage of vehicles present.
+* When a vehicle leaves the barrier end and is successfully recorded by the desktop application backend, the pie chart automatically refreshes the record, reducing the percentage of vehicles present.
 
 
 *Line chart*
 
-Similar to the above components, the line chart shows the parking lot of 
-revenue for the day, with hourly interval on the x-axis. The chart should 
-refresh every hour to reflect the revenue trend for the past hours of the day.
+Similar to the above components, the line chart shows the parking lot of revenue for the day, with hourly interval on the x-axis. The chart should refresh every hour to reflect the revenue trend for the past hours of the day.
 
-However, because the testing time only lasts for less than 1 hour, the unit of x-axis
-is modified to seconds and the refresh frequency is also changed to every second.
-Then, because the limitation of the space where the line chart is at, we can
-only fit 100 seconds in the chart, which is a simple, memorizable number. After
-100 seconds, the line chart will no longer refresh and reflect the real-time
-revenue but all other charts of the UI are not affected
+However, because the testing time only lasts for less than 1 hour, the unit of x-axis is modified to seconds and the refresh frequency is also changed to every second.
 
-The following criteria can judge its success: when 
-the barrier end detects the vehicle leaving the parking lot, the desktop 
-program backend monitors the MQTT stream and stores the file to the local 
-hard drive. The front-end calls the API interface for receivable 
-calculations, which are finally reflected in a line chart that is 
+Then, because the limitation of the space where the line chart is at, we can only fit 100 seconds in the chart, which is a simple, memorable number. After 100 seconds, the line chart will no longer refresh and reflect the real-time revenue but all other charts of the UI are not affected.
+
+The following criteria can judge its success: when the barrier end detects the vehicle leaving the parking lot, the desktop program backend monitors the MQTT stream and stores the file to the local hard drive. The front-end calls the API interface for receivable calculations, which are finally reflected in a line chart that is 
 dynamically refreshed in real-time.
 
-The limitation of this design is that during testing, we need to ensure the 
-activities all happen within 100 seconds when line chart is still refreshing.
-After that we need to manually re-start the desktop app.
+The limitation of this design is that during testing, we need to ensure the activities all happen within 100 seconds when line chart is still refreshing. After that we need to manually re-start the desktop app.
 
 *Barrier control buttons*
 
@@ -768,31 +750,14 @@ The criteria for evaluating the success of this component can be judged in this 
 ## Social and Ethical implications
 
 #### Data Security, privacy and data protection
-Due to the time limitation on this project, the data are currently stored on
-local hard disks of the manager who uses the desktop application. Because the 
-desktop application is acting as a server, all the data from users will be 
-processed by the desktop. This means that users' personal information is not
-kept confidential at all at this stage. In the future, after deploying a more
-comprehensive database, the users' personal data will not be easily visible
-to the managers. In turn, the data should be completely protected and shield
+Due to the time limitation on this project, the data are currently stored on local hard disks of the manager who uses the desktop application. Because the desktop application is acting as a server, all the data from users will be processed by the desktop. This means that users' personal information is not kept confidential at all at this stage. In the future, after deploying a more comprehensive database, the users' personal data will not be easily visible to the managers. In turn, the data should be completely protected and shield
 from any visualisation of the employees.
 
 #### Social benefits
-With this technology, the time of paying before leaving a parking lot is saved.
-More car can park in the lots during busy hours as the cars in the lots can leave
-quicker. For the users, they can also easily review and keep track of their parking 
-records.
+With this technology, the time of paying before leaving a parking lot is saved. More car can park in the lots during busy hours as the cars in the lots can leave quicker. For the users, they can also easily review and keep track of their parking records.
 
 #### Environmental impact
-Less emission from cars queuing with their engine on to exit the parking lot.
-Less usage of physical currencies at the transactions are payment machines.
-Less public facilities to fix: without this system, there will be multiple payment
-machines dotted around the parking lot and built inside the exit barriers, 
-with this system, there will be no payment machines in the parking lot not 
-at the exit. The only publically used facility now will be the M5Stack that
-controlls the barriers.
+Less emission from cars queuing with their engine on to exit the parking lot. Less usage of physical currencies at the transactions are payment machines. Less public facilities to fix: without this system, there will be multiple payment machines dotted around the parking lot and built inside the exit barriers, with this system, there will be no payment machines in the parking lot not at the exit. The only publicly used facility now will be the M5Stack that controls the barriers.
 
 #### Employment
-The elimination of public facilities results in less maintenance requirements
-thus potentially less employment. However, the higher demand of the keys 
-(M5Sticks) will induce more employments for the mass production.
+The elimination of public facilities results in less maintenance requirements thus potentially less employment. However, the higher demand of the keys (M5Sticks) will induce more employments for the mass production.
