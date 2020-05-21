@@ -47,13 +47,8 @@
 
 * Back end
 
-  | Achievement                                          | What we have learnt from it                                  |
-| ---------------------------------------------------- | ------------------------------------------------------------ |
-  | Learn to develop in multiple languages based on JSON | The desktop server controller successfully communicated with M5Stack through the MQTT protocol. Even though the desktop front-end side and the M5Stack side use different language for development (Processing and C++, respectively), data exchange using JSON file format is still smooth. We took into account the needs of both the M5Stack end and web end, and controlled the task logic well: the controller can accept and process the requests from M5Stack and send back receipts at the same time. |
-  | Learn to use limited tools for development           | We have never been exposed to the software Processing before, so we were very unfamiliar with the syntax. By reading the documentation of Processing, understanding the APIs provided by it, and performing unit testing, we used the library functions provided by Processing well and achieved our goal. It is often troublesome to collaborate and test with multiple group members at the same time, so we used the MQTT client to manually publish the formatted JSON file to simulate the M5Stack message. In this way, everyone in the group can complete the entire system testing independently. |
   
-  
-  
+
   | Achievement                                          | What we have learnt from it                                  |
   | ---------------------------------------------------- | ------------------------------------------------------------ |
   | Learn to develop in multiple languages based on JSON | The desktop server controller successfully communicated with M5Stack through the MQTT protocol. Even though the desktop front-end side and the M5Stack side use different language for development (Processing and C++, respectively), data exchange using JSON file format is still smooth. We took into account the needs of both the M5Stack end and web end, and controlled the task logic well: the controller can accept and process the requests from M5Stack and send back receipts at the same time. |
