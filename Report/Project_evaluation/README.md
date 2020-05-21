@@ -26,6 +26,12 @@
 
 ### Web
 
+| Achievement                               | What we learned from it                                      |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| Built up a complete front-end application | In order to implement the web application, we learned the basic techniques that are used in front-end development, such as HTML5, CSS, and JavaScript. We also learned from more advanced techniques like Bootstrap 4 and establishing connections with MQTT broker. This gives us a good view of how front-end applications work and how to build web pages from scratch -- there was no team member had the experience in web development, while after doing this project, we are quite confident that we are able to build up web pages in a short time. |
+| Met all requirements                      | All requirements set at the beginning of this project have been met. The data schema designed according to the requirements perfectly allow us to meet the requirements by implementing functions for the data types one by one. |
+| Good communication and teamwork           | The communication between the web application and the desktop application is somewhat sophisticated. There are 6 types of data with different meaning, which requires good communication and collaboration skills to demonstrate and understand. Fortunately, our programmers carried out good communications and teamwork to implement this web application meeting all the requirements. This is the most valuable thing that we learned from this project, as it is also very important in real-world software development. |
+
 <a name="_adesktop"></a>
 
 ### Desktop
@@ -93,9 +99,33 @@ There are many features to be added in order for this product to launch for publ
 
 <a name="_short-web"></a>
 
-
 #### Web
-比如可以在网站上实时附近（支持这个系统的）停车场有多少空位。database可以转移到网上,这样可以保护data privacy， 因为目前所有的user data都不保密，manager全都可以看到。购买stick的页面。注销账户选项。
+
+The web application we implemented in this project only has some simple functionality for demonstration, such as user registration, vehicle registration, topping up, and some simple data visualization. However, as a user client, the web application is the most important part to attract new users, and it determines how user-friendly our product is. Most functionality related to users should be displayed on the web application.
+
+There are absolutely more features could be implemented in the future:
+
+* Order a stick
+
+  Now the user could register their vehicles and stick id on the web page, but what if they do not have a stick (?!) This is a problem because currently the only way for a user to get the stick is that they know us and ask us for the stick (which you can do). So there will be a button for users to order sticks from the website. Put an order, and get the stick in 5 days -- this will also help develop the express delivery industry!
+
+* Parking history & Fee charging history
+
+  In the current web application, users can only see their parking time in the last seven days. However if you are a user, you may want to know how long you parked and how much you were charged on Sep. 9th, 2019. It is quite necessary to make a page for users to view and search their parking data.
+
+* More data visualization!!
+
+  Data visualization might be an important aspect of a web application. In our case, users might want to see some other kinds of charts, such as the statistics of their parking fee and parking time in different parking lots.
+
+* Quick top up on mobile device
+
+  "What? Balance not enough?" Simon shouts at the barrier because he does not have enough balance to pay his parking fee when he wants to leave the parking lot. Then he has to open up his browser on the phone, input the url, log in, and finally he tops up! This would be quite inconvenient and will potentially cause a low efficiency at parking lot, and the drivers after Simon might whistle at him angrily. To solve this problem, in the future we will develop mobile apps on Android device and iOS to enable quick top up, and the users can choose whether they want to automatically top up by binding their bank accounts with PIMS.
+
+* Map API
+
+  After PIMS widely deployed in the UK (impossible), we would add a map to the front-end application (web or mobile apps) to enable users to see the closest parking lot near them, and see how many parking bays available in the lots. Moreover, they can also check where they parked their cars as some of them might forget it after a long time parking. 
+
+These features could be beneficial because they will promote the user experience. However, as the web application is just the front-end app, more efforts should be made in the desktop application (or a complete back-end architecture in the future) and in the IoT device.
 
 <a name="_shot-desktop"></a>
 
@@ -125,6 +155,10 @@ There are many features to be added in order for this product to launch for publ
 * Data storage
 
   At the database level, we only used the local hard disk to store data. Each time we store the data, we must traverse all the files in the folder to refresh them. This method is very unsafe and inefficient because in reality, there will be a great amount of user thus a great amount of files to iterate through. Therefore, we should use MySQL, SQLServer or other advanced databases to store the data, and improve the query efficiency by setting IDs. For confidential information, such as passwords and customers' names that they provide on the website, we will not directly store them in plain text, but apply encryption methods such as MD5 to store them in cipher text.
+
+* Keep sessions
+
+  As is demonstrated in [System Implementation](../System_implementation/README.md), there is actually no real session system in our front-end and back-end communications. In the future a session system must be used to implement this feature, in order to achieve a higher level of security.
 
 <a name="_short-iot"></a>
 

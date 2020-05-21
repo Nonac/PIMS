@@ -239,7 +239,7 @@ We conducted a total of three tests, a single-part effect demonstration, a joint
 * Server receives messages sent from M5Stack and debug the program.
 
 ##### Web
-In this sprint we carried out the system tests for 3 stages and fixed bugs. We did found a significant bug that could cause the system cashing in this sprint: while all three parts of our software running, the web page crashes because different types of data was wrongly accepted by web JavaScript logics in `client.onMessageArrived` in [account.js](../../web_application/user_account.js)
+In this sprint we carried out the system tests for 3 stages and fixed bugs. We did find a significant bug that could cause the system cashing in this sprint: while all three parts of our software running, the web page crashes because different types of data was wrongly accepted by web JavaScript logics in `client.onMessageArrived` in [account.js](../../web_application/user_account.js)
 
 ```javascript
     if (respondObj.info.username === username && respondObj.info.status === 1) {
@@ -868,8 +868,6 @@ There is a limitation that the versions below 10 of Internet Explorer do not sup
 
 Directly manipulating on DOM tree is regarded as bad practice in programming nowadays, and programmers are encouraged to use frameworks that hide the DOM manipulation like React and Vue in front-end development. However, for this light-weight application, it seems unnecessary to put the so heavy frameworks in use. But one thing worth considering is that if we want to extend this application to a wider use, it would be better to use a framework such as Vue or React.
 
-****
-
 **Echarts**
 
 *Why do we choose this?*
@@ -880,7 +878,17 @@ Echarts enables data visualization and chart dynamic rendering with several easy
 
 To initialize an echarts object we have to provide the constructor function a DOM block element with specified height and width. However, in our responsive web design, the container for the chart has a percentage as height and width, which is not supported by the Echarts. To solve this, we use jQuery to set the width and height of the element dynamically at the stage of page loading, and this can give the element fixed values of length and width according to the actual size of it. 
 
-But this brings another problem: after the jQuery setting a fix value for any attribute, the element keeps the value when even if the page size has been changed by user. This will cause the chart out of edge if the user zoom in the page. To fix this, a solution is to listen the element size using jQuery, however, this will cause a bad performance of the JavaScript logics, and it is not worth implementing because the user can refresh the page to make it a dynamic size.
+But this brings another problem: after the jQuery setting a fix value for any attribute, the element keeps the value when even if the page size has been changed by user. This will cause the chart out of edge if the user zoom in the page. To fix this, a solution is to listen the element size using jQuery, however, this will cause a bad performance of the JavaScript logics, and it is not worth implementing because the user can refresh the pages manually when they want to change the size of the web pages.
+
+**Cookies**
+
+*Why cookies are in need?*
+
+In order to keep the user logged in, the status is often stored as cookie in practice of web development to prevent illegal access to the user account page.
+
+*Limitation*
+
+However, in this project there is actually no 'back-end' system, as a result of which, setting cookie and keeping sessions could be quite challenging. To implement a session system in the desktop application needs plenty of work, and will add to the number of types of data schema due to the nature of MQTT. Furthermore, as all data transport via broker is explicit and can be seen by anyone who subscribe a certain topic, **security** seems not a topic that is worth considering in this small project. As a result, we simply store the username in the cookie to simulate keeping the logged in status, even if we are aware that this could be very dangerous that the user could access any of the user's account by carrying out a fake cookie.
 
 ### Desktop back-end
 *Why do we use these [communication rules](../System_design/README.md#_e)?*
