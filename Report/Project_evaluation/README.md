@@ -193,7 +193,9 @@ What if we think outside the box regarding "vehicles"? Then we will get a door t
 
 #### Agile development
 
+This project has followed closely with agile development principles. We designed the system around customer needs and kept them as our top priority. We were open to changes and adapted them quickly once they rose. We have been working on development regularly and at a constant and sustainable pace, following our Gannt Chart plan. After each small sprint we measured the progress by the amount of working code, which is usually all of them, before moving on to the next sprint. We completely trusted all out teammates because everyone was so talented and motivated. We arranged video calls frequently during this difficult time, even though some did not want to show their messy faces thus used filters (talking to an obedient husky was real fun).
 
+We cared about technical excellence and tried to do our best with what we have. We minimised unnecessary work when adapting changes to our goal (we were going to mount the M5Stick on a real toy car to mimic cars entering/exiting parking lots but cancelled the purchase in the end). We divided ourselves into 4 sub-groups with each team having 1-2 teammates. Within each sub-group we organized tasks for our own and reflect regularly on what had been achieved.
 
 <a name="_daily"></a>
 
@@ -238,4 +240,4 @@ Besides that, the 7-hour time difference made communication harder in 2 ways: 1 
 
 Also, due to the censorship in mainland China, the group members have had episodes of hard times to access github, which in return delayed development.
 
-One other thing to mention is that due to the COVID-19 influence, the marking criteria changed to 100% dependent on the portfolio, which is not the top strength of our group. As a group of foreigners whose first language isn't English, it was a shame that we couldn't deliver the well-functioning product that we are proud of face to face, but to write it down. We spent twice or more time than others on writing to make sure our language is clear and straight forward, because we feared that no matter how much effort we put on the product, if we couldn't deliver it clearly in the report, which is the only chance we have, all the effort would be wasted.
+One other thing to mention is that due to the COVID-19 influence, the marking criteria changed to 100% dependent on the portfolio, which is not the top strength of our group. As a group of foreigners whose first language isn't English, it was a shame that we couldn't deliver the well-functioning product that we are proud of face to face, but to write it down. We spent twice or more time than others on writing to make sure our language is clear and straight forward, because we feared that no matter how much effort we put on the product, if we couldn't deliver it clearly in the report, which is the only chance we have, all the effort would be wasted. 

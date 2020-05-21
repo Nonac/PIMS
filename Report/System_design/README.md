@@ -35,41 +35,46 @@ and/or subscribers. The messages published on MQTT can also be seen by going on
 to its website.
 
 #### Online elements
-* Web\
-The website is developed by Bootstrap and is designed for customers to access
-their personal account. Once the customer
-wishes to use this service, they should open an account with us and register their
-vehicles on the website. The website also provides records of their usage histories.
+* Web
+
+  The website is developed by Bootstrap and is designed for customers to access
+  their personal account. Once the customer
+  wishes to use this service, they should open an account with us and register their
+  vehicles on the website. The website also provides records of their usage histories.
 
 
-* Desktop application\
-The desktop application is developed by Processing. It is designed for managers
-at the parking lots to monitor and manage the parking lot. It visualises the
-occupany of the parking lot and monitors the vehicles using this parking lot.
+* Desktop application
 
-* M5Stack\
-The M5Stack is a small IoT (Internet of things) device compatible with Arduino and
-has built-in sensors (e.g. accelerometer, gyroscope), WIFI, bluetooth,
-colorful screen and buttons. In our design, it acts as the parking lot
-entrance/exit barrier. It is mounted at the parking lot entrance/exit.
-The screen will display the barrier's status (open or close).
+  The desktop application is developed by Processing. It is designed for managers
+  at the parking lots to monitor and manage the parking lot. It visualises the
+  occupancy of the parking lot and monitors the vehicles using this parking lot.
+
+* M5Stack
+
+  The M5Stack is a small IoT (Internet of things) device compatible with Arduino and
+  has built-in sensors (e.g. accelerometer, gyroscope), WIFI, Bluetooth,
+  colorful screen and buttons. In our design, it acts as the parking lot
+  entrance/exit barrier. It is mounted at the parking lot entrance/exit.
+  The screen will display the barrier's status (open or close).
 
 #### Offline elements
-* M5Stick\
-M5Stick comes with M5Stack and is even smaller than M5Stack. It also has a screen,
-a button and bluetooth. In our design, the M5Stick acts as a key to open the
-parking lot barrier (M5Stack). This means that the M5Stick is kept by the driver
-in the car. During the driver's registration process, he/she must link the M5Stick's
-bluetooth address with his/her PIMS account. When the driver wishes to enter/exit
-the parking lot, he/she only needs to press the button on M5Stick
-when the M5Stick and M5Stack (barrier) are in the vicinity.
+* M5Stick
 
-* Local database\
-There is a simple data storage system in this design since it is not the
-focus of the project. The data of the customers' from out website are passed
-through MQTT and saved on the local hard disk in the manager's desktop. Each
-parking lot should have at one manager that keeps the application open all
-the time, so the customers' data can be saved on the hard disk.  
+  M5Stick comes with M5Stack and is even smaller than M5Stack. It also has a screen,
+  a button and bluetooth. In our design, the M5Stick acts as a key to open the
+  parking lot barrier (M5Stack). This means that the M5Stick is kept by the driver
+  in the car. During the driver's registration process, he/she must link the M5Stick's
+  bluetooth address with his/her PIMS account. When the driver wishes to enter/exit
+  the parking lot, he/she only needs to press the button on M5Stick
+  when the M5Stick and M5Stack (barrier) are in the vicinity.
+
+* Local database
+
+  There is a simple data storage system in this design since it is not the
+  focus of the project. The data of the customers' from out website are passed
+  through MQTT and saved on the local hard disk in the manager's desktop. Each
+  parking lot should have at one manager that keeps the application open all
+  the time, so the customers' data can be saved on the hard disk.  
 
 <a name="_b"></a>
 ## Requirements of key sub-systems
@@ -229,7 +234,9 @@ has to lift up or lower the barrier themselves.
 ### Desktop app
 ![desktopAppUML](desktopApp_UML.png)
 
-The basic object-oriented model for this project is shown in the figure. The DashboardView part of the picture is the view part of the MVC model. This section is dominated by the build program view section, so it is mainly for the construction of the program's graphical interface, with  UI build()  functions dominating. The Database section shows the Model section. The GETS and RECEIVES functions are the main ones. where MessageType is the important message storage abstract class that defines all data types. Event is the main controller part. Mainly for the interaction of the desktop app with the barrier and the interaction of the desktop app with the web client. MQTT is also mainly applied in this part as a means of communication.
+*What are we getting out of this diagram?*
+
+The basic object-oriented model for this project is shown in the diagram. The DashboardView part of the picture is the view part of the MVC model. This section is dominated by the build program view section, so it is mainly for the construction of the program's graphical interface, with  UI build()  functions dominating. The Database section shows the Model section. The GETS and RECEIVES functions are the main ones. where MessageType is the important message storage abstract class that defines all data types. Event is the main controller part. Mainly for the interaction of the desktop app with the barrier and the interaction of the desktop app with the web client. MQTT is also mainly applied in this part as a means of communication.
 
 The overall architecture of the desktop side is designed in such a way that multiple people can work together on the same project using object-oriented design. The back-end engineer first builds the underlying model and data structure part as the overall framework, and the rest of the system can build the remaining components based on the framework. Because the back-end engineers need to dock both the web and M5Stack data processing needs, the two back-end engineers are working on the model and controller, respectively. As the data structure becomes more complex, the model part will be satisfied with more than simple GETS() and SET() methods, more logical calculations will be performed inside the model. And controllers are more concerned with receiving and sending data streams at MQTT, thus separating the model from the controller. So we have a relatively independent build view file in the architecture to handle the build() method of building images.
 
@@ -238,7 +245,7 @@ The overall architecture of the desktop side is designed in such a way that mult
 
 The diagram above shows the working flow of the web application and demonstrates the core object for communication and the categorization of functions in [user_account.js](../../web_application/user_account.js). We mainly used functions in the scripts to implement the core functionality of the user logics, and render the pages dynamically. 
 
-* How this works?
+* How does this work?
 
   There are two functional components that the web application have -- communication and rendering. In general, the rendering component is directed by the communication component, in another word, the web pages are re-rendered when a valid message is received. However, the rendering component can also trigger the communication component, because for some types of messages, only when the former messages arrive can another query be made. For example, when and only when a message of which type is `web_vehicle_query` arrives, the client will be able to send a query of `web_history_query` to fetch parking history of the first vehicle in the fetched list.
 
@@ -282,12 +289,12 @@ to the bottom right button "Customer account":
 
 
 #### Version 3.0 - Processing
-In the end, we amended the design to the below. The differences are:
+In the end, we amended the design to the one below. The differences are:
 1. Top left chart is changed from two-column to one-column, because two-column
 can be confusing at times and if we use a scrollable chart we will be able to show
 just as much information as having a two-column chart.
 2. Bottom middle chart is changed from a combined chart (bar and line) to just
-a line chart, because in the testing period, we only have 1 MStick (key) thus
+a line chart, because in the testing period, we only have 1 M5Stick (key) thus
 1 car to enter/exit. This means the revenue will not change as frequently as in
 reality. The bars that were supposed to indicate the revenue made per hour will
 be 0 at most times;
@@ -301,11 +308,12 @@ necessary and can be moved to "future work" section.
 ![visual_impression](destop_view/Visual_Impression.png)
 
 ### Desktop back end - JSON file format
-The format of the json file has changed many times throughout the design process.
+The format of the JSON file has changed many times throughout the design process.
 According to the different requirements of the system and the different design of
-the system, the format of json should also be constantly designed.
+the system, the format of JSON should also be constantly designed.
+
 #### "barrier_type"
-In the "data_type": "m5_transmit" json file, according to the initial assumption,
+In the "data_type": "m5_transmit" JSON file, according to the initial assumption,
 we only have "barrier_id" in "barrier_info" to identify the barrier. The previous
 idea was to have the entrance and exit sharing the only barrier (the only M5Stack).
 
@@ -323,21 +331,9 @@ idea was to have the entrance and exit sharing the only barrier (the only M5Stac
 }
 ```
 
-However, we found that in that case, since the M5Stack scans for bluetooth
-addresses every 5 seconds and transmits the closest one to the broker,
-if the car parks close to the barrier, 
-the M5Stack will detect its bluetooth address over and over again
- and keeps opening and closing,
-indicating the car keeps going in and going out, repeatedly, despite the car
-(M5Stcik) is staying still.
-This may be less of a problem in reality but during our tests, we only had
-one registered bluetooth address, which was the M5Stick, so it would always be
-detected. 
+However, we found that in that case, since the M5Stack scans for Bluetooth addresses every 5 seconds and transmits the closest one to the broker, if the car parks close to the barrier, the M5Stack will detect its Bluetooth address over and over again and keeps opening and closing, indicating the car keeps going in and going out, repeatedly, despite the car (M5Stcik) is staying still. This may be less of a problem in reality but during our tests, we only had one registered Bluetooth address, which was the M5Stick, so it would always be detected. 
 
-To solve this, we added **"barrier_type"** attribute to separate the barrier
-at the entrance and the exit. If the car
-is outside the parking lot, only the entrance barrier will open. If the car is in the
-parking lot, only the exit barrier will open.
+To solve this, we added **"barrier_type"** attribute to separate the barrier at the entrance and the exit. If the car is outside the parking lot, only the entrance barrier will open. If the car is in the parking lot, only the exit barrier will open.
 
 ```
 {
@@ -355,9 +351,7 @@ parking lot, only the exit barrier will open.
 ```
 
 #### "status"
-In the "data_type": "web_register" json file, we didn't have the **"status"** field to
- begin with. Instead, we only had a boolean attribute "is_success"
-  to determine whether the registration is successful.
+In the "data_type": "web_register" JSON file, we didn't have the **"status"** field to  begin with. Instead, we only had a Boolean attribute "is_success"  to determine whether the registration is successful.
 
 ```
 {
@@ -369,12 +363,7 @@ In the "data_type": "web_register" json file, we didn't have the **"status"** fi
 		}
 }
 ```
-However, we found that other than the 3 online elements subscribing to MQTT,
-the MQTT also subscribes itself. This means only a boolean is not enough.
-Thus, we intriduced the **"status"** field to distinguish
- from whom this message was published. It is an integer field which can deal
- with multiple situations, including whether a request is successful
- or where the message comes from.
+However, we found that other than the 3 online elements subscribing to MQTT, the MQTT also subscribes itself. This means only a Boolean is not enough. Thus, we introduced the **"status"** field to distinguish  from whom this message was published. It is an integer field which can deal  with multiple situations, including whether a request is successful  or where the message comes from.
  ```
 {
 	"data_type": "web_register",  
@@ -392,25 +381,12 @@ Thus, we intriduced the **"status"** field to distinguish
 ### Rules for communication
    - All message must go through MQTT.
    - The 3 online application must subscribe the same topic "PIMS" on MQTT.
-   - Each session connected must be a "round-trip". In other words, when
-      sender sends a message via MQTT to receiver, it also expects to receive
-      a receipt (in the form of a MQTT message, too) from the receiver whether the
-      request is valid.
-   - MQTT messages (in the form of JSON objects) must contain a "status" flag
-      that indicates its origin and validation status. I.e. "status=2" means the
-      message is from web end to desktop end (acting as a server).
-      Then in the receipt, "status=1" means the request is successfully verified
-      by the server, whereas "status=0" means the request has failed.
+   - Each session connected must be a "round-trip". In other words, when sender sends a message via MQTT to receiver, it also expects to receive receipt (in the form of a MQTT message, too) from the receiver whether the request is valid.
+   - MQTT messages (in the form of JSON objects) must contain a "status" flag that indicates its origin and validation status. I.e. "status=2" means the message is from web end to desktop end (acting as a server). Then in the receipt, "status=1" means the request is successfully verified by the server, whereas "status=0" means the request has failed.
 
-Since different parts of our system send information asynchronously, we
-decided to let them publish different JSON objects to the MQTT topic 'PIMS'
-but all with an attribute named 'data_type' to signal the receivers to pick
-up the right messages. <br>
+Since different parts of our system send information asynchronously, we decided to let them publish different JSON objects to the MQTT topic 'PIMS' but all with an attribute named 'data_type' to signal the receivers to pick up the right messages. <br>
 
-We could have packaged them into a single JSON array and designated an index
- of that array for each recipient. However, that would have introduced another
-  level of complexity for the JSON objects and reduced their overall
-  readability. After careful consideration, we abandoned this approach.
+We could have packaged them into a single JSON array and designated an index  of that array for each recipient. However, that would have introduced another level of complexity for the JSON objects and reduced their overall readability. After careful consideration, we abandoned this approach.
 
 ### Iot
 #### "m5_transmit"
@@ -434,7 +410,7 @@ Receiver: __the Desktop App__ (currently acts as a server)
 
 This JSON object contains information about the BT devices that were present during the last scan period and the barrier that sent this message. <br>
 The keys are self-explanatory by their names.<br>
-One thing worth mentioning is that each cell in the "bluetooth_devices" array corresponds to a single BT device and the size of this array is dynamic (equals to the number of devices that were detectable by that barrier in the last scan).
+One thing worth mentioning is that each cell in the "Bluetooth_devices" array corresponds to a single BT device and the size of this array is dynamic (equals to the number of devices that were detectable by that barrier in the last scan).
 
 #### "m5_receive"
 Sender: __the Desktop App__ <br>
@@ -458,7 +434,7 @@ This JSON object acts as a command from our server to a specific barrier. <br>
 
 All of the data is sent in the format of JSON. The queries sent by web app have the status code `2`, while the response from the controller has the status code `1` or `0`, represent success or failure respectively.
 
-If the query result is fail (e.g. the username the user intended to register already exists, password validation failed, the M5 stick key has already been reigistered, or some other things went wrong), the controller will send a failure message. The failure messages are in a unified format:
+If the query result is fail (e.g. the username the user intended to register already exists, password validation failed, the M5 stick key has already been registered, or some other things went wrong), the controller will send a failure message. The failure messages are in a unified format:
 
 ```
 {
@@ -725,15 +701,10 @@ Send the query to broker so that the controller can receive this message to rech
 <a name="_f"></a>
 ## Details of the data persistence mechanisms in use
 
-1. There are 10 types of data structure in total but not all of them need to
- be stored on local hard disk.
-2. Only 4 data types, "parking", "web_register", "web_vehicle_register" and
-"web_finance" are stored on local hard disk. Others can be extracted or
- derived from these 4 data types.
-3. For these 4 data types, the files are named as "datatype+userId.json" or
-"datatype+vehicleId.json". Each of them is relatively independent.
-4. Every time we create a new file or update an existing file, we need to
-refresh database file system to make data persistent.
+1. There are 10 types of data structure in total but not all of them need to be stored on local hard disk.
+2. Only 4 data types, "parking", "web_register", "web_vehicle_register" and "web_finance" are stored on local hard disk. Others can be extracted or derived from these 4 data types.
+3. For these 4 data types, the files are named as "datatype+userId.json" or "datatype+vehicleId.json". Each of them is relatively independent.
+4. Every time we create a new file or update an existing file, we need to refresh database file system to make data persistent.
 
 
 <a name="_g"></a>
@@ -743,6 +714,6 @@ HTML5, CSS3 and JavaScript are the main technologies that we use in the web appl
 * [Bootstrap4](https://getbootstrap.com/docs/4.0/getting-started/introduction/) - *A free and open-source CSS framework directed at responsive, mobile-first front-end web development.* We use the toolkit of Bootstrap4 including CSS and JavaScript components as the front-end template.
 * [Echarts](https://echarts.apache.org/en/index.html) - *A powerful charting and visualization library offering an easy way of adding intuitive, interactive, and highly customizable charts.* This library is used in the [user_account.js](../../web_application/user_account.js) to render the chart of statistical data of parking time.
 
-* [jQuery](https://jquery.com/) - *Simplify HTML DOM tree traversal and manipulation, as well as event handling, CSS animation.* We use this to manipulate DOM elements and get the element's width and height dynamicaly for rendering Echarts.
+* [jQuery](https://jquery.com/) - *Simplify HTML DOM tree traversal and manipulation, as well as event handling, CSS animation.* We use this to manipulate DOM elements and get the element's width and height dynamically for rendering Echarts.
 
-* [Paho JavaScript Client](https://www.eclipse.org/paho/clients/js/) - *MQTT browser-based client library written in Javascript that uses WebSockets to connect to an MQTT Broker.* Establish connection with broker by this library.
+* [Paho JavaScript Client](https://www.eclipse.org/paho/clients/js/) - *MQTT browser-based client library written in JavaScript that uses WebSockets to connect to an MQTT Broker.* Establish connection with broker by this library.

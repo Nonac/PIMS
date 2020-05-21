@@ -42,19 +42,19 @@ With this system, the drivers can save the time of paying at the machine. With c
 Our product is designed for 3 different end users: customers, drivers, and parking lot managers.
 To make the picture clear, we will introduce 3 typical user stories.
 ### Customers
-Leo is sick and tired of the situations mentioned [above](#_advert). He sees the advertisement of PIMS and decides to make his life easier by using it.He goes onto PIMS website and orders a key (M5Stick). After the key arrives, he opens an account with PIMS. He finds its bluetooth sequence in the instruction booklet and enters it along with his car's vehicle identification number. Ta-da! Account created. Now whoever drives his car can use PIMS service for participating parking lots. He can also review how many hours and where he has parked for the past 7 days.
+```Leo is sick and tired of the situations mentioned [above](#_advert). He sees the advertisement of PIMS and decides to make his life easier by using it.He goes onto PIMS website and orders a key (M5Stick). After the key arrives, he opens an account with PIMS. He finds its bluetooth sequence in the instruction booklet and enters it along with his car's vehicle identification number. Ta-da! Account created. Now whoever drives his car can use PIMS service for participating parking lots. He can also review how many hours and where he has parked for the past 7 days.```
 
 ### Drivers
-Professor Smith works at University of Bristol. The university has a business membership with PIMS, which means all the cars registered under the university's account has a M5Stick and the expense will be taken from the university's business account. Today Prof. Smith and her research group need to attend a conference in Bath, representing the School of Engineering. The meeting takes place in a conference center with a public parking lot. They are given a university owned minivan to for the trip.
+```Professor Smith works at University of Bristol. The university has a business membership with PIMS, which means all the cars registered under the university's account has a M5Stick and the expense will be taken from the university's business account. Today Prof. Smith and her research group need to attend a conference in Bath, representing the School of Engineering. The meeting takes place in a conference center with a public parking lot. They are given a university owned minivan to for the trip.```
 
-When approaching the entrance, she presses the parking lot key (M5Stick) that was already mounted in the car. Even without stopping, the barrier opens to welcome them in.
+```When approaching the entrance, she presses the parking lot key (M5Stick) that was already mounted in the car. Even without stopping, the barrier opens to welcome them in.```
 
-After the 5-hour-long conference, Prof Smith and her group are really exhausted and don't want to queue up at the payment machine - the queue looks really long, it's a busy parking lot after all. Luckily, they don't need to! They go straight back to the minivan and start driving back to Bristol. When approaching the exit, without even stopping and opening the window, Prof Smith simply presses the key (M5Stick) and the barrier lifts up to let them out!
+```After the 5-hour-long conference, Prof Smith and her group are really exhausted and don't want to queue up at the payment machine - the queue looks really long, it's a busy parking lot after all. Luckily, they don't need to! They go straight back to the minivan and start driving back to Bristol. When approaching the exit, without even stopping and opening the window, Prof Smith simply presses the key (M5Stick) and the barrier lifts up to let them out!```
 
 ### Parking lot managers
-Rachel works for Cabot Circus shopping mall. Her office is pretty close to the parking lot, so she can report any abnormal activities via the app. She also works from home from time to time. Wherever she is, she can open the desktop application to see how many cars are currently in the parking lot and how much revenue they are currently making.
+```Rachel works for Cabot Circus shopping mall. Her office is pretty close to the parking lot, so she can report any abnormal activities via the app. She also works from home from time to time. Wherever she is, she can open the desktop application to see how many cars are currently in the parking lot and how much revenue they are currently making.```
 
-Her boss has asked her to plan for a 2-hour car wash product promotion at the designated area inside the parking lot next Saturday, so she needs to choose a time when the number of targeted customers are at its peak. She opens the desktop app and pulls up the hourly record of the number of cars in the parking lot for the past month. Then she chooses 1-3pm next Saturday for the promotion.
+```Her boss has asked her to plan for a 2-hour car wash product promotion at the designated area inside the parking lot next Saturday, so she needs to choose a time when the number of targeted customers are at its peak. She opens the desktop app and pulls up the hourly record of the number of cars in the parking lot for the past month. Then she chooses 1-3pm next Saturday for the promotion.```
 
 <a name="_portfolio"></a>
 
@@ -84,7 +84,7 @@ Her boss has asked her to plan for a 2-hour car wash product promotion at the de
 
 [Click here](Report/Project_evaluation/README.md) to see:
 
-* SUccess of the project
+* Success of the project
 * Future work
 * Working practives of the group
 * Coronavirus impact on the project
@@ -92,8 +92,6 @@ Her boss has asked her to plan for a 2-hour car wash product promotion at the de
 <a name="_video"></a>
 
 ## Pitch video
-Here is the video of us demonstrating how the M5Stack (barrier)
-, M5Stick (key), desktop application (for managers) and webpage (for customers) 
-work together via the communication on MQTT.
+Here is the video of us demonstrating how the M5Stack (barrier) , M5Stick (the key for drivers), desktop application (for managers) and webpage (for customers) work together via the communication on MQTT.
 
 [![Video thumbnail](Report/Video%20thumbnail.png)](https://youtu.be/kaCjAmnIsRY "PIMS")
