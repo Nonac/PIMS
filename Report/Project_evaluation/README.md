@@ -26,7 +26,7 @@
 
 ### Web
 
-| Achievement                               | What we learned from it                                      |
+| Achievement                               | What we learnt from it                                       |
 | ----------------------------------------- | ------------------------------------------------------------ |
 | Built up a complete front-end application | In order to implement the web application, we learned the basic techniques that are used in front-end development, such as HTML5, CSS, and JavaScript. We also learned from more advanced techniques like Bootstrap 4 and establishing connections with MQTT broker. This gives us a good view of how front-end applications work and how to build web pages from scratch -- there was no team member had the experience in web development, while after doing this project, we are quite confident that we are able to build up web pages in a short time. |
 | Responsive design                         | The web pages are designed to be responsive. We have learned a lot about how to design the layout and the position of elements. We also have had a better understanding of the approaches to make the web pages responsive. |
@@ -48,7 +48,7 @@
 
   The desktop server controller successfully communicated with M5Stack through the MQTT protocol. Even though the desktop front-end side and the M5Stack side use different language for development (Processing and C++, respectively), data exchange using JSON file format is still smooth. We took into account the needs of both the M5Stack end and web end, and controlled the task logic well: the controller can accept and process the requests from M5Stack and send back receipts at the same time.
 
-  We have never been exposed to the software Processing before, and we are very unfamiliar with the syntax. By reading the documentation of Processing, understanding the APIs provided by it, and performing unit testing, we used the library functions provided by Processing well and achieved our goal. It is often troublesome to collaborate and test with multiple group members at the same time, so we used the MQTT client to manually publish the formatted JSON file to simulate the M5Stack message. In this way, everyone in the group can complete the entire system testing independently.
+  We have never been exposed to the software Processing before, so we were very unfamiliar with the syntax. By reading the documentation of Processing, understanding the APIs provided by it, and performing unit testing, we used the library functions provided by Processing well and achieved our goal. It is often troublesome to collaborate and test with multiple group members at the same time, so we used the MQTT client to manually publish the formatted JSON file to simulate the M5Stack message. In this way, everyone in the group can complete the entire system testing independently.
 
 <a name="_aiot"></a>
 
@@ -124,7 +124,7 @@ There are absolutely more features could be implemented in the future:
 
 * Map API
 
-  After PIMS widely deployed in the UK (impossible), we would add a map to the front-end application (web or mobile apps) to enable users to see the closest parking lot near them, and see how many parking bays available in the lots. Moreover, they can also check where they parked their cars as some of them might forget it after a long time parking. 
+  After PIMS is widely deployed in the UK ~~which is impossible~~ we will add a map to the front-end application (web or mobile apps) to enable users to find the participating parking lots in the vicinity, and how many available parking spaces they have. Moreover, they can also mark down where they parked their cars as some of them might forget it after a long time of parking. 
 
 These features could be beneficial because they will promote the user experience. However, as the web application is just the front-end app, more efforts should be made in the desktop application (or a complete back-end architecture in the future) and in the IoT device.
 
@@ -157,7 +157,7 @@ These features could be beneficial because they will promote the user experience
 
   At the database level, we only used the local hard disk to store data. Each time we store the data, we must traverse all the files in the folder to refresh them. This method is very unsafe and inefficient because in reality, there will be a great amount of user thus a great amount of files to iterate through. Therefore, we should use MySQL, SQLServer or other advanced databases to store the data, and improve the query efficiency by setting IDs. For confidential information, such as passwords and customers' names that they provide on the website, we will not directly store them in plain text, but apply encryption methods such as MD5 to store them in cipher text.
 
-* Keep sessions
+* Session keeping
 
   As is demonstrated in [System Implementation](../System_implementation/README.md), there is actually no real session system in our front-end and back-end communications. In the future a session system must be used to implement this feature, in order to achieve a higher level of security.
 
@@ -179,11 +179,11 @@ These features could be beneficial because they will promote the user experience
 
 ### Long-term goals
 
-Let's look into a greater future. With the development of IoT technology, people will no longer be satisfied with simply tracking real objects, **but to develop more human interaction with reality. The parking management system project developed in this project is a kind of car networking**, the core of which lies in the interaction between M5Stick-C and M5Stack, in other words, the communication between the key and the door. If we continue to develop this project, we can predict some pictures of the future. Ultimately and ideally, the M5Stick can be purchased along with the car, so all new-generation cars can start using this system immediately. Sooner or later, it can cover all the parking lots and all the cars registered in the UK. Then, the car itself can become an electronic wallet, and it won't be a dream for us to apply such a convenient system at any drive-through restaurants.
+Let's look into a greater future. With the development of IoT technology, people will no longer be satisfied with simply tracking real objects, but to interact with them. More specific than IoT (Internet of Things), PIMS promotes the idea of IoV (Internet of Vehicles), the core of which lies in the interaction between M5Stick-C and M5Stack, in other words, the communication between the key and the door. If we continue to develop this project, we can predict some pictures of the future. Ultimately and ideally, the M5Stick can be purchased along with the car, so all new-generation cars can start using this system immediately. Sooner or later, it can cover all the parking lots and all the cars registered in the UK. Then, the car itself can become an electronic wallet, and it won't be a dream for us to apply such a convenient system at any drive-through restaurants.
 
 Let's come back to this project, the key-door interaction relies on the Bluetooth technology we have now. Of course, for security purposes, it is certainly not possible to use protocols that are so open for a system that involves so many people. The project will then have the opportunity to advance the development and implementation of a proximity vehicle interaction encryption protocol. The advantages offered by it are significant compared to the identification technologies, such as automatic license plate recognition, image recognition, and IC card radio communication, that exist today. The new wireless protocol is fundamentally different from the existing techniques in terms of both the speed and accuracy of recognition.
 
-What if we think outside the box of "vehicles"? Then we will get a door that can be opened from a distance, and through this door, we need to have tickets. By extension of this idea, we get office area management systems, amusement park management systems, cinema management systems and even import/export logistics management systems for ports. All in all, the system will be rich in extensions in the long-term, and all these extensions will make our lives more convenient.
+What if we think outside the box regarding "vehicles"? Then we will get a door that can be opened from a distance, and to go through this door, we need tickets. By extending this idea, we get office area management systems, amusement park management systems, cinema management systems and even import/export logistics management systems for ports. All in all, the system will be rich in extensions in the long-term, and all these extensions will make our lives more convenient.
 
 <a name="_practice"></a>
 
