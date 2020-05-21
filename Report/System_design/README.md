@@ -233,10 +233,30 @@ The basic object-oriented model for this project is shown in the figure. The Das
 
 The overall architecture of the desktop side is designed in such a way that multiple people can work together on the same project using object-oriented design. The back-end engineer first builds the underlying model and data structure part as the overall framework, and the rest of the system can build the remaining components based on the framework. Because the back-end engineers need to dock both the web and M5Stack data processing needs, the two back-end engineers are working on the model and controller, respectively. As the data structure becomes more complex, the model part will be satisfied with more than simple GETS() and SET() methods, more logical calculations will be performed inside the model. And controllers are more concerned with receiving and sending data streams at MQTT, thus separating the model from the controller. So we have a relatively independent build view file in the architecture to handle the build() method of building images.
 
-### Web app
+### Web application
 ![web](Web_Chart.png)
 
-We mainly used functions in the scripts to implement the core functionality of the user logics, and render the pages dynamically. One thing might be confusing is that the rendering functions also call the query functions sometimes. This is because for some types of messages, only when the former messages arrive can another query be made. For example, when and only when a message of which type is `web_vehicle_query` arrives, the client will be able to send a query of `web_history_query` to fetch parking history of the first vehicle in the fetched list.
+The diagram above shows the working flow of the web application and demonstrates the core object for communication and the categorization of functions in [user_account.js](../../web_application/user_account.js). We mainly used functions in the scripts to implement the core functionality of the user logics, and render the pages dynamically. 
+
+* How this works?
+
+  There are two functional components that the web application have -- communication and rendering. In general, the rendering component is directed by the communication component, in another word, the web pages are re-rendered when a valid message is received. However, the rendering component can also trigger the communication component, because for some types of messages, only when the former messages arrive can another query be made. For example, when and only when a message of which type is `web_vehicle_query` arrives, the client will be able to send a query of `web_history_query` to fetch parking history of the first vehicle in the fetched list.
+
+  * The communication component contains an object client, which is for the direct communication with MQTT, and several functions that compose message bodies and send the messages by calling `client.send()`.
+  * The rendering component contains a bunch of functions that manipulate the DOM tree, render the elements, and trigger another communication process.
+
+  The work flow is: 
+
+  1. At the stage of pages loading or user clicking the buttons on the web pages, query functions in the communication component will be called.
+  2. The query function composes a message body and calls the `client.send`.
+  3. The client object publishes the message to broker via MQTT.
+  4. The Desktop application receives the message and gives a response message.
+  5. The client receives the message and calls a function in the rendering component
+  6. The rendering function re-render the elements in the DOM tree and displays new data on the web page. For some of the rendering functions, a function in the communication component will be called to trigger a new cycle.
+
+* Tips for programmers who take over this project
+  * In order to add a new feature, you must add two functions, one in the communication component and another one in the rendering component.
+  * This schema could be refactored to be more object-oriented. For example, the communication component can be encapsulated into one object that contains all functions for communication and connection, and the rendering component is also potential to be refactored to be an object of JavaScript.
 
 <a name="_d"></a>
 
