@@ -657,3 +657,8 @@ HTML5, CSS3 and JavaScript are the main technologies that we use in the web appl
 ## Section summary
 
 In this section we have presented the system design of the project. We talked about what the elements are and what roles they play. We briefly showed our design process that reflects our though process and introduced the requirements we plan to satisfy. We established rules to abide by so that the implementation process will be more systematic.
+
+[Back to homepage](../../README.md#_portfolio)
+
+[Next section: System implementation](../System_implementation/README.md)
+
