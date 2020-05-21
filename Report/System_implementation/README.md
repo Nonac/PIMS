@@ -1337,7 +1337,7 @@ The criteria for evaluating the success of this component can be judged in this 
   <tr>
     <td>Using M5Stick-Cs as keys</td>
     <td><ul>
-    <li><a href = "/Report/System_implementation/README.md/#2aIoT_keysPowerLevel">Determining distance via RSSI is only valid when the BT modules of all the keys are on the same level. </a></li>
+    <li><a href = "/Report/System_implementation/README.md/#2aIoT_keysPowerLevel">Determining distance via RSSI is only valid when the power of the BT modules of all the keys are on the same level. </a></li>
     <li>Each M5Stick-C has a display and a button just resembling hardware bank tokens.</li>
     <li>Its size is small enough to be a key.</li>
     </ul></td>
