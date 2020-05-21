@@ -32,8 +32,8 @@
 <a name="_intro"></a>
 
 ## Introduction
-Parking Iot Management System is designed for easy access to public parking lots. It is like a toll-pass (FasTrak or E-ZPass) in the US or ETC in China, but used on parking lots. Each driver wishing to use this system needs to obtain a key (M5Stick) and register their personal and vehicle information on the PIMS website. With a key in hand, the driver can park in any participating parking lot, all they need to do is to press the key (Stick) to enter, and press to exit. The barrier, controlled by M5 Stack, receives the request from the Stick together with the Stick's bluetooth address, and verifies the user's account via the broker
-(MQTT). If successful, the barrier (Stack) will lift up to let the car in/out. The system will track the car's parking time and calculate with the tariff of the parking lot's, then charge the payment from user's account.
+Parking Iot Management System is designed for easy access to public parking lots. It is like a toll-pass (FasTrak or E-ZPass) in the US or ETC in China, but used on parking lots. Each driver wishing to use this system needs to obtain a key (M5Stick) and register their personal and vehicle information on the PIMS website. With a key in hand, the driver can park in any participating parking lot, all they need to do is to press the key (M5Stick) to enter, and press to exit. The barrier, controlled by M5Stack, receives the request from the Stick together with the Stick's bluetooth address, and verifies the user's account via the broker
+(MQTT). If successful, the barrier (M5Stack) will lift up to let the car in/out. The system will track the car's parking time and calculate with the tariff of the parking lot's, then charge the payment from user's account.
 
 With this system, the drivers can save the time of paying at the machine. With cars leaving the parking lot quicker, more cars are able to park in the lot during a busy day.
 
@@ -86,7 +86,7 @@ To make the picture clear, we will introduce 3 typical user stories.
 
 * Success of the project
 * Future work
-* Working practives of the group
+* Working practices of the group
 * Coronavirus impact on the project
 
 <a name="_video"></a>

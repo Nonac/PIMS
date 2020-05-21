@@ -47,12 +47,10 @@
 
 * Back end
 
-  
-
-  | Achievement                                          | What we have learnt from it                                  |
-  | ---------------------------------------------------- | ------------------------------------------------------------ |
-  | Learn to develop in multiple languages based on JSON | The desktop server controller successfully communicated with M5Stack through the MQTT protocol. Even though the desktop front-end side and the M5Stack side use different language for development (Processing and C++, respectively), data exchange using JSON file format is still smooth. We took into account the needs of both the M5Stack end and web end, and controlled the task logic well: the controller can accept and process the requests from M5Stack and send back receipts at the same time. |
-  | Learn to use limited tools for development           | We have never been exposed to the software Processing before, so we were very unfamiliar with the syntax. By reading the documentation of Processing, understanding the APIs provided by it, and performing unit testing, we used the library functions provided by Processing well and achieved our goal. It is often troublesome to collaborate and test with multiple group members at the same time, so we used the MQTT client to manually publish the formatted JSON file to simulate the M5Stack message. In this way, everyone in the group can complete the entire system testing independently. |
+  | Achievement                                           | What we have learnt from it                                  |
+| ----------------------------------------------------- | ------------------------------------------------------------ |
+  | Learnt to develop in multiple languages based on JSON | The desktop server controller successfully communicated with M5Stack through the MQTT protocol. Even though the desktop front-end side and the M5Stack side use different language for development (Processing and C++, respectively), data exchange using JSON file format is still smooth. We took into account the needs of both the M5Stack end and web end, and controlled the task logic well: the controller can accept and process the requests from M5Stack and send back receipts at the same time. |
+  | Learnt to use limited tools for development           | We have never been exposed to the software Processing before, so we were very unfamiliar with the syntax. By reading the documentation of Processing, understanding the APIs provided by it, and performing unit testing, we used the library functions provided by Processing well and achieved our goal. It is often troublesome to collaborate and test with multiple group members at the same time, so we used the MQTT client to manually publish the formatted JSON file to simulate the M5Stack message. In this way, everyone in the group can complete the entire system testing independently. |
 
 
 
@@ -201,7 +199,7 @@ What if we think outside the box regarding "vehicles"? Then we will get a door t
 
 This project has followed closely with agile development principles. We designed the system around customer needs and kept them as our top priority. We were open to changes and adapted them quickly once they rose. We have been working on development regularly and at a constant and sustainable pace, following our Gannt Chart plan. After each small sprint we measured the progress by the amount of working code, which is usually all of them, before moving on to the next sprint. We completely trusted all out teammates because everyone was so talented and motivated. We arranged video calls frequently during this difficult time, even though some did not want to show their messy faces thus used filters (talking to an obedient husky was real fun).
 
-We cared about technical excellence and tried to do our best with what we have. We minimised unnecessary work when adapting changes to our goal (we were going to mount the M5Stick on a real toy car to mimic cars entering/exiting parking lots but cancelled the purchase in the end). We divided ourselves into 4 sub-groups with each team having 1-2 teammates. Within each sub-group we organized tasks for our own and reflect regularly on what had been achieved.
+We cared about technical excellence and tried to do our best with what we have. We minimised unnecessary work when adapting changes to our goal (we were going to mount the M5Stick on a real toy car to mimic cars entering/exiting parking lots but cancelled the purchase in the end). We divided ourselves into 4 sub-groups with 1-2 teammates in each. Within each sub-group we organized tasks for our own and reflect regularly on what had been achieved.
 
 <a name="_daily"></a>
 
