@@ -290,7 +290,7 @@ In this sprint we finalised the charts and plots on desktop UI to make sure they
 
 ### Hardware timeline
 
-<a name = "2aIoTST"> </a
+<a name = "2aIoTST"> </a>
 
 Sprint No.| Brief Description| Implementation
 ------------ | ------------- | -------------
