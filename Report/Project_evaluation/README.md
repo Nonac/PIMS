@@ -36,19 +36,25 @@
 <a name="_adesktop"></a>
 
 ### Desktop
+
 * Front end
 
-  Front-end engineering for desktop applications, like all view work, is a combination of fine art and dynamic technology. How to create a user interface that corresponds to the application scenario the user is in is the main thing we should consider. For example, we should consider what colour patterns to apply under what circumstances, or what data visualization tools to use to achieve the best results under what circumstances. Thinking logically like this can be challenging but necessary for front-end.
-
-  The desktop app view framework we applied in this project is Processing's controlP5 repository. Of course, this is our best option for completing class requirements. Although we had several alternative options, it was the framing conditions that allowed us to adapt to similar work later. To develop the framework, the front-end working group fully read the developer documentation, including all the samples and even the source code of some repositories. We also found bugs in the sample architecture, which is why we skipped the controlP5 multi-page refresh development.
-
-  Of course, it's not just technology that we've learned. We also learned how to work as front-end engineers on large projects to coordinate with back-end engineers and flexibly adjust our design and code as the back-end functions evolve. This builds the foundation for more significant work.
+  | Achievement                                      | What we have learnt from it                                  |
+  | ------------------------------------------------ | ------------------------------------------------------------ |
+  | Application of front-end design concepts         | Front-end engineering for desktop applications, like all view work, is a combination of fine art and dynamic technology. How to create a user interface that corresponds to the application scenario the user is in is the main thing we should consider. For example, we should consider what color patterns to apply under what circumstances, or what data visualization tools to use to achieve the best results under what circumstances. Thinking logically like this can be challenging but necessary for front-end. |
+  | Use controlP5 to complete front-end construction | The desktop app view framework we applied in this project is Processing's controlP5 repository. Of course, this is our best option for completing class requirements. Although we had several alternative options, it was the framing conditions that allowed us to adapt to similar work later. To develop the framework, the front-end working group fully read the developer documentation, including all the samples and even the source code of some repositories. We also found bugs in the sample architecture, which is why we skipped the controlP5 multi-page refresh development. |
+  | Good communication and teamwork                  | Of course, it's not just technology that we've learned. We also learned how to work as front-end engineers on large projects to coordinate with back-end engineers and flexibly adjust our design and code as the back-end functions evolve. This builds the foundation for more significant work. |
 
 * Back end
 
-  The desktop server controller successfully communicated with M5Stack through the MQTT protocol. Even though the desktop front-end side and the M5Stack side use different language for development (Processing and C++, respectively), data exchange using JSON file format is still smooth. We took into account the needs of both the M5Stack end and web end, and controlled the task logic well: the controller can accept and process the requests from M5Stack and send back receipts at the same time.
+  
 
-  We have never been exposed to the software Processing before, so we were very unfamiliar with the syntax. By reading the documentation of Processing, understanding the APIs provided by it, and performing unit testing, we used the library functions provided by Processing well and achieved our goal. It is often troublesome to collaborate and test with multiple group members at the same time, so we used the MQTT client to manually publish the formatted JSON file to simulate the M5Stack message. In this way, everyone in the group can complete the entire system testing independently.
+  | Achievement                                          | What we have learnt from it                                  |
+  | ---------------------------------------------------- | ------------------------------------------------------------ |
+  | Learn to develop in multiple languages based on JSON | The desktop server controller successfully communicated with M5Stack through the MQTT protocol. Even though the desktop front-end side and the M5Stack side use different language for development (Processing and C++, respectively), data exchange using JSON file format is still smooth. We took into account the needs of both the M5Stack end and web end, and controlled the task logic well: the controller can accept and process the requests from M5Stack and send back receipts at the same time. |
+  | Learn to use limited tools for development           | We have never been exposed to the software Processing before, so we were very unfamiliar with the syntax. By reading the documentation of Processing, understanding the APIs provided by it, and performing unit testing, we used the library functions provided by Processing well and achieved our goal. It is often troublesome to collaborate and test with multiple group members at the same time, so we used the MQTT client to manually publish the formatted JSON file to simulate the M5Stack message. In this way, everyone in the group can complete the entire system testing independently. |
+
+
 
 <a name="_aiot"></a>
 
