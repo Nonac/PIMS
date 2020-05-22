@@ -32,14 +32,13 @@
 <a name="_intro"></a>
 
 ## Introduction
-Parking Iot Management System is designed for easy access to public parking lots. It is like a toll-pass (FasTrak or E-ZPass) in the US or ETC in China, but used on parking lots. Every person wishing to use this system needs to obtain a key (M5Stick) and register their personal and vehicle information on the PIMS website. With a key in hand, the driver can park in any participating parking lot, all they need to do is to press the key (M5Stick) to enter, and press to exit. The barrier, controlled by M5Stack, receives the request from the Stick together with the Stick's bluetooth address, and verifies the user's account via the broker
-(MQTT). If successful, the barrier (M5Stack) will lift up to let the car in/out. The system will track the car's parking time and calculate with the tariff of the parking lot's, then charge the payment from customer's account.
+Parking Iot Management System is designed for easy access to public parking lots. It is like a toll-pass (FasTrak or E-ZPass) in the US or ETC in China, but used on parking lots. Every person wishing to use this system needs to obtain a key (M5Stick) and register their personal and vehicle information on the PIMS website. With a key in hand, the driver can park in any participating parking lot, all they need to do is to press the key (M5Stick) to enter, and press to exit. The barrier, controlled by M5Stack, receives the request together with the key's bluetooth address from the M5Stick, and verifies the user's account at desktop app via the broker (MQTT). If successful, the barrier (M5Stack) will lift up to let the car in/out. The system will track the car's parking time and calculate with the tariff of the parking lot's, then charge the payment from customer's account.
 
 With this system, the drivers can save the time of paying at the machine. With cars leaving the parking lot quicker, more cars are able to park in the lot during a busy day.
 
 <a name="_stakeholders"></a>
 ## Stakeholders
-Our product is designed for 3 different end users: customers, drivers, and parking lot managers. Customers can be personal customers or a business customers. They are the online account holders and vehicle owners. Drivers can be anyone legally driving the vehicles that have the key (M5Stick) mounted in. The customer and driver can be the same person. Parking lot managers are administratives who minitor the parking lots.
+Our product is designed for 3 different end users: customers, drivers, and parking lot managers. Customers can be personal customers or business customers. They are the online account holders and vehicle owners. Drivers can be anyone legally driving the vehicles that have the key (M5Stick) mounted in. The customer and driver can be the same person. Parking lot managers are administratives who minitor the parking lots.
 
 To make the picture clear, we will introduce 3 typical user stories.
 
@@ -54,7 +53,7 @@ To make the picture clear, we will introduce 3 typical user stories.
 ```After the 5-hour-long conference, Prof Smith and her group are really exhausted and don't want to queue up at the payment machine - the queue looks really long, it's a busy parking lot after all. Luckily, they don't need to! They go straight back to the minivan and start driving back to Bristol. When approaching the exit, without even stopping and opening the window, Prof Smith simply presses the key (M5Stick) and the barrier lifts up to let them out!```
 
 ### Parking lot managers
-```Rachel works for Cabot Circus shopping mall. Her office is pretty close to the parking lot, so she can report any abnormal activities via the app. She also works from home from time to time. Wherever she is, she can open the desktop application to see how many cars are currently in the parking lot and how much revenue they are currently making.```
+```Rachel works for a shopping mall. Her job is to manage their parking lot. Her office is pretty close to the parking lot, so she can report any abnormal activities via the app. Whenever she wants, she can open the desktop application to see how many cars are currently in the parking lot and how much revenue they are currently making.```
 
 ```Her boss has asked her to plan for a 2-hour car wash product promotion at the designated area inside the parking lot next Saturday, so she needs to choose a time when the number of targeted customers are at its peak. She opens the desktop app and pulls up the hourly record of the number of cars in the parking lot for the past month. Then she chooses 1-3pm next Saturday for the promotion.```
 
