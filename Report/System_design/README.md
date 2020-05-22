@@ -2,6 +2,8 @@
 
 In this section, we will be talking about the design of our project: why did we design it like this, the process of what we went through and how we ended up with the final design, and the details of technologies we chose for the design.
 
+One thing to note down first is that for simplicity, the customer and the driver are the same person for now, which means whoever drives the car needs to be registered on our website. We can separate them in the future so that the driver doesn't need to be a registered customer, see [future work](../Project_evaluation/README.md#_future).
+
 ## Contents
 * [Architecture of the entire system](#_a)
     * [Schematic diagram](#_diagram)
@@ -85,13 +87,13 @@ There is a simple data storage system in this design since it is not the focus o
 Customers use the web application to sign up/log in to an account, register their information, and see their records. In order to enable customers to use the web application to manage their accounts smoothly, it must fulfill the following requirements:
 #### Sign up and log in
 1. Allow customers to sign up a new account --> inform the desktop app that there is a new customer registration.
-2. Allow customers to log in to have access to their own accounts --> validate customername and password with desktop app and keep the logged status with cookies.
+2. Allow customers to log in to have access to their own accounts --> validate username and password with desktop app and keep the logged status with cookies.
 3. Prevent the illegal access to customer account page --> filter access by validating cookies.
 #### Customer Information Registration
 1. Customers can register a new vehicle after a key (M5Stick) is delivered to them --> inform the desktop app and re-render the vehicle list.
 2. Customers can top-up their balance --> inform the desktop app a payment and its amount is made and re-render the balance value.
 #### Display customer info and statistical data
-1. Show the customer's customername, the vehicles they own, and their account balance --> fetch customer account information from the desktop app and render it on the account page.
+1. Show the customer's username, the vehicles they own, and their account balance --> fetch customer account information from the desktop app and render it on the account page.
 2. Display the statistical data of parking time in the last 7 days, showing in chart --> fetch a list of parking time and render the chart.
 
 <a name="_b-desktop"></a>
@@ -100,7 +102,7 @@ Customers use the web application to sign up/log in to an account, register thei
 
 Since this project is a parking management software prototype, we designed the requirements of the desktop client system with full consideration of different client usage situations. Due to the limitation of this project, we can only store the customer's data on local hard disk on the manager's desktop. This makes the desktop app a bridge between the web app (customer end) and the hardware side (the barriers). In programming term, it is a controller in the Model-View-Controller pattern.
 
-To elaborate, customers' registration data from the website must be sent through the broker to desktop app for storage and customers' enter request must also be sent by the barrier (M5Stack) through the broker to the desktop app for verification.
+To elaborate, customers' registration data from the website must be sent through the broker to desktop app for storage and driver's entry request must also be sent by the barrier (M5Stack) through the broker to the desktop app for verification.
 
 The above communication happens automatically at the back-end, whereas the front-end is only for data visualisation, so managers can closely monitor the parking lot.
 
@@ -119,13 +121,13 @@ In the regular usage of the desktop app, the parking lot manager sits in the cen
 As mentioned above, the desktop back-end acts as a controller between web app and the barriers, so the following points are required in the design:
 
 1. Subscribe and retrieve customers' and their vehicles' registration information from MQTT (published by web app).
-2. Parse the messages from MQTT, separate them into specific topics (e.g. customer registration, vehicle registration, customer account top-up etc) and store them on the local hard drive as JSON files.
+2. Parse the messages from MQTT, separate them into specific topics (e.g. customer registration, vehicle registration, customer account top-up etc.) and store them on the local hard drive as JSON files.
 3. Pack up the locally stored data and publish them onto MQTT as per web app's request.
-4. Subscribe and retrieve customers' entry/exit request at the parking lot from MQTT (published by M5Stack).
+4. Subscribe and retrieve drivers' entry/exit request at the parking lot from MQTT (published by M5Stack).
 5. Parse the messages from MQTT, separate them into specific topics, namely the entry request and exit request, and store them on the local hard drive as JSON files. Note that when the car enters the parking lot, the type "in" JSON file is generated, but it should be replaced by type "out" JSON file once the car leaves, because the "out" JSON file covers more information (the time on exit).
 6. Send receipt to web app or M5Stack via MQTT after receiving their messages.
 7. After receiving the entry request, the controller determines whether the Bluetooth address with the highest signal strength corresponds to a registered car. If not, it continues to search for a Bluetooth address with a slightly weaker signal strength until it finds a registered car.
-8. The entry and exit requests and the customer's essential information are logically processed and saved on the desktop. The saved files should be updated promptly.
+8. The entry and exit requests and the customer/driver's essential information are logically processed and saved on the desktop. The saved files should be updated promptly.
 9. When the car enters or exits the parking lot, the controller must send a message to the M5Stack to control the barrier's behaviour. After the barrier lifts, a 5-second pause is required to give the car the time to pass through. After 5 seconds, the controller should send another message to close the barrier.
 10. Send control commands to the barrier, as per managers' requests. The post-desktop API should provide the feature to send barrier manipulation request to the barrier via MQTT. 
 11. To provide all the data to be fetched and thus make a software back-end API, it is also the underlying arithmetic that the software should be implemented at the desktop app runtime. Various interfaces are provided for other functions.
@@ -150,12 +152,12 @@ A barrier must meet the following requirements:
 
 ### M5Stick (Keys)
 
-Each M5Stick-C is a key that is recognisable by any barrier in our system. These keys are used to identify registered customers. Since our barriers seek BT devices, the keys are in essence BT advertising devices.
+Each M5Stick-C is a key that is recognisable by any barrier in our system. These keys are used to identify registered drivers. Since our barriers seek BT devices, the keys are in essence BT advertising devices.
 
 Following requirements must be satisfied for the keys:
 
 1. Has a unique id.
-2. Powered by rechargeable batteries so customers can use them outside freely.
+2. Powered by rechargeable batteries so drivers can use them outside freely.
 3. Can advertise itself as a BT device
 4. The BT advertising state can be switched on and off for using and saving energy, respectively.
 
@@ -168,7 +170,7 @@ Following requirements must be satisfied for the keys:
 ### Web application
 ![web](Web_Chart.png)
 
-The diagram above shows the working flow of the web application and demonstrates the core object for communication and the categorization of functions in [customer_account.js](../../web_application/customer_account.js). We mainly used functions in the scripts to implement the core functionality of the customer logics, and render the pages dynamically. 
+The diagram above shows the working flow of the web application and demonstrates the core object for communication and the categorization of functions in [user_account.js](../../web_application/user_account.js). We mainly used functions in the scripts to implement the core functionality of the user logics, and render the pages dynamically. 
 
 *How does this work?*
 
@@ -179,7 +181,7 @@ There are two functional components in the web application - communication and r
 
 The work flow is: 
 
-1. At the stage of pages loading or customer clicking the buttons on the web pages, query functions in the communication component will be called.
+1. At the stage of pages loading or user clicking the buttons on the web pages, query functions in the communication component will be called.
 2. The query function composes a message body and calls the `client.send`.
 3. The client object publishes the message to the broker via MQTT.
 4. The desktop application receives the message and gives a response message.
@@ -221,7 +223,7 @@ Before building on Processing, we used PowerPoint to draw out the electronic des
 
 ![dark_mode](destop_view/ppt3.png)
 
-More than that, we also designed another page in the desktop app corresponding to the bottom right button "Customer account":
+More than that, we also designed another page in the desktop app corresponding to the bottom right button "customer account":
 ![customer_account](destop_view/ppt4.png)
 
 
@@ -283,7 +285,7 @@ In the "data_type": "web_register" JSON file, we didn't have the **"status"** fi
 {
 	"data_type": "web_register",  
 	"info": {
-			"customername": "lea_tong",
+			"username": "lea_tong",
 			"password": "password",
 			"is_success":"true"
 		}
@@ -294,7 +296,7 @@ However, we found that other than the 3 online elements subscribing to MQTT, the
 {
 	"data_type": "web_register",  
 	"info": {
-			"customername": "lea_tong",
+			"username": "lea_tong",
 			"password": "password",
 			"status": 2
 		}
@@ -331,7 +333,7 @@ If the query result is fail (e.g. the username the customer intended to register
 {
 	"data_type": "example",
 	"info": {
-			"customername": "lea_tong",
+			"username": "lea_tong",
 		    "status": 0
 		}
 }
@@ -349,7 +351,7 @@ All messages received by the web application will be checked the ownership -- wh
 {
 	"data_type": "web_login",
 	"info": {
-			"customername": "lea_tong",
+			"username": "lea_tong",
 			"password": "password",
 		    "status": 2
 		}
@@ -362,7 +364,7 @@ All messages received by the web application will be checked the ownership -- wh
 {
 	"data_type": "web_login",
 	"info": {
-			"customername": "lea_tong",
+			"username": "lea_tong",
 		    "status": 1
 		}
 }
@@ -374,7 +376,7 @@ All messages received by the web application will be checked the ownership -- wh
 {
 	"data_type": "web_login",
 	"info": {
-			"customername": "lea_tong",
+			"username": "lea_tong",
 		    "status": 0
 		}
 }
@@ -390,7 +392,7 @@ Send a query message for validation of customer login. Send query with status = 
 {
 	"data_type": "web_register",  
 	"info": {
-			"customername": "lea_tong",
+			"username": "lea_tong",
 			"password": "password",
 			"status": 2
 		}
@@ -403,7 +405,7 @@ Send a query message for validation of customer login. Send query with status = 
 {
 	"data_type": "web_register",  
 	"info": {
-			"customername": "lea_tong",
+			"username": "lea_tong",
 			"status": 1
 		}
 }
@@ -419,7 +421,7 @@ Send this query to the broker to register a new account. The desktop application
 {
 	"data_type": "web_vehicle_register",
 	"info": {
-			"customername":"lea_tong",
+			"username":"lea_tong",
 			"vehicle_id": "acdjcidjd",
 			"vehicle_type":"car",
 			"status": 2,
@@ -436,12 +438,12 @@ Send this query to the broker to register a new account. The desktop application
 	"data_type": "web_vehicle_register",   
 	"info": {
 			"status": 1,
-			"customername":"lea_tong"
+			"username":"lea_tong"
 		}
 }
 ```
 
-Register a new vehicle for current customer. The desktop application returns status 1 and username if this registration for vehicle succeeds, otherwise will return the failure message.
+Register a new vehicle for the current customer. The desktop application returns status 1 and username if this registration for vehicle succeeds, otherwise will return the failure message.
 
 #### "web_vehicle_query"
 
@@ -451,7 +453,7 @@ Register a new vehicle for current customer. The desktop application returns sta
 {
 	"data_type": "web_vehicle_query",    
 	"info": {
-		"customername": "lea_tong",
+		"username": "lea_tong",
 		"status": 2
 	}
 }
@@ -463,7 +465,7 @@ Register a new vehicle for current customer. The desktop application returns sta
 {
 	"data_type": "web_vehicle_query",
 	"info": {
-		"customername": "lea_tong",
+		"username": "lea_tong",
 		"vehicle_list": [
 			{
 				"vehicle_id": "example01",
@@ -493,7 +495,7 @@ Get failure status if there is something goes wrong in the back-end.
 {
 	"data_type": "web_vehicle_history",
 	"info": {
-		"customername": "lea_tong",
+		"username": "lea_tong",
 		"status": 2
 	}
 }
@@ -505,7 +507,7 @@ Get failure status if there is something goes wrong in the back-end.
 {
 	"data_type": "web_vehicle_history",
 	"info": {
-		"customername": "lea_tong",
+		"username": "lea_tong",
 		"vehicle_id": "A007",
 		"0": 4.3,	  
 		"1": 15,     
@@ -530,7 +532,7 @@ Send this query to fetch a list of statistical data of one specific vehicle's hi
 
 	"data_type": "web_finance",
 	"info": {
-			"customername":"lea_tong",
+			"username":"lea_tong",
 			"status": 2
 		}
 }
@@ -543,7 +545,7 @@ Send this query to fetch a list of statistical data of one specific vehicle's hi
 
 	"data_type": "web_finance",
 	"info": {
-			"customername":"lea_tong",
+			"username":"lea_tong",
 			"balance": 21331,
 			"currency":"GBP",
 			"status": 1
@@ -562,7 +564,7 @@ To get the current customer's balance in their account.
 
 	"data_type": "web_recharge",
 	"info": {
-			"customername":"lea_tong",
+			"username":"lea_tong",
 			"card_number":"326173173718",
 			"pay_amount":"10",
 			"status": 2
@@ -577,7 +579,7 @@ To get the current customer's balance in their account.
 
 	"data_type": "web_recharge",  
 	"info": {
-			"customername":"lea_tong",
+			"username":"lea_tong",
 			"balance": 21331,
 			"currency":"GBP",
 			"status": 1
@@ -585,7 +587,7 @@ To get the current customer's balance in their account.
 }
 ```
 
-Send the query to broker so that the controller can receive this message to recharge for the customer. If success, the controller will send back to the customer the message containing the customer's current balance and the type of currency.
+Send the query to broker so that the controller can receive this message to top-up for the customer. If successful, the controller will send back to the customer the message containing the customer's current balance and the type of currency.
 
 <a name="_e-iot"></a>
 

@@ -1,4 +1,7 @@
 # Project Evaluation
+
+In this section we will evaluate this project - the success, what we learnt, the future work and how we worked as a team.
+
 ## Contents
 
 * [Success of the project](#_sucess)
@@ -129,6 +132,10 @@ There are absolutely more features could be implemented in the future:
 * Map API
 
   After PIMS is widely deployed in the UK ~~which is impossible~~ we will add a map to the front-end application (web or mobile apps) to enable users to find the participating parking lots in the vicinity, and how many available parking spaces they have. Moreover, they can also mark down where they parked their cars as some of them might forget it after a long time of parking. 
+  
+* Business account
+
+  For now, we only implemented the functionality of registering and managing personal accounts. In that way, the drivers must also be registered customers. In the future, we can separate the two roles. The customers are the account owners and the vehicle owners, but the drivers can be anyone who can legally drive the vehicle. Once that is accomplished, we can add the "business account" feature so that the account can be linked to a business and they can register their business-owned vehicles then mount the M5Stick in there. Its employees who can legally driver those vehicles do not need to be a registered customer.
 
 These features could be beneficial because they will promote the user experience. However, as the web application is just the front-end app, more efforts should be made in the desktop application (or a complete back-end architecture in the future) and in the IoT device.
 
@@ -183,7 +190,7 @@ These features could be beneficial because they will promote the user experience
 
 ### Long-term goals
 
-Let's look into a greater future. With the development of IoT technology, people will no longer be satisfied with simply tracking real objects, but to interact with them. More specific than IoT (Internet of Things), PIMS promotes the idea of IoV (Internet of Vehicles), the core of which lies in the interaction between M5Stick-C and M5Stack. In other words, the communication between the key and the door. If we continue to develop this project, we can predict some pictures of the future. Ultimately and ideally, the M5Stick can be purchased along with the car, so all new-generation cars can start using this system immediately. Sooner or later, it can cover all the parking lots and all the cars registered in the UK. Then, the car itself can become an electronic wallet, and it won't be a dream for us to apply such a convenient system at any drive-through restaurants.
+Let's look into a greater future. With the development of IoT technology, people will no longer be satisfied with simply tracking real objects, but to interact with them. More specific than IoT (Internet of Things), PIMS promotes the idea of IoV (Internet of Vehicles), the core of which lies in the interaction between M5Stick-C and M5Stack. In other words, the communication between the key and the door. If we continue to develop this project, we can predict some pictures of the future. Ultimately and ideally, the M5Stick can be purchased along with the car, so all new-generation cars can start using this system immediately. Sooner or later, it can cover all the parking lots and all the cars registered in the UK. Then, the car itself can become a digital wallet, and it won't be a dream for us to apply such a convenient system at any drive-through restaurants.
 
 Let's come back to this project, the key-door interaction relies on the Bluetooth technology we have now. Of course, for security purposes, it is certainly not possible to use protocols that are so open for a system that involves so many people. The project will then have the opportunity to advance the development and implementation of a proximity vehicle interaction encryption protocol. The advantages offered by it are significant compared to the identification technologies, such as automatic license plate recognition, image recognition, and IC card radio communication, that exist today. The new wireless protocol is fundamentally different from the existing techniques in terms of both the speed and accuracy of recognition.
 
@@ -238,10 +245,12 @@ Now it's the end of the project. Looking back on the past 3 months, not only did
 <a name="_coronavirus"></a>
 
 ### Coronavirus impact on the project
-This work has been impacted by the global pandemic COVID-19, as 3 out of 6 group members went back to China. The time lost greatly on not only the long-haul flight but also: trying to constantly refresh airline pages to get precious tickets that might be cancelled by others, keeping an eye on the airline announcements on the flight status, queuing up for temperature tests after landing, and 14-day isolation (some were even longer due to close-by passengers on the flight tested positive) in a hotel that only offers basic facilities which means not ideal internet connection nor ideal hardware facilities.
+This work has been impacted by the global pandemic COVID-19, as 3 out of 6 group members went back to China. A significant amount of time was lost not only on the long-haul flight but also by members being  heavily preoccupied by trying to obtain important flight tickets home and 14-day isolation after landing (some were even longer due to close-by passengers on the flight tested positive) in a hotel that only offers basic facilities which means not ideal internet connection nor ideal hardware facilities.
 
-Besides that, the 7-hour time difference made communication harder in 2 ways: 1 We could only effectively communicate when we were all awake. 2 Only the members remaining in the UK could participate in lecturers' video meeting because the meetings were held after midnight in China.
+Besides that, the 7-hour time difference made communication harder in 2 ways: 1) We could only effectively communicate when we were all awake; 2) Only the members remaining in the UK could participate in lecturers' video meeting because the meetings were held after midnight in China.
 
-Also, due to the censorship in mainland China, the group members have had episodes of hard times to access github, which in return delayed development.
+Also, due to the censorship in mainland China, the group members have had hard times to access github, which in turn delayed development.
 
-One other thing to mention is that due to the COVID-19 influence, the marking criteria changed to 100% dependent on the portfolio, which is not the top strength of our group. As a group of foreigners whose first language isn't English, it was a shame that we couldn't deliver the well-functioning product that we are proud of face to face, but to write it down. We spent twice or more time than others on writing to make sure our language is clear and straight forward, because we feared that no matter how much effort we put on the product, if we couldn't deliver it clearly in the report, which is the only chance we have, all the effort would be wasted. 
+One other thing to mention is that due to the COVID-19 influence, the marking criteria changed to 100% dependent on the portfolio, which is not the biggest strength of our group. As a group of foreigners whose first language isn't English, it was a shame that we couldn't deliver the well-functioning product that we are proud of face to face, but to write it down. We had to spend much more time than others on writing to make sure our language is clear and straightforward, because we feared that no matter how much effort we put into the product, if we couldn't deliver it clearly in the report, which is the only chance we have, all the effort would be wasted. 
+
+[Back to homepage](../../README.md#_portfolio)
